@@ -1,0 +1,1 @@
+{"version":3,"file":"loader.d.ts","sourceRoot":"","sources":["../../nunjucks/src/loader.ts"],"names":[],"mappings":"AAGA,OAAO,EAAC,UAAU,EAAC,MAAM,UAAU,CAAC;AAEpC,qBAAa,MAAO,SAAQ,UAAU;IAErC,OAAO,CAAC,IAAI,KAAA,EAAE,EAAE,KAAA;IAKhB,UAAU,CAAC,QAAQ,KAAA;CAInB;AAED,eAAe,MAAM,CAAC"}

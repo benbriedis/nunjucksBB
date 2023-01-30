@@ -1,0 +1,1 @@
+{"version":3,"file":"globalTypes.d.ts","sourceRoot":"","sources":["../../nunjucks/src/globalTypes.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,CAAC;AAEV,OAAO,CAAC,MAAM,CAAC;IACd,IAAI,GAAG,EAAE,GAAG,CAAC;IAEV,UAAU,MAAM;QAClB,mBAAmB,MAAC;KACpB;CACD"}
