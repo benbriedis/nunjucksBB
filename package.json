@@ -4,9 +4,12 @@
   "version": "3.2.3",
   "author": "James Long <longster@gmail.com>",
   "dependencies": {
+    "@types/asap": "^2.0.0",
     "a-sync-waterfall": "^1.0.0",
     "asap": "^2.0.3",
-    "commander": "^5.1.0"
+    "chokidar": "^3.5.3",
+    "commander": "^5.1.0",
+    "fs": "^0.0.1-security"
   },
   "browser": "./browser/nunjucks.js",
   "devDependencies": {
@@ -14,6 +17,7 @@
     "@babel/core": "^7.0.0-beta.38",
     "@babel/preset-env": "^7.0.0-beta.38",
     "@babel/register": "^7.0.0-beta.38",
+    "@types/node": "^18.11.18",
     "babel-loader": "^8.0.0-beta.0",
     "babel-plugin-istanbul": "^4.1.5",
     "babel-plugin-module-resolver": "3.0.0-beta.5",
@@ -54,9 +58,6 @@
     "uglify-js": "^2.8.29",
     "uglifyjs-webpack-plugin": "^1.1.6",
     "webpack": "^3.10.0"
-  },
-  "peerDependencies": {
-    "chokidar": "^3.3.0"
   },
   "peerDependenciesMeta": {
     "chokidar": {

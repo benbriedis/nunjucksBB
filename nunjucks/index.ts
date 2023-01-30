@@ -3,7 +3,7 @@
 import lib from './src/lib';
 import {Environment, Template} from './src/environment';
 import Loader from './src/loader';
-import loaders from './src/loaders';
+import * as loaders from './src/loaders';
 import precomp from './src/precompile';
 import compiler from './src/compiler';
 import parser from './src/parser';

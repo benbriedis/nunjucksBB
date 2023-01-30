@@ -45,7 +45,7 @@ class Obj {
     this.init(...args);
   }
 
-  init() {}
+  init(...args) {}
 
   get typename() {
     return this.constructor.name;
@@ -67,7 +67,7 @@ class EmitterObj extends EventEmitter {
     this.init(...args);
   }
 
-  init() {}
+  init(...args) {}
 
   get typename() {
     return this.constructor.name;

@@ -34,7 +34,7 @@ class Obj {
         // Unfortunately necessary for backwards compatibility
         this.init(...args);
     }
-    init() { }
+    init(...args) { }
     get typename() {
         return this.constructor.name;
     }
@@ -52,7 +52,7 @@ class EmitterObj extends EventEmitter {
         // Unfortunately necessary for backwards compatibility
         this.init(...args);
     }
-    init() { }
+    init(...args) { }
     get typename() {
         return this.constructor.name;
     }
