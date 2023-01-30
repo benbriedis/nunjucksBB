@@ -84,11 +84,11 @@
   "bin": {
     "nunjucks-precompile": "./bin/precompile"
   },
-  "main": "index.js",
+  "main": "tsOut/index.js",
   "files": [
     "bin/**",
     "browser/**",
-    "src/**"
+    "tsOut/src/**"
   ],
   "nyc": {
     "require": [
@@ -99,7 +99,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mozilla/nunjucks.git"
+    "url": "https://github.com/benbriedis/nunjucksBB.git"
   },
   "keywords": [
     "template",
@@ -107,6 +107,6 @@
   ],
   "license": "BSD-2-Clause",
   "bugs": {
-    "url": "https://github.com/mozilla/nunjucks/issues"
+    "url": "https://github.com/benbriedis/nunjucksBB/issues"
   }
 }
