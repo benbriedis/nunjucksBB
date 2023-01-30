@@ -49,7 +49,6 @@ export const PrecompiledLoader = loaders.PrecompiledLoader;
 export const WebLoader = loaders.WebLoader;
 
 export {Environment,Template,Loader};
-
 export {compiler,parser,lexer,runtime,lib,nodes,installJinjaCompat,configure};
 
 export function reset() 
@@ -71,6 +70,15 @@ export function render(name, ctx, cb)
 	return e.render(name, ctx, cb);
 }
 
+//XXX in time use this to replace old render()
+export async function asyncRender(name,ctx) 
+{
+	if (!e) 
+		configure();
+	return await e.asyncRender(name, ctx);
+}
+
+
 export function renderString(src, ctx, cb) 
 {
 	if (!e) 
@@ -81,6 +89,8 @@ export function renderString(src, ctx, cb)
 //FIXME precompile can be undefined in which case these should not be exported
 export const precompile = precomp.precompile;
 export const precompileString = precomp.precompileString;
+
+//export default e;  /* ie default "nunjucks" */
 
 /*
 module.exports = {

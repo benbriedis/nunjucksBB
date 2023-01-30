@@ -79,4 +79,5 @@ exports.renderString = renderString;
 //FIXME precompile can be undefined in which case these should not be exported
 exports.precompile = precompile_1.default.precompile;
 exports.precompileString = precompile_1.default.precompileString;
+exports.default = e; /* ie default "nunjucks" */
 //# sourceMappingURL=index.js.map
