@@ -89,7 +89,7 @@
   "files": [
     "bin/**",
     "browser/**",
-    "tsOut/src/**"
+    "tsOut/**"
   ],
   "nyc": {
     "require": [
