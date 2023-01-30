@@ -1,5 +1,5 @@
 {
-  "name": "nunjucks",
+  "name": "nunjucksBB",
   "description": "A powerful templating engine with inheritance, asynchronous control, and more (jinja2 inspired)",
   "version": "3.2.3",
   "author": "James Long <longster@gmail.com>",

@@ -1,5 +1,5 @@
 {
-  "name": "nunjucks",
+  "name": "nunjucksBB",
   "main": "browser/nunjucks.js",
   "ignore": [
     "Makefile",
