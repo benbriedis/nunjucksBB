@@ -17,8 +17,6 @@ let e;
 
 function configure(templatesPath=undefined, opts=undefined) 
 {
-console.log('configure()  -  1');
-
 	opts = opts || {};
 	if (lib.isObject(templatesPath)) {
 		opts = templatesPath;
@@ -37,10 +35,7 @@ console.log('configure()  -  1');
 			async: opts.web && opts.web.async
 		});
 
-console.log('configure()  -  8');
-
 	e = new Environment(templateLoader, opts);
-console.log('configure()  -  9  e:',e);
 
 	if (opts && opts.express) 
 		e.express(opts.express);
@@ -62,11 +57,8 @@ function compile(src, env, path, eagerCompile)
 
 function render(name, ctx, cb=undefined) 
 {
-console.log('render()  -  1');
 	if (!e) 
 		configure();
-console.log('render()  -  2');
-console.log('index  render()  e.loaders:',e.loaders);	
 	return e.render(name, ctx, cb);
 }
 

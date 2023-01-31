@@ -31,7 +31,8 @@ const asap_1 = __importDefault(require("asap"));
 const a_sync_waterfall_1 = __importDefault(require("a-sync-waterfall"));
 const lib_1 = __importDefault(require("./lib"));
 const compiler_1 = __importDefault(require("./compiler"));
-const filters_1 = __importDefault(require("./filters"));
+//import filters from './filters';
+const filters = require('./filters');
 const loaders_1 = require("./loaders");
 const tests_1 = __importDefault(require("./tests"));
 const globals_1 = __importDefault(require("./globals"));
@@ -115,9 +116,8 @@ class Environment extends object_1.EmitterObj2 {
         this.asyncFilters = [];
         this.extensions = {};
         this.extensionsList = [];
-        lib_1.default._entries(filters_1.default).forEach(([name, filter]) => this.addFilter(name, filter));
+        lib_1.default._entries(filters).forEach(([name, filter]) => this.addFilter(name, filter));
         lib_1.default._entries(tests_1.default).forEach(([name, test]) => this.addTest(name, test));
-        console.log('init()  this:', this);
     }
     _initLoaders() {
         const me = this;
@@ -127,7 +127,6 @@ class Environment extends object_1.EmitterObj2 {
             if (typeof loader.on === 'function') {
                 loader.on('update', function (name, fullname) {
                     loader.cache[name] = null;
-                    console.log('environment _initLoaders()  emit update');
                     //FIXME use a mixin to support emit?
                     me.emit('update', name, fullname, loader);
                 });
@@ -282,7 +281,6 @@ class Environment extends object_1.EmitterObj2 {
         return (0, express_app_1.default)(this, app);
     }
     render(name, ctx, cb) {
-        console.log('environment  render()  START this.loaders:', this.loaders);
         if (lib_1.default.isFunction(ctx)) {
             cb = ctx;
             ctx = null;

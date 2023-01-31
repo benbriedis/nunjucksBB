@@ -17,7 +17,6 @@ const jinja_compat_1 = __importDefault(require("./src/jinja-compat"));
 // A single instance of an environment, since this is so commonly used
 let e;
 function configure(templatesPath = undefined, opts = undefined) {
-    console.log('configure()  -  1');
     opts = opts || {};
     if (lib_1.default.isObject(templatesPath)) {
         opts = templatesPath;
@@ -34,9 +33,7 @@ function configure(templatesPath = undefined, opts = undefined) {
             useCache: opts.web && opts.web.useCache,
             async: opts.web && opts.web.async
         });
-    console.log('configure()  -  8');
     e = new environment_1.Environment(templateLoader, opts);
-    console.log('configure()  -  9  e:', e);
     if (opts && opts.express)
         e.express(opts.express);
     return e;
@@ -50,11 +47,8 @@ function compile(src, env, path, eagerCompile) {
     return new environment_1.Template(src, env, path, eagerCompile);
 }
 function render(name, ctx, cb = undefined) {
-    console.log('render()  -  1');
     if (!e)
         configure();
-    console.log('render()  -  2');
-    console.log('index  render()  e.loaders:', e.loaders);
     return e.render(name, ctx, cb);
 }
 //XXX in time use this to replace old render()

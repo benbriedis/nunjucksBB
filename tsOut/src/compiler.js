@@ -1,12 +1,15 @@
 'use strict';
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Compiler = void 0;
-const parser = require('./parser');
-const transformer = require('./transformer');
-const nodes = require('./nodes');
-const { TemplateError } = require('./lib');
-const { Frame } = require('./runtime');
-const { Obj2 } = require('./object');
+const parser_1 = __importDefault(require("./parser"));
+const transformer_1 = __importDefault(require("./transformer"));
+const nodes_1 = __importDefault(require("./nodes"));
+const lib_1 = require("./lib");
+const runtime_1 = require("./runtime");
+const object_1 = require("./object");
 // These are all the same for now, but shouldn't be passed straight
 // through
 const compareOps = {
@@ -19,7 +22,7 @@ const compareOps = {
     '<=': '<=',
     '>=': '>='
 };
-class Compiler extends Obj2 {
+class Compiler extends object_1.Obj2 {
     constructor(templateName, throwOnUndefined) {
         super();
         this.templateName = templateName;
@@ -38,7 +41,7 @@ class Compiler extends Obj2 {
         if (colno !== undefined) {
             colno += 1;
         }
-        throw new TemplateError(msg, lineno, colno);
+        throw new lib_1.TemplateError(msg, lineno, colno);
     }
     _pushBuffer() {
         const id = this._tmpid();
@@ -127,7 +130,7 @@ class Compiler extends Obj2 {
     _compileExpression(node, frame) {
         // TODO: I'm not really sure if this type check is worth it or
         // not.
-        this.assertType(node, nodes.Literal, nodes.Symbol, nodes.Group, nodes.Array, nodes.Dict, nodes.FunCall, nodes.Caller, nodes.Filter, nodes.LookupVal, nodes.Compare, nodes.InlineIf, nodes.In, nodes.Is, nodes.And, nodes.Or, nodes.Not, nodes.Add, nodes.Concat, nodes.Sub, nodes.Mul, nodes.Div, nodes.FloorDiv, nodes.Mod, nodes.Pow, nodes.Neg, nodes.Pos, nodes.Compare, nodes.NodeList);
+        this.assertType(node, nodes_1.default.Literal, nodes_1.default.Symbol, nodes_1.default.Group, nodes_1.default.Array, nodes_1.default.Dict, nodes_1.default.FunCall, nodes_1.default.Caller, nodes_1.default.Filter, nodes_1.default.LookupVal, nodes_1.default.Compare, nodes_1.default.InlineIf, nodes_1.default.In, nodes_1.default.Is, nodes_1.default.And, nodes_1.default.Or, nodes_1.default.Not, nodes_1.default.Add, nodes_1.default.Concat, nodes_1.default.Sub, nodes_1.default.Mul, nodes_1.default.Div, nodes_1.default.FloorDiv, nodes_1.default.Mod, nodes_1.default.Pow, nodes_1.default.Neg, nodes_1.default.Pos, nodes_1.default.Compare, nodes_1.default.NodeList);
         this.compile(node, frame);
     }
     assertType(node, ...types) {
@@ -148,7 +151,7 @@ class Compiler extends Obj2 {
             this._emit(',');
         }
         if (args) {
-            if (!(args instanceof nodes.NodeList)) {
+            if (!(args instanceof nodes_1.default.NodeList)) {
                 this.fail('compileCallExtension: arguments must be a NodeList, ' +
                     'use `parser.parseSignature`');
             }
@@ -241,10 +244,10 @@ class Compiler extends Obj2 {
     compilePair(node, frame) {
         var key = node.key;
         var val = node.value;
-        if (key instanceof nodes.Symbol) {
-            key = new nodes.Literal(key.lineno, key.colno, key.value);
+        if (key instanceof nodes_1.default.Symbol) {
+            key = new nodes_1.default.Literal(key.lineno, key.colno, key.value);
         }
-        else if (!(key instanceof nodes.Literal &&
+        else if (!(key instanceof nodes_1.default.Literal &&
             typeof key.value === 'string')) {
             this.fail('compilePair: Dict keys must be strings or names', key.lineno, key.colno);
         }
@@ -393,7 +396,7 @@ class Compiler extends Obj2 {
     }
     compileFilter(node, frame) {
         var name = node.name;
-        this.assertType(name, nodes.Symbol);
+        this.assertType(name, nodes_1.default.Symbol);
         this._emit('env.getFilter("' + name.value + '").call(context, ');
         this._compileAggregate(node.args, frame);
         this._emit(')');
@@ -401,7 +404,7 @@ class Compiler extends Obj2 {
     compileFilterAsync(node, frame) {
         var name = node.name;
         var symbol = node.symbol.value;
-        this.assertType(name, nodes.Symbol);
+        this.assertType(name, nodes_1.default.Symbol);
         frame.set(symbol, symbol);
         this._emit('env.getFilter("' + name.value + '").call(context, ');
         this._compileAggregate(node.args, frame);
@@ -535,7 +538,7 @@ class Compiler extends Obj2 {
         this._emitLine(arr + ' = runtime.fromIterator(' + arr + ');');
         // If multiple names are passed, we need to bind them
         // appropriately
-        if (node.name instanceof nodes.Array) {
+        if (node.name instanceof nodes_1.default.Array) {
             this._emitLine(`var ${i};`);
             // The object could be an arroy or object. Note that the
             // body of the loop is duplicated for each condition, but
@@ -611,7 +614,7 @@ class Compiler extends Obj2 {
         this._emit('var ' + arr + ' = runtime.fromIterator(');
         this._compileExpression(node.arr, frame);
         this._emitLine(');');
-        if (node.name instanceof nodes.Array) {
+        if (node.name instanceof nodes_1.default.Array) {
             const arrayLen = node.name.children.length;
             this._emit(`runtime.${asyncMethod}(${arr}, ${arrayLen}, function(`);
             node.name.children.forEach((name) => {
@@ -668,11 +671,11 @@ class Compiler extends Obj2 {
         var keepFrame = (frame !== undefined);
         // Type check the definition of the args
         node.args.children.forEach((arg, i) => {
-            if (i === node.args.children.length - 1 && arg instanceof nodes.Dict) {
+            if (i === node.args.children.length - 1 && arg instanceof nodes_1.default.Dict) {
                 kwargs = arg;
             }
             else {
-                this.assertType(arg, nodes.Symbol);
+                this.assertType(arg, nodes_1.default.Symbol);
                 args.push(arg);
             }
         });
@@ -689,7 +692,7 @@ class Compiler extends Obj2 {
             currFrame = frame.push(true);
         }
         else {
-            currFrame = new Frame();
+            currFrame = new runtime_1.Frame();
         }
         this._emitLines(`var ${funcId} = runtime.makeMacro(`, `[${argNames.join(', ')}], `, `[${kwargNames.join(', ')}], `, `function (${realNames.join(', ')}) {`, 'var callerFrame = frame;', 'frame = ' + ((keepFrame) ? 'frame.push(true);' : 'new runtime.Frame();'), 'kwargs = kwargs || {};', 'if (Object.prototype.hasOwnProperty.call(kwargs, "caller")) {', 'frame.set("caller", kwargs.caller); }');
         // Expose the arguments to the template. Don't need to use
@@ -779,7 +782,7 @@ class Compiler extends Obj2 {
             var name;
             var alias;
             var id = this._tmpid();
-            if (nameNode instanceof nodes.Pair) {
+            if (nameNode instanceof nodes_1.default.Pair) {
                 name = nameNode.key.value;
                 alias = nameNode.value.value;
             }
@@ -889,7 +892,7 @@ class Compiler extends Obj2 {
         children.forEach(child => {
             // TemplateData is a special case because it is never
             // autoescaped, so simply output it for optimization
-            if (child instanceof nodes.TemplateData) {
+            if (child instanceof nodes_1.default.TemplateData) {
                 if (child.value) {
                     this._emit(`${this.buffer} += `);
                     this.compileLiteral(child, frame);
@@ -913,7 +916,7 @@ class Compiler extends Obj2 {
         if (frame) {
             this.fail('compileRoot: root node can\'t have frame');
         }
-        frame = new Frame();
+        frame = new runtime_1.Frame();
         this._emitFuncBegin(node, 'root');
         this._emitLine('var parentTemplate = null;');
         this._compileChildren(node, frame);
@@ -925,7 +928,7 @@ class Compiler extends Obj2 {
         this._emitFuncEnd(true);
         this.inBlock = true;
         const blockNames = [];
-        const blocks = node.findAll(nodes.Block);
+        const blocks = node.findAll(nodes_1.default.Block);
         blocks.forEach((block, i) => {
             const name = block.name.value;
             if (blockNames.indexOf(name) !== -1) {
@@ -933,7 +936,7 @@ class Compiler extends Obj2 {
             }
             blockNames.push(name);
             this._emitFuncBegin(block, `b_${name}`);
-            const tmpFrame = new Frame();
+            const tmpFrame = new runtime_1.Frame();
             this._emitLine('var frame = frame.push(true);');
             this.compile(block.body, tmpFrame);
             this._emitFuncEnd();
@@ -951,6 +954,7 @@ class Compiler extends Obj2 {
             _compile.call(this, node, frame);
         }
         else {
+            console.log('ERROR compiler.js compile()  node:', node);
             this.fail(`compile: Cannot compile node: ${node.typename}`, node.lineno, node.colno);
         }
     }
@@ -964,7 +968,7 @@ function compile(src, asyncFilters, extensions, name, opts = {}) {
     // Run the extension preprocessors against the source.
     const preprocessors = (extensions || []).map(ext => ext.preprocess).filter(f => !!f);
     const processedSrc = preprocessors.reduce((s, processor) => processor(s), src);
-    c.compile(transformer.transform(parser.parse(processedSrc, extensions, opts), asyncFilters, name));
+    c.compile(transformer_1.default.transform(parser_1.default.parse(processedSrc, extensions, opts), asyncFilters, name));
     return c.getCode();
 }
 ;

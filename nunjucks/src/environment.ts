@@ -4,7 +4,8 @@ import asap from 'asap';
 import waterfall from 'a-sync-waterfall';
 import lib from './lib';
 import compiler from './compiler';
-import filters from './filters';
+//import filters from './filters';
+const filters = require('./filters');
 import type Loader from './loader';
 import {FileSystemLoader, WebLoader, PrecompiledLoader} from './loaders';
 import tests from './tests';
@@ -108,8 +109,6 @@ class Environment extends EmitterObj2
 
 		lib._entries(filters).forEach(([name, filter]) => this.addFilter(name, filter));
 		lib._entries(tests).forEach(([name, test]) => this.addTest(name, test));
-
-console.log('init()  this:',this);	
   	}
 
 	_initLoaders() 
@@ -122,7 +121,6 @@ console.log('init()  this:',this);
 			if (typeof loader.on === 'function') {
 				loader.on('update', function(name, fullname) {
 					loader.cache[name] = null;
-console.log('environment _initLoaders()  emit update');	
 //FIXME use a mixin to support emit?
 					me.emit('update', name, fullname, loader);
 				});
@@ -316,8 +314,6 @@ console.log('environment _initLoaders()  emit update');
 
 	render(name, ctx, cb) 
 	{
-console.log('environment  render()  START this.loaders:',this.loaders);	
-
 		if (lib.isFunction(ctx)) {
 			cb = ctx;
 			ctx = null;

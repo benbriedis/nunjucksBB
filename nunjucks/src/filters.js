@@ -1,7 +1,7 @@
 'use strict';
 
-var lib = require('./lib');
-var r = require('./runtime');
+import lib from './lib';
+import r from './runtime';
 
 var exports = module.exports = {};
 

@@ -46,7 +46,6 @@ function extendClass(cls, name, props) {
 
 export class Obj {
   constructor(...args) {
-this._objId = Math.random();	
     // Unfortunately necessary for backwards compatibility
     this.init(...args);
   }
@@ -57,7 +56,8 @@ this._objId = Math.random();
     return this.constructor.name;
   }
 
-  static extend(name, props=undefined) {
+  static extend(name, props=undefined):any
+  {
     if (typeof name === 'object') {
       props = name;
       name = 'anonymous';
@@ -66,21 +66,24 @@ this._objId = Math.random();
   }
 }
 
-export class Obj2 {
-  get typename() {
-    return this.constructor.name;
-  }
+export abstract class Obj2 
+{
+//XXX remove 'get'? Make abstract?
+	get typename() 
+	{
+		return this.constructor.name;
+	}
 
-  static extend(name, props=undefined) {
-    if (typeof name === 'object') {
-      props = name;
-      name = 'anonymous';
-    }
-    return extendClass(this, name, props);
-  }
+//XXX remove extend?
+	static extend(name, props=undefined):any
+	{
+		if (typeof name === 'object') {
+			props = name;
+			name = 'anonymous';
+		}
+		return extendClass(this, name, props);
+	}
 }
-
-
 
 
 //XXX BB cf using Typescript mixins instead for emitting and regular classes or
@@ -101,7 +104,7 @@ export class EmitterObj extends EventEmitter {
     return this.constructor.name;
   }
 
-  static extend(name, props) {
+  static extend(name, props):any {
     if (typeof name === 'object') {
       props = name;
       name = 'anonymous';
@@ -115,7 +118,7 @@ export class EmitterObj2 extends EventEmitter {
     return this.constructor.name;
   }
 
-  static extend(name, props) {
+  static extend(name, props):any {
     if (typeof name === 'object') {
       props = name;
       name = 'anonymous';
@@ -124,6 +127,5 @@ export class EmitterObj2 extends EventEmitter {
   }
 }
 
-
-module.exports = { Obj,Obj2, EmitterObj, EmitterObj2 };
+export default { Obj,Obj2, EmitterObj, EmitterObj2 };
 

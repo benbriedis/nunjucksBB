@@ -37,7 +37,6 @@ function extendClass(cls, name, props) {
 }
 class Obj {
     constructor(...args) {
-        this._objId = Math.random();
         // Unfortunately necessary for backwards compatibility
         this.init(...args);
     }
@@ -55,9 +54,11 @@ class Obj {
 }
 exports.Obj = Obj;
 class Obj2 {
+    //XXX remove 'get'? Make abstract?
     get typename() {
         return this.constructor.name;
     }
+    //XXX remove extend?
     static extend(name, props = undefined) {
         if (typeof name === 'object') {
             props = name;
@@ -103,5 +104,5 @@ class EmitterObj2 extends EventEmitter {
     }
 }
 exports.EmitterObj2 = EmitterObj2;
-module.exports = { Obj, Obj2, EmitterObj, EmitterObj2 };
+exports.default = { Obj, Obj2, EmitterObj, EmitterObj2 };
 //# sourceMappingURL=object.js.map

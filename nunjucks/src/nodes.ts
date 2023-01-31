@@ -81,25 +81,24 @@ export class NodeList extends Node
 	}
 }
 
-class Root extends NodeList {};
-class Literal extends Value {};
+class Root extends NodeList {get typename() {return 'Root';}};
+class Literal extends Value {get typename() {return 'Literal';} };
 
-class Symbol extends Value {};
-class Group extends NodeList {};
-//class ArrayNode extends NodeList.extend('Array');     //FIXME divergent name and constant
-class Array extends NodeList {};     		//FIXME? may get in trouble for using this name...
-class Pair extends Node { get fields() { return ['key', 'value']; } };
-class Dict extends NodeList {};
-class LookupVal extends Node { get fields() { return ['target', 'val']; } };
-class If extends Node { get fields() { return ['cond', 'body', 'else_']; } };
-class IfAsync extends If {};
-class InlineIf extends Node { get fields() { return ['cond', 'body', 'else_']; } };
-class For extends Node { get fields() { return ['arr', 'name', 'body', 'else_']; } };
-class AsyncEach extends For {};
-class AsyncAll extends For {};
-class Macro extends Node { get fields() { return ['name', 'args', 'body']; } };
-class Caller extends Macro {};
-class Import extends Node { get fields() { return ['template', 'target', 'withContext']; } };
+class Symbol extends Value {get typename() {return 'Symbol';} };
+class Group extends NodeList {get typename() {return 'Group';} };
+class ArrayNode extends NodeList {get typename() {return 'Array';} };     		//FIXME? may get in trouble for using this name...
+class Pair extends Node {get typename() {return 'Pair';}  get fields() { return ['key', 'value']; } };
+class Dict extends NodeList {get typename() {return 'Dict';} };
+class LookupVal extends Node {get typename() {return 'LookupVal';}  get fields() { return ['target', 'val']; } };
+class If extends Node {get typename() {return 'If';}  get fields() { return ['cond', 'body', 'else_']; } };
+class IfAsync extends If {get typename() {return 'IfAsync';} };
+class InlineIf extends Node {get typename() {return 'InlineIf';}  get fields() { return ['cond', 'body', 'else_']; } };
+class For extends Node {get typename() {return 'For';}  get fields() { return ['arr', 'name', 'body', 'else_']; } };
+class AsyncEach extends For {get typename() {return 'AsyncEach';} };
+class AsyncAll extends For {get typename() {return 'AsyncAll';} };
+class Macro extends Node {get typename() {return 'Macro';}  get fields() { return ['name', 'args', 'body']; } };
+class Caller extends Macro {get typename() {return 'Caller';} };
+class Import extends Node {get typename() {return 'Import';}  get fields() { return ['template', 'target', 'withContext']; } };
 
 class FromImport extends Node 
 {
@@ -111,40 +110,40 @@ class FromImport extends Node
 	}
 }
 
-class FunCall extends Node { get fields() { return ['name', 'args']; } };
-class Filter extends FunCall {};
-class FilterAsync extends Filter { get fields() { return ['name', 'args', 'symbol']; } };
-class KeywordArgs extends Dict {};
-class Block extends Node { get fields() { return ['name', 'body']; } };
-class Super extends Node { get fields() { return ['blockName', 'symbol']; } };
-class TemplateRef extends Node { get fields() { return ['template']; } };
-class Extends extends TemplateRef {};
-class Include extends Node { get fields() { return ['template', 'ignoreMissing']; } };
-class Set extends Node { get fields() { return ['targets', 'value']; } };
-class Switch extends Node { get fields() { return ['expr', 'cases', 'default']; } };
-class Case extends Node { get fields() { return ['cond', 'body']; } };
-class Output extends NodeList {};
-class Capture extends Node { get fields() { return ['body']; } };
-class TemplateData extends Literal {};
-class UnaryOp extends Node { get fields() { return ['target']; } };
-class BinOp extends Node { get fields() { return ['left', 'right']; } };
-class In extends BinOp {};
-class Is extends BinOp {};
-class Or extends BinOp {};
-class And extends BinOp {};
-class Not extends UnaryOp {};
-class Add extends BinOp {};
-class Concat extends BinOp {};
-class Sub extends BinOp {};
-class Mul extends BinOp {};
-class Div extends BinOp {};
-class FloorDiv extends BinOp {};
-class Mod extends BinOp {};
-class Pow extends BinOp {};
-class Neg extends UnaryOp {};
-class Pos extends UnaryOp {};
-class Compare extends Node { get fields() { return ['expr', 'ops']; } };
-class CompareOperand extends Node { get fields() { return ['expr', 'type']; } };
+class FunCall extends Node {get typename() {return 'FunCall';}  get fields() { return ['name', 'args']; } };
+class Filter extends FunCall {get typename() {return 'Filter';} };
+class FilterAsync extends Filter {get typename() {return 'FilterAsync';}  get fields() { return ['name', 'args', 'symbol']; } };
+class KeywordArgs extends Dict {get typename() {return 'KeywordArgs';} };
+class Block extends Node {get typename() {return 'Block';}  get fields() { return ['name', 'body']; } };
+class Super extends Node {get typename() {return 'Super';}  get fields() { return ['blockName', 'symbol']; } };
+class TemplateRef extends Node {get typename() {return 'TemplateRef';}  get fields() { return ['template']; } };
+class Extends extends TemplateRef {get typename() {return 'Extends';} };
+class Include extends Node {get typename() {return 'Include';}  get fields() { return ['template', 'ignoreMissing']; } };
+class Set extends Node {get typename() {return 'Set';}  get fields() { return ['targets', 'value']; } };
+class Switch extends Node {get typename() {return 'Switch';}  get fields() { return ['expr', 'cases', 'default']; } };
+class Case extends Node {get typename() {return 'Case';}  get fields() { return ['cond', 'body']; } };
+class Output extends NodeList {get typename() {return 'Output';} };
+class Capture extends Node {get typename() {return 'Capture';}  get fields() { return ['body']; } };
+class TemplateData extends Literal {get typename() {return 'TemplateData';} };
+class UnaryOp extends Node {get typename() {return 'UnaryOp';}  get fields() { return ['target']; } };
+class BinOp extends Node {get typename() {return 'BinOp';}  get fields() { return ['left', 'right']; } };
+class In extends BinOp {get typename() {return 'In';} };
+class Is extends BinOp {get typename() {return 'Is';} };
+class Or extends BinOp {get typename() {return 'Or';} };
+class And extends BinOp {get typename() {return 'And';} };
+class Not extends UnaryOp {get typename() {return 'Not';} };
+class Add extends BinOp {get typename() {return 'Add';} };
+class Concat extends BinOp {get typename() {return 'Concat';} };
+class Sub extends BinOp {get typename() {return 'Sub';} };
+class Mul extends BinOp {get typename() {return 'Mul';} };
+class Div extends BinOp {get typename() {return 'Div';} };
+class FloorDiv extends BinOp {get typename() {return 'FloorDiv';} };
+class Mod extends BinOp {get typename() {return 'Mod';} };
+class Pow extends BinOp {get typename() {return 'Pow';} };
+class Neg extends UnaryOp {get typename() {return 'Neg';} };
+class Pos extends UnaryOp {get typename() {return 'Pos';} };
+class Compare extends Node {get typename() {return 'Compare';}  get fields() { return ['expr', 'ops']; } };
+class CompareOperand extends Node {get typename() {return 'CompareOperand';}  get fields() { return ['expr', 'type']; } };
 
 /*
 export const CallExtension = Node.extend('CallExtension', {
@@ -183,11 +182,12 @@ class CallExtension extends Node
 	}
 
 	get fields() { return ['extName', 'prop', 'args', 'contentArgs']; }
+	get typename() {return 'CallExtension';} 
 }
 
 
 
-class CallExtensionAsync extends CallExtension {};
+class CallExtensionAsync extends CallExtension {get typename() {return 'CallExtensionAsync';} };
 
 // This is hacky, but this is just a debugging function anyway
 function print(str, indent=undefined, inline=undefined) {
@@ -255,7 +255,7 @@ export default {
 	Literal: Literal,
 	Symbol: Symbol,
 	Group: Group,
-	Array: Array,
+	Array: ArrayNode,
 	Pair: Pair,
 	Dict: Dict,
 	Output: Output,

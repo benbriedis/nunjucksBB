@@ -1,11 +1,11 @@
 'use strict';
 
-const parser = require('./parser');
-const transformer = require('./transformer');
-const nodes = require('./nodes');
-const {TemplateError} = require('./lib');
-const {Frame} = require('./runtime');
-const {Obj2} = require('./object');
+import parser from './parser';
+import transformer from './transformer';
+import nodes from './nodes';
+import {TemplateError} from './lib';
+import {Frame} from './runtime';
+import {Obj2} from './object';
 
 // These are all the same for now, but shouldn't be passed straight
 // through
@@ -1172,6 +1172,7 @@ export class Compiler extends Obj2 {
     if (_compile) {
       _compile.call(this, node, frame);
     } else {
+console.log('ERROR compiler.js compile()  node:',node);	
       this.fail(`compile: Cannot compile node: ${node.typename}`, node.lineno, node.colno);
     }
   }

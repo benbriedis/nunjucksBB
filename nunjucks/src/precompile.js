@@ -1,11 +1,11 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const {_prettifyError} = require('./lib');
-const compiler = require('./compiler');
-const {Environment} = require('./environment');
-const precompileGlobal = require('./precompile-global');
+import fs from 'fs';
+import path from 'path';
+import {_prettifyError} from './lib';
+import compiler from './compiler';
+import {Environment} from './environment';
+import precompileGlobal from './precompile-global';
 
 function match(filename, patterns) {
   if (!Array.isArray(patterns)) {
@@ -128,7 +128,7 @@ function _precompile(str, name, env) {
   };
 }
 
-module.exports = {
-  precompile: precompile,
-  precompileString: precompileString
+export default {
+	precompile: precompile,
+	precompileString: precompileString
 };

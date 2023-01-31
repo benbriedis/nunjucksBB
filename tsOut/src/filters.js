@@ -1,6 +1,10 @@
 'use strict';
-var lib = require('./lib');
-var r = require('./runtime');
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const lib_1 = __importDefault(require("./lib"));
+const runtime_1 = __importDefault(require("./runtime"));
 var exports = module.exports = {};
 function normalize(value, defaultValue) {
     if (value === null || value === undefined || value === false) {
@@ -37,7 +41,7 @@ exports.batch = batch;
 function capitalize(str) {
     str = normalize(str, '');
     const ret = str.toLowerCase();
-    return r.copySafeness(str, ret.charAt(0).toUpperCase() + ret.slice(1));
+    return runtime_1.default.copySafeness(str, ret.charAt(0).toUpperCase() + ret.slice(1));
 }
 exports.capitalize = capitalize;
 function center(str, width) {
@@ -47,9 +51,9 @@ function center(str, width) {
         return str;
     }
     const spaces = width - str.length;
-    const pre = lib.repeat(' ', (spaces / 2) - (spaces % 2));
-    const post = lib.repeat(' ', spaces / 2);
-    return r.copySafeness(str, pre + str + post);
+    const pre = lib_1.default.repeat(' ', (spaces / 2) - (spaces % 2));
+    const post = lib_1.default.repeat(' ', spaces / 2);
+    return runtime_1.default.copySafeness(str, pre + str + post);
 }
 exports.center = center;
 function default_(val, def, bool) {
@@ -63,8 +67,8 @@ function default_(val, def, bool) {
 // TODO: it is confusing to export something called 'default'
 exports['default'] = default_; // eslint-disable-line dot-notation
 function dictsort(val, caseSensitive, by) {
-    if (!lib.isObject(val)) {
-        throw new lib.TemplateError('dictsort filter: val must be an object');
+    if (!lib_1.default.isObject(val)) {
+        throw new lib_1.default.TemplateError('dictsort filter: val must be an object');
     }
     let array = [];
     // deliberately include properties from the object's prototype
@@ -79,16 +83,16 @@ function dictsort(val, caseSensitive, by) {
         si = 1;
     }
     else {
-        throw new lib.TemplateError('dictsort filter: You can only sort by either key or value');
+        throw new lib_1.default.TemplateError('dictsort filter: You can only sort by either key or value');
     }
     array.sort((t1, t2) => {
         var a = t1[si];
         var b = t2[si];
         if (!caseSensitive) {
-            if (lib.isString(a)) {
+            if (lib_1.default.isString(a)) {
                 a = a.toUpperCase();
             }
-            if (lib.isString(b)) {
+            if (lib_1.default.isString(b)) {
                 b = b.toUpperCase();
             }
         }
@@ -102,19 +106,19 @@ function dump(obj, spaces) {
 }
 exports.dump = dump;
 function escape(str) {
-    if (str instanceof r.SafeString) {
+    if (str instanceof runtime_1.default.SafeString) {
         return str;
     }
     str = (str === null || str === undefined) ? '' : str;
-    return r.markSafe(lib.escape(str.toString()));
+    return runtime_1.default.markSafe(lib_1.default.escape(str.toString()));
 }
 exports.escape = escape;
 function safe(str) {
-    if (str instanceof r.SafeString) {
+    if (str instanceof runtime_1.default.SafeString) {
         return str;
     }
     str = (str === null || str === undefined) ? '' : str;
-    return r.markSafe(str.toString());
+    return runtime_1.default.markSafe(str.toString());
 }
 exports.safe = safe;
 function first(arr) {
@@ -123,11 +127,11 @@ function first(arr) {
 exports.first = first;
 function forceescape(str) {
     str = (str === null || str === undefined) ? '' : str;
-    return r.markSafe(lib.escape(str.toString()));
+    return runtime_1.default.markSafe(lib_1.default.escape(str.toString()));
 }
 exports.forceescape = forceescape;
 function groupby(arr, attr) {
-    return lib.groupBy(arr, attr, this.env.opts.throwOnUndefined);
+    return lib_1.default.groupBy(arr, attr, this.env.opts.throwOnUndefined);
 }
 exports.groupby = groupby;
 function indent(str, width, indentfirst) {
@@ -138,17 +142,17 @@ function indent(str, width, indentfirst) {
     width = width || 4;
     // let res = '';
     const lines = str.split('\n');
-    const sp = lib.repeat(' ', width);
+    const sp = lib_1.default.repeat(' ', width);
     const res = lines.map((l, i) => {
         return (i === 0 && !indentfirst) ? l : `${sp}${l}`;
     }).join('\n');
-    return r.copySafeness(str, res);
+    return runtime_1.default.copySafeness(str, res);
 }
 exports.indent = indent;
 function join(arr, del, attr) {
     del = del || '';
     if (attr) {
-        arr = lib.map(arr, (v) => v[attr]);
+        arr = lib_1.default.map(arr, (v) => v[attr]);
     }
     return arr.join(del);
 }
@@ -165,9 +169,9 @@ function lengthFilter(val) {
             // ECMAScript 2015 Maps and Sets
             return value.size;
         }
-        if (lib.isObject(value) && !(value instanceof r.SafeString)) {
+        if (lib_1.default.isObject(value) && !(value instanceof runtime_1.default.SafeString)) {
             // Objects (besides SafeStrings), non-primative Arrays
-            return lib.keys(value).length;
+            return lib_1.default.keys(value).length;
         }
         return value.length;
     }
@@ -175,17 +179,17 @@ function lengthFilter(val) {
 }
 exports.length = lengthFilter;
 function list(val) {
-    if (lib.isString(val)) {
+    if (lib_1.default.isString(val)) {
         return val.split('');
     }
-    else if (lib.isObject(val)) {
-        return lib._entries(val || {}).map(([key, value]) => ({ key, value }));
+    else if (lib_1.default.isObject(val)) {
+        return lib_1.default._entries(val || {}).map(([key, value]) => ({ key, value }));
     }
-    else if (lib.isArray(val)) {
+    else if (lib_1.default.isArray(val)) {
         return val;
     }
     else {
-        throw new lib.TemplateError('list filter: type not iterable');
+        throw new lib_1.default.TemplateError('list filter: type not iterable');
     }
 }
 exports.list = list;
@@ -198,7 +202,7 @@ function nl2br(str) {
     if (str === null || str === undefined) {
         return '';
     }
-    return r.copySafeness(str, str.replace(/\r\n|\n/g, '<br />\n'));
+    return runtime_1.default.copySafeness(str, str.replace(/\r\n|\n/g, '<br />\n'));
 }
 exports.nl2br = nl2br;
 function random(arr) {
@@ -215,7 +219,7 @@ function getSelectOrReject(expectedTestResult) {
     function filter(arr, testName = 'truthy', secondArg) {
         const context = this;
         const test = context.env.getTest(testName);
-        return lib.toArray(arr).filter(function examineTestResult(item) {
+        return lib_1.default.toArray(arr).filter(function examineTestResult(item) {
             return test.call(context, item, secondArg) === expectedTestResult;
         });
     }
@@ -254,7 +258,7 @@ function replace(str, old, new_, maxCount) {
         str = '' + str;
     }
     // If by now, we don't have a string, throw it back
-    if (typeof str !== 'string' && !(str instanceof r.SafeString)) {
+    if (typeof str !== 'string' && !(str instanceof runtime_1.default.SafeString)) {
         return str;
     }
     // ShortCircuits
@@ -262,7 +266,7 @@ function replace(str, old, new_, maxCount) {
         // Mimic the python behaviour: empty string is replaced
         // by replacement e.g. "abc"|replace("", ".") -> .a.b.c.
         res = new_ + str.split('').join(new_) + new_;
-        return r.copySafeness(str, res);
+        return runtime_1.default.copySafeness(str, res);
     }
     let nextIndex = str.indexOf(old);
     // if # of replacements to perform is 0, or the string to does
@@ -287,21 +291,21 @@ function replace(str, old, new_, maxCount) {
     if (pos < str.length) {
         res += str.substring(pos);
     }
-    return r.copySafeness(originalStr, res);
+    return runtime_1.default.copySafeness(originalStr, res);
 }
 exports.replace = replace;
 function reverse(val) {
     var arr;
-    if (lib.isString(val)) {
+    if (lib_1.default.isString(val)) {
         arr = list(val);
     }
     else {
         // Copy it
-        arr = lib.map(val, v => v);
+        arr = lib_1.default.map(val, v => v);
     }
     arr.reverse();
-    if (lib.isString(val)) {
-        return r.copySafeness(val, arr.join(''));
+    if (lib_1.default.isString(val)) {
+        return runtime_1.default.copySafeness(val, arr.join(''));
     }
     return arr;
 }
@@ -344,15 +348,15 @@ function slice(arr, slices, fillWith) {
 exports.slice = slice;
 function sum(arr, attr, start = 0) {
     if (attr) {
-        arr = lib.map(arr, (v) => v[attr]);
+        arr = lib_1.default.map(arr, (v) => v[attr]);
     }
     return start + arr.reduce((a, b) => a + b, 0);
 }
 exports.sum = sum;
-exports.sort = r.makeMacro(['value', 'reverse', 'case_sensitive', 'attribute'], [], function sortFilter(arr, reversed, caseSens, attr) {
+exports.sort = runtime_1.default.makeMacro(['value', 'reverse', 'case_sensitive', 'attribute'], [], function sortFilter(arr, reversed, caseSens, attr) {
     // Copy it
-    let array = lib.map(arr, v => v);
-    let getAttribute = lib.getAttrGetter(attr);
+    let array = lib_1.default.map(arr, v => v);
+    let getAttribute = lib_1.default.getAttrGetter(attr);
     array.sort((a, b) => {
         let x = (attr) ? getAttribute(a) : a;
         let y = (attr) ? getAttribute(b) : b;
@@ -360,7 +364,7 @@ exports.sort = r.makeMacro(['value', 'reverse', 'case_sensitive', 'attribute'], 
             attr && (x === undefined || y === undefined)) {
             throw new TypeError(`sort: attribute "${attr}" resolved to undefined`);
         }
-        if (!caseSens && lib.isString(x) && lib.isString(y)) {
+        if (!caseSens && lib_1.default.isString(x) && lib_1.default.isString(y)) {
             x = x.toLowerCase();
             y = y.toLowerCase();
         }
@@ -377,7 +381,7 @@ exports.sort = r.makeMacro(['value', 'reverse', 'case_sensitive', 'attribute'], 
     return array;
 });
 function string(obj) {
-    return r.copySafeness(obj, obj);
+    return runtime_1.default.copySafeness(obj, obj);
 }
 exports.string = string;
 function striptags(input, preserveLinebreaks) {
@@ -395,17 +399,17 @@ function striptags(input, preserveLinebreaks) {
     else {
         res = trimmedInput.replace(/\s+/gi, ' ');
     }
-    return r.copySafeness(input, res);
+    return runtime_1.default.copySafeness(input, res);
 }
 exports.striptags = striptags;
 function title(str) {
     str = normalize(str, '');
     let words = str.split(' ').map(word => capitalize(word));
-    return r.copySafeness(str, words.join(' '));
+    return runtime_1.default.copySafeness(str, words.join(' '));
 }
 exports.title = title;
 function trim(str) {
-    return r.copySafeness(str, str.replace(/^\s*|\s*$/g, ''));
+    return runtime_1.default.copySafeness(str, str.replace(/^\s*|\s*$/g, ''));
 }
 exports.trim = trim;
 function truncate(input, length, killwords, end) {
@@ -426,7 +430,7 @@ function truncate(input, length, killwords, end) {
         input = input.substring(0, idx);
     }
     input += (end !== undefined && end !== null) ? end : '...';
-    return r.copySafeness(orig, input);
+    return runtime_1.default.copySafeness(orig, input);
 }
 exports.truncate = truncate;
 function upper(str) {
@@ -436,11 +440,11 @@ function upper(str) {
 exports.upper = upper;
 function urlencode(obj) {
     var enc = encodeURIComponent;
-    if (lib.isString(obj)) {
+    if (lib_1.default.isString(obj)) {
         return enc(obj);
     }
     else {
-        let keyvals = (lib.isArray(obj)) ? obj : lib._entries(obj);
+        let keyvals = (lib_1.default.isArray(obj)) ? obj : lib_1.default._entries(obj);
         return keyvals.map(([k, v]) => `${enc(k)}=${enc(v)}`).join('&');
     }
 }
@@ -498,7 +502,7 @@ function float(val, def) {
     return (isNaN(res)) ? def : res;
 }
 exports.float = float;
-const intFilter = r.makeMacro(['value', 'default', 'base'], [], function doInt(value, defaultValue, base = 10) {
+const intFilter = runtime_1.default.makeMacro(['value', 'default', 'base'], [], function doInt(value, defaultValue, base = 10) {
     var res = parseInt(value, base);
     return (isNaN(res)) ? defaultValue : res;
 });

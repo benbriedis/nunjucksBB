@@ -18,44 +18,61 @@ export declare class NodeList extends Node {
     addChild(node: any): void;
 }
 declare class Root extends NodeList {
+    get typename(): string;
 }
 declare class Literal extends Value {
+    get typename(): string;
 }
 declare class Symbol extends Value {
+    get typename(): string;
 }
 declare class Group extends NodeList {
+    get typename(): string;
 }
-declare class Array extends NodeList {
+declare class ArrayNode extends NodeList {
+    get typename(): string;
 }
 declare class Pair extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class Dict extends NodeList {
+    get typename(): string;
 }
 declare class LookupVal extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class If extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class IfAsync extends If {
+    get typename(): string;
 }
 declare class InlineIf extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class For extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class AsyncEach extends For {
+    get typename(): string;
 }
 declare class AsyncAll extends For {
+    get typename(): string;
 }
 declare class Macro extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class Caller extends Macro {
+    get typename(): string;
 }
 declare class Import extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class FromImport extends Node {
@@ -64,85 +81,119 @@ declare class FromImport extends Node {
     constructor(lineno: any, colno: any, template: any, names: any, withContext: any);
 }
 declare class FunCall extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class Filter extends FunCall {
+    get typename(): string;
 }
 declare class FilterAsync extends Filter {
+    get typename(): string;
     get fields(): string[];
 }
 declare class KeywordArgs extends Dict {
+    get typename(): string;
 }
 declare class Block extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class Super extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class TemplateRef extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class Extends extends TemplateRef {
+    get typename(): string;
 }
 declare class Include extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class Set extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class Switch extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class Case extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class Output extends NodeList {
+    get typename(): string;
 }
 declare class Capture extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class TemplateData extends Literal {
+    get typename(): string;
 }
 declare class UnaryOp extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class BinOp extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class In extends BinOp {
+    get typename(): string;
 }
 declare class Is extends BinOp {
+    get typename(): string;
 }
 declare class Or extends BinOp {
+    get typename(): string;
 }
 declare class And extends BinOp {
+    get typename(): string;
 }
 declare class Not extends UnaryOp {
+    get typename(): string;
 }
 declare class Add extends BinOp {
+    get typename(): string;
 }
 declare class Concat extends BinOp {
+    get typename(): string;
 }
 declare class Sub extends BinOp {
+    get typename(): string;
 }
 declare class Mul extends BinOp {
+    get typename(): string;
 }
 declare class Div extends BinOp {
+    get typename(): string;
 }
 declare class FloorDiv extends BinOp {
+    get typename(): string;
 }
 declare class Mod extends BinOp {
+    get typename(): string;
 }
 declare class Pow extends BinOp {
+    get typename(): string;
 }
 declare class Neg extends UnaryOp {
+    get typename(): string;
 }
 declare class Pos extends UnaryOp {
+    get typename(): string;
 }
 declare class Compare extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class CompareOperand extends Node {
+    get typename(): string;
     get fields(): string[];
 }
 declare class CallExtension extends Node {
@@ -153,8 +204,10 @@ declare class CallExtension extends Node {
     autoescape: any;
     constructor(lineno: any, colno: any, ext: any, prop: any, args: any, contentArgs: any);
     get fields(): string[];
+    get typename(): string;
 }
 declare class CallExtensionAsync extends CallExtension {
+    get typename(): string;
 }
 declare function printNodes(node: any, indent: any): void;
 declare const _default: {
@@ -165,7 +218,7 @@ declare const _default: {
     Literal: typeof Literal;
     Symbol: typeof Symbol;
     Group: typeof Group;
-    Array: typeof Array;
+    Array: typeof ArrayNode;
     Pair: typeof Pair;
     Dict: typeof Dict;
     Output: typeof Output;

@@ -1,2 +1,2 @@
-export function transform(ast: any, asyncFilters: any): any;
+export {};
 //# sourceMappingURL=transformer.d.ts.map

@@ -1,7 +1,7 @@
 'use strict';
 
-var nodes = require('./nodes');
-var lib = require('./lib');
+import nodes from './nodes';
+import lib from './lib';
 
 var sym = 0;
 function gensym() {
