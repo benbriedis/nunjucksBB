@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Loader = void 0;
 const path_1 = __importDefault(require("path"));
 const object_1 = require("./object");
-class Loader extends object_1.EmitterObj {
+class Loader extends object_1.EmitterObj2 {
     resolve(from, to) {
         return path_1.default.resolve(path_1.default.dirname(from), to);
     }

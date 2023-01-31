@@ -2,10 +2,10 @@
 
 import lexer from './lexer';
 import nodes from './nodes';
-import {Obj} from './object';
+import {Obj2} from './object';
 import lib from './lib';
 
-export class Parser extends Obj 
+export class Parser extends Obj2
 {
     tokens;
     peeked;
@@ -13,8 +13,9 @@ export class Parser extends Obj
     dropLeadingWhitespace;
     extensions;
 
-  init(tokens) 
+  constructor(tokens) 
   {
+  	super();
     this.tokens = tokens;
     this.peeked = null;
     this.breakOnBlocks = null;
@@ -226,7 +227,7 @@ export class Parser extends Obj
     const node = new nodes.Macro(macroTok.lineno, macroTok.colno, name, args);
 
     this.advanceAfterBlockEnd(macroTok.value);
-    node.body = this.parseUntilBlocks('endmacro');
+    (<any>node).body = this.parseUntilBlocks('endmacro');
     this.advanceAfterBlockEnd();
 
     return node;
@@ -325,7 +326,7 @@ export class Parser extends Obj
     return node;
   }
 
-  parseFrom() {
+  parseFrom():any {
     const fromTok = this.peekToken();
     if (!this.skipSymbol('from')) {
       this.fail('parseFrom: expected from');
@@ -404,8 +405,8 @@ export class Parser extends Obj
 
     const node = new nodes.Block(tag.lineno, tag.colno);
 
-    node.name = this.parsePrimary();
-    if (!(node.name instanceof nodes.Symbol)) {
+    (<any>node).name = this.parsePrimary();
+    if (!((<any>node).name instanceof nodes.Symbol)) {
       this.fail('parseBlock: variable name expected',
         tag.lineno,
         tag.colno);
@@ -413,9 +414,9 @@ export class Parser extends Obj
 
     this.advanceAfterBlockEnd(tag.value);
 
-    node.body = this.parseUntilBlocks('endblock');
+    (<any>node).body = this.parseUntilBlocks('endblock');
     this.skipSymbol('endblock');
-    this.skipSymbol(node.name.value);
+    this.skipSymbol((<any>node).name.value);
 
     const tok = this.peekToken();
     if (!tok) {
@@ -427,7 +428,7 @@ export class Parser extends Obj
     return node;
   }
 
-  parseExtends() {
+  parseExtends():any {
     const tagName = 'extends';
     const tag = this.peekToken();
     if (!this.skipSymbol(tagName)) {
@@ -435,7 +436,7 @@ export class Parser extends Obj
     }
 
     const node = new nodes.Extends(tag.lineno, tag.colno);
-    node.template = this.parseExpression();
+    (<any>node).template = this.parseExpression();
 
     this.advanceAfterBlockEnd(tag.value);
     return node;
@@ -450,10 +451,10 @@ export class Parser extends Obj
     }
 
     const node = new nodes.Include(tag.lineno, tag.colno);
-    node.template = this.parseExpression();
+    (<any>node).template = this.parseExpression();
 
     if (this.skipSymbol('ignore') && this.skipSymbol('missing')) {
-      node.ignoreMissing = true;
+      (<any>node).ignoreMissing = true;
     }
 
     this.advanceAfterBlockEnd(tag.value);
@@ -512,7 +513,7 @@ export class Parser extends Obj
 
     let target;
     while ((target = this.parsePrimary())) {
-      node.targets.push(target);
+      (<any>node).targets.push(target);
 
       if (!this.skip(lexer.TOKEN_COMMA)) {
         break;
@@ -525,16 +526,16 @@ export class Parser extends Obj
           tag.lineno,
           tag.colno);
       } else {
-        node.body = new nodes.Capture(
+        (<any>node).body = new nodes.Capture(
           tag.lineno,
           tag.colno,
           this.parseUntilBlocks('endset')
         );
-        node.value = null;
+        (<any>node).value = null;
         this.advanceAfterBlockEnd();
       }
     } else {
-      node.value = this.parseExpression();
+      (<any>node).value = this.parseExpression();
       this.advanceAfterBlockEnd(tag.value);
     }
 
@@ -1273,7 +1274,7 @@ export class Parser extends Obj
       checkComma = true;
     }
 
-    if (kwargs.children.length) {
+    if ((<any>kwargs).children.length) {
       args.addChild(kwargs);
     }
 

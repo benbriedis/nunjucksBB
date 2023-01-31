@@ -46,6 +46,7 @@ function extendClass(cls, name, props) {
 
 export class Obj {
   constructor(...args) {
+this._objId = Math.random();	
     // Unfortunately necessary for backwards compatibility
     this.init(...args);
   }
@@ -64,6 +65,28 @@ export class Obj {
     return extendClass(this, name, props);
   }
 }
+
+export class Obj2 {
+  get typename() {
+    return this.constructor.name;
+  }
+
+  static extend(name, props=undefined) {
+    if (typeof name === 'object') {
+      props = name;
+      name = 'anonymous';
+    }
+    return extendClass(this, name, props);
+  }
+}
+
+
+
+
+//XXX BB cf using Typescript mixins instead for emitting and regular classes or
+//       generics for extending
+//XXX Are these things used in the compiled versions?
+//XXX note EventEmitter is a Node.js thing
 
 export class EmitterObj extends EventEmitter {
   constructor(...args) {
@@ -87,4 +110,20 @@ export class EmitterObj extends EventEmitter {
   }
 }
 
-module.exports = { Obj, EmitterObj };
+export class EmitterObj2 extends EventEmitter {
+  get typename() {
+    return this.constructor.name;
+  }
+
+  static extend(name, props) {
+    if (typeof name === 'object') {
+      props = name;
+      name = 'anonymous';
+    }
+    return extendClass(this, name, props);
+  }
+}
+
+
+module.exports = { Obj,Obj2, EmitterObj, EmitterObj2 };
+

@@ -8,13 +8,14 @@ const lexer_1 = __importDefault(require("./lexer"));
 const nodes_1 = __importDefault(require("./nodes"));
 const object_1 = require("./object");
 const lib_1 = __importDefault(require("./lib"));
-class Parser extends object_1.Obj {
+class Parser extends object_1.Obj2 {
     tokens;
     peeked;
     breakOnBlocks;
     dropLeadingWhitespace;
     extensions;
-    init(tokens) {
+    constructor(tokens) {
+        super();
         this.tokens = tokens;
         this.peeked = null;
         this.breakOnBlocks = null;

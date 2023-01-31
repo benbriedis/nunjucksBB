@@ -1,5 +1,6 @@
-import { Obj, EmitterObj } from './object';
-declare class Environment extends EmitterObj {
+import type Loader from './loader';
+import { Obj2, EmitterObj2 } from './object';
+declare class Environment extends EmitterObj2 {
     globals: any;
     filters: {};
     tests: {};
@@ -8,7 +9,7 @@ declare class Environment extends EmitterObj {
     extensionsList: any[];
     opts: any;
     loaders: any;
-    init(loaders: any, opts: any): void;
+    constructor(loaders?: Loader | Loader[], opts?: any);
     _initLoaders(): void;
     invalidateCache(): void;
     addExtension(name: any, extension: any): this;
@@ -28,7 +29,7 @@ declare class Environment extends EmitterObj {
     renderString(src: any, ctx: any, opts: any, cb: any): any;
     waterfall(tasks: any, callback: any, forceAsync: any): any;
 }
-declare class Template extends Obj {
+declare class Template extends Obj2 {
     env: any;
     path: any;
     tmplProps: any;
@@ -36,7 +37,7 @@ declare class Template extends Obj {
     compiled: any;
     blocks: any;
     rootRenderFunc: any;
-    init(src: any, env: any, path: any, eagerCompile: any): void;
+    constructor(src: any, env: any, path: any, eagerCompile?: any);
     render(ctx: any, parentFrame: any, cb?: any): any;
     getExported(ctx: any, parentFrame: any, cb: any): any;
     compile(): void;

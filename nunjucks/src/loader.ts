@@ -1,9 +1,9 @@
 'use strict';
 
 import path from 'path';
-import {EmitterObj} from './object';
+import {EmitterObj2} from './object';
 
-export class Loader extends EmitterObj 
+export class Loader extends EmitterObj2 
 {
 	resolve(from, to) 
 	{

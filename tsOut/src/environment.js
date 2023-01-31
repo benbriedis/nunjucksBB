@@ -61,7 +61,8 @@ const noopTmplSrc = {
         }
     }
 };
-class Environment extends object_1.EmitterObj {
+//XXX use an emit mixin
+class Environment extends object_1.EmitterObj2 {
     globals;
     filters = {};
     tests = {};
@@ -69,8 +70,11 @@ class Environment extends object_1.EmitterObj {
     extensions = {};
     extensionsList = [];
     opts;
-    loaders;
-    init(loaders, opts) {
+    //FIXME only working with 'declare' present. No idea why	
+    loaders; //XXX public for testing only
+    //	public loaders: Loader[];  //XXX public for testing only
+    constructor(loaders, opts) {
+        super();
         // The dev flag determines the trace that'll be shown on errors.
         // If set to true, returns the full trace from the error point,
         // otherwise will return trace starting from Template.render
@@ -113,18 +117,23 @@ class Environment extends object_1.EmitterObj {
         this.extensionsList = [];
         lib_1.default._entries(filters_1.default).forEach(([name, filter]) => this.addFilter(name, filter));
         lib_1.default._entries(tests_1.default).forEach(([name, test]) => this.addTest(name, test));
+        console.log('init()  this:', this);
     }
     _initLoaders() {
+        const me = this;
         this.loaders.forEach(loader => {
             // Caching and cache busting
             loader.cache = {};
             if (typeof loader.on === 'function') {
                 loader.on('update', function (name, fullname) {
                     loader.cache[name] = null;
-                    this.emit('update', name, fullname, loader);
+                    console.log('environment _initLoaders()  emit update');
+                    //FIXME use a mixin to support emit?
+                    me.emit('update', name, fullname, loader);
                 });
+                //XXX BB possibly just used for Chokidar
                 loader.on('load', function (name, source) {
-                    this.emit('load', name, source, loader);
+                    me.emit('load', name, source, loader);
                 });
             }
         });
@@ -273,6 +282,7 @@ class Environment extends object_1.EmitterObj {
         return (0, express_app_1.default)(this, app);
     }
     render(name, ctx, cb) {
+        console.log('environment  render()  START this.loaders:', this.loaders);
         if (lib_1.default.isFunction(ctx)) {
             cb = ctx;
             ctx = null;
@@ -307,12 +317,13 @@ class Environment extends object_1.EmitterObj {
 }
 exports.Environment = Environment;
 //TODO split into separate files
-class Context extends object_1.Obj {
+class Context extends object_1.Obj2 {
     env;
     ctx;
     blocks;
     exported;
-    init(ctx, blocks, env) {
+    constructor(ctx, blocks, env) {
+        super();
         // Has to be tied to an environment so we can tap into its globals.
         this.env = env || new Environment();
         // Make a duplicate of ctx
@@ -366,7 +377,7 @@ class Context extends object_1.Obj {
         return exported;
     }
 }
-class Template extends object_1.Obj {
+class Template extends object_1.Obj2 {
     env;
     path;
     tmplProps;
@@ -374,7 +385,8 @@ class Template extends object_1.Obj {
     compiled;
     blocks;
     rootRenderFunc;
-    init(src, env, path, eagerCompile) {
+    constructor(src, env, path, eagerCompile = undefined) {
+        super();
         this.env = env || new Environment();
         if (lib_1.default.isObject(src)) {
             switch (src.type) {

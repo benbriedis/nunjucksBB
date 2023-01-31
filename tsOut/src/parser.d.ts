@@ -1,11 +1,11 @@
-import { Obj } from './object';
-export declare class Parser extends Obj {
+import { Obj2 } from './object';
+export declare class Parser extends Obj2 {
     tokens: any;
     peeked: any;
     breakOnBlocks: any;
     dropLeadingWhitespace: any;
     extensions: any;
-    init(tokens: any): void;
+    constructor(tokens: any);
     nextToken(withWhitespace?: any): any;
     peekToken(): any;
     pushToken(tok: any): void;
@@ -22,7 +22,7 @@ export declare class Parser extends Obj {
     parseCall(): any;
     parseWithContext(): any;
     parseImport(): any;
-    parseFrom(): import("./nodes").FromImport;
+    parseFrom(): any;
     parseBlock(): any;
     parseExtends(): any;
     parseInclude(): any;

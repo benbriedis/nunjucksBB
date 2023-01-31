@@ -1,6 +1,6 @@
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EmitterObj = exports.Obj = void 0;
+exports.EmitterObj2 = exports.EmitterObj = exports.Obj2 = exports.Obj = void 0;
 // A simple class system, more documentation to come
 const EventEmitter = require('events');
 const lib = require('./lib');
@@ -37,6 +37,7 @@ function extendClass(cls, name, props) {
 }
 class Obj {
     constructor(...args) {
+        this._objId = Math.random();
         // Unfortunately necessary for backwards compatibility
         this.init(...args);
     }
@@ -53,6 +54,23 @@ class Obj {
     }
 }
 exports.Obj = Obj;
+class Obj2 {
+    get typename() {
+        return this.constructor.name;
+    }
+    static extend(name, props = undefined) {
+        if (typeof name === 'object') {
+            props = name;
+            name = 'anonymous';
+        }
+        return extendClass(this, name, props);
+    }
+}
+exports.Obj2 = Obj2;
+//XXX BB cf using Typescript mixins instead for emitting and regular classes or
+//       generics for extending
+//XXX Are these things used in the compiled versions?
+//XXX note EventEmitter is a Node.js thing
 class EmitterObj extends EventEmitter {
     constructor(...args) {
         super();
@@ -72,5 +90,18 @@ class EmitterObj extends EventEmitter {
     }
 }
 exports.EmitterObj = EmitterObj;
-module.exports = { Obj, EmitterObj };
+class EmitterObj2 extends EventEmitter {
+    get typename() {
+        return this.constructor.name;
+    }
+    static extend(name, props) {
+        if (typeof name === 'object') {
+            props = name;
+            name = 'anonymous';
+        }
+        return extendClass(this, name, props);
+    }
+}
+exports.EmitterObj2 = EmitterObj2;
+module.exports = { Obj, Obj2, EmitterObj, EmitterObj2 };
 //# sourceMappingURL=object.js.map

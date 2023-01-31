@@ -5,7 +5,7 @@ const transformer = require('./transformer');
 const nodes = require('./nodes');
 const {TemplateError} = require('./lib');
 const {Frame} = require('./runtime');
-const {Obj} = require('./object');
+const {Obj2} = require('./object');
 
 // These are all the same for now, but shouldn't be passed straight
 // through
@@ -20,8 +20,10 @@ const compareOps = {
   '>=': '>='
 };
 
-export class Compiler extends Obj {
-  init(templateName, throwOnUndefined) {
+export class Compiler extends Obj2 {
+  constructor(templateName, throwOnUndefined) 
+  {
+  	super();
     this.templateName = templateName;
     this.codebuf = [];
     this.lastId = 0;

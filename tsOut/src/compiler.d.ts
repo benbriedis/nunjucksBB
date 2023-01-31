@@ -1,11 +1,11 @@
-export class Compiler extends Obj {
-    init(templateName: any, throwOnUndefined: any): void;
+export class Compiler extends Obj2 {
+    constructor(templateName: any, throwOnUndefined: any);
     templateName: any;
     codebuf: any[];
     lastId: number;
     buffer: any;
     bufferStack: any[];
-    _scopeClosers: any;
+    _scopeClosers: string;
     inBlock: boolean;
     throwOnUndefined: any;
     fail(msg: any, lineno: any, colno: any): void;
@@ -90,6 +90,6 @@ declare namespace _default {
     export { Compiler };
 }
 export default _default;
-import { Obj } from "./object";
+import { Obj2 } from "./object";
 declare function compile(src: any, asyncFilters: any, extensions: any, name: any, opts?: {}): string;
 //# sourceMappingURL=compiler.d.ts.map

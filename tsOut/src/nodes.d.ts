@@ -1,303 +1,219 @@
-export function print(str: any, indent: any, inline: any): void;
-export function printNodes(node: any, indent: any): void;
-export class Node extends Obj {
-    init(lineno: any, colno: any, ...args: any[]): void;
+import { Obj2 } from './object';
+export declare class Node extends Obj2 {
     lineno: any;
     colno: any;
+    get fields(): any[];
+    constructor(lineno: any, colno: any, ...args: any[]);
     findAll(type: any, results: any): any;
     iterFields(func: any): void;
 }
-export class Value extends Node {
+export declare class Value extends Node {
+    get typename(): string;
     get fields(): string[];
 }
-export class NodeList extends Node {
+export declare class NodeList extends Node {
+    get typename(): string;
     get fields(): string[];
-    init(lineno: any, colno: any, nodes: any): void;
+    constructor(lineno?: any, colno?: any, nodes?: any);
     addChild(node: any): void;
 }
-export const Root: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Literal: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Symbol: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Group: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const ArrayNode: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Pair: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Dict: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const LookupVal: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const If: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const IfAsync: any;
-export const InlineIf: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const For: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const AsyncEach: any;
-export const AsyncAll: any;
-export const Macro: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Caller: any;
-export const Import: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export class FromImport extends Node {
+declare class Root extends NodeList {
+}
+declare class Literal extends Value {
+}
+declare class Symbol extends Value {
+}
+declare class Group extends NodeList {
+}
+declare class Array extends NodeList {
+}
+declare class Pair extends Node {
     get fields(): string[];
-    init(lineno: any, colno: any, template: any, names: any, withContext: any): void;
 }
-export const FunCall: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Filter: any;
-export const FilterAsync: any;
-export const KeywordArgs: any;
-export const Block: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Super: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const TemplateRef: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Extends: any;
-export const Include: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Set: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Switch: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Case: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Output: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const Capture: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const TemplateData: any;
-export const UnaryOp: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const BinOp: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const In: any;
-export const Is: any;
-export const Or: any;
-export const And: any;
-export const Not: any;
-export const Add: any;
-export const Concat: any;
-export const Sub: any;
-export const Mul: any;
-export const Div: any;
-export const FloorDiv: any;
-export const Mod: any;
-export const Pow: any;
-export const Neg: any;
-export const Pos: any;
-export const Compare: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const CompareOperand: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const CallExtension: {
-    new (...args: any[]): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const CallExtensionAsync: any;
-declare namespace _default {
-    export { Node };
-    export { Root };
-    export { NodeList };
-    export { Value };
-    export { Literal };
-    export { Symbol };
-    export { Group };
-    export { ArrayNode as Array };
-    export { Pair };
-    export { Dict };
-    export { Output };
-    export { Capture };
-    export { TemplateData };
-    export { If };
-    export { IfAsync };
-    export { InlineIf };
-    export { For };
-    export { AsyncEach };
-    export { AsyncAll };
-    export { Macro };
-    export { Caller };
-    export { Import };
-    export { FromImport };
-    export { FunCall };
-    export { Filter };
-    export { FilterAsync };
-    export { KeywordArgs };
-    export { Block };
-    export { Super };
-    export { Extends };
-    export { Include };
-    export { Set };
-    export { Switch };
-    export { Case };
-    export { LookupVal };
-    export { BinOp };
-    export { In };
-    export { Is };
-    export { Or };
-    export { And };
-    export { Not };
-    export { Add };
-    export { Concat };
-    export { Sub };
-    export { Mul };
-    export { Div };
-    export { FloorDiv };
-    export { Mod };
-    export { Pow };
-    export { Neg };
-    export { Pos };
-    export { Compare };
-    export { CompareOperand };
-    export { CallExtension };
-    export { CallExtensionAsync };
-    export { printNodes };
+declare class Dict extends NodeList {
 }
+declare class LookupVal extends Node {
+    get fields(): string[];
+}
+declare class If extends Node {
+    get fields(): string[];
+}
+declare class IfAsync extends If {
+}
+declare class InlineIf extends Node {
+    get fields(): string[];
+}
+declare class For extends Node {
+    get fields(): string[];
+}
+declare class AsyncEach extends For {
+}
+declare class AsyncAll extends For {
+}
+declare class Macro extends Node {
+    get fields(): string[];
+}
+declare class Caller extends Macro {
+}
+declare class Import extends Node {
+    get fields(): string[];
+}
+declare class FromImport extends Node {
+    get typename(): string;
+    get fields(): string[];
+    constructor(lineno: any, colno: any, template: any, names: any, withContext: any);
+}
+declare class FunCall extends Node {
+    get fields(): string[];
+}
+declare class Filter extends FunCall {
+}
+declare class FilterAsync extends Filter {
+    get fields(): string[];
+}
+declare class KeywordArgs extends Dict {
+}
+declare class Block extends Node {
+    get fields(): string[];
+}
+declare class Super extends Node {
+    get fields(): string[];
+}
+declare class TemplateRef extends Node {
+    get fields(): string[];
+}
+declare class Extends extends TemplateRef {
+}
+declare class Include extends Node {
+    get fields(): string[];
+}
+declare class Set extends Node {
+    get fields(): string[];
+}
+declare class Switch extends Node {
+    get fields(): string[];
+}
+declare class Case extends Node {
+    get fields(): string[];
+}
+declare class Output extends NodeList {
+}
+declare class Capture extends Node {
+    get fields(): string[];
+}
+declare class TemplateData extends Literal {
+}
+declare class UnaryOp extends Node {
+    get fields(): string[];
+}
+declare class BinOp extends Node {
+    get fields(): string[];
+}
+declare class In extends BinOp {
+}
+declare class Is extends BinOp {
+}
+declare class Or extends BinOp {
+}
+declare class And extends BinOp {
+}
+declare class Not extends UnaryOp {
+}
+declare class Add extends BinOp {
+}
+declare class Concat extends BinOp {
+}
+declare class Sub extends BinOp {
+}
+declare class Mul extends BinOp {
+}
+declare class Div extends BinOp {
+}
+declare class FloorDiv extends BinOp {
+}
+declare class Mod extends BinOp {
+}
+declare class Pow extends BinOp {
+}
+declare class Neg extends UnaryOp {
+}
+declare class Pos extends UnaryOp {
+}
+declare class Compare extends Node {
+    get fields(): string[];
+}
+declare class CompareOperand extends Node {
+    get fields(): string[];
+}
+declare class CallExtension extends Node {
+    extName: any;
+    prop: any;
+    args: any;
+    contentArgs: any;
+    autoescape: any;
+    constructor(lineno: any, colno: any, ext: any, prop: any, args: any, contentArgs: any);
+    get fields(): string[];
+}
+declare class CallExtensionAsync extends CallExtension {
+}
+declare function printNodes(node: any, indent: any): void;
+declare const _default: {
+    Node: typeof Node;
+    Root: typeof Root;
+    NodeList: typeof NodeList;
+    Value: typeof Value;
+    Literal: typeof Literal;
+    Symbol: typeof Symbol;
+    Group: typeof Group;
+    Array: typeof Array;
+    Pair: typeof Pair;
+    Dict: typeof Dict;
+    Output: typeof Output;
+    Capture: typeof Capture;
+    TemplateData: typeof TemplateData;
+    If: typeof If;
+    IfAsync: typeof IfAsync;
+    InlineIf: typeof InlineIf;
+    For: typeof For;
+    AsyncEach: typeof AsyncEach;
+    AsyncAll: typeof AsyncAll;
+    Macro: typeof Macro;
+    Caller: typeof Caller;
+    Import: typeof Import;
+    FromImport: typeof FromImport;
+    FunCall: typeof FunCall;
+    Filter: typeof Filter;
+    FilterAsync: typeof FilterAsync;
+    KeywordArgs: typeof KeywordArgs;
+    Block: typeof Block;
+    Super: typeof Super;
+    Extends: typeof Extends;
+    Include: typeof Include;
+    Set: typeof Set;
+    Switch: typeof Switch;
+    Case: typeof Case;
+    LookupVal: typeof LookupVal;
+    BinOp: typeof BinOp;
+    In: typeof In;
+    Is: typeof Is;
+    Or: typeof Or;
+    And: typeof And;
+    Not: typeof Not;
+    Add: typeof Add;
+    Concat: typeof Concat;
+    Sub: typeof Sub;
+    Mul: typeof Mul;
+    Div: typeof Div;
+    FloorDiv: typeof FloorDiv;
+    Mod: typeof Mod;
+    Pow: typeof Pow;
+    Neg: typeof Neg;
+    Pos: typeof Pos;
+    Compare: typeof Compare;
+    CompareOperand: typeof CompareOperand;
+    CallExtension: typeof CallExtension;
+    CallExtensionAsync: typeof CallExtensionAsync;
+    printNodes: typeof printNodes;
+};
 export default _default;
-import { Obj } from "./object";
 //# sourceMappingURL=nodes.d.ts.map

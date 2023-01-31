@@ -1,5 +1,5 @@
-import { EmitterObj } from './object';
-export declare class Loader extends EmitterObj {
+import { EmitterObj2 } from './object';
+export declare class Loader extends EmitterObj2 {
     resolve(from: any, to: any): string;
     isRelative(filename: any): boolean;
 }

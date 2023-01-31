@@ -5,10 +5,11 @@ import waterfall from 'a-sync-waterfall';
 import lib from './lib';
 import compiler from './compiler';
 import filters from './filters';
+import type Loader from './loader';
 import {FileSystemLoader, WebLoader, PrecompiledLoader} from './loaders';
 import tests from './tests';
 import globals from './globals';
-import {Obj, EmitterObj} from './object';
+import {Obj,Obj2, EmitterObj,EmitterObj2} from './object';
 import globalRuntime,{handleError,Frame} from './runtime';
 import expressApp from './express-app';
 
@@ -37,7 +38,9 @@ const noopTmplSrc = {
 	}
 };
 
-class Environment extends EmitterObj 
+
+//XXX use an emit mixin
+class Environment extends EmitterObj2 
 {
 	globals;
 	filters = {};
@@ -46,10 +49,15 @@ class Environment extends EmitterObj
 	extensions = {};
 	extensionsList = [];
 	opts;
-	loaders;
+//FIXME only working with 'declare' present. No idea why	
+	public loaders;  //XXX public for testing only
+//	public loaders: Loader[];  //XXX public for testing only
 
-	init(loaders, opts) 
+
+	constructor(loaders?:Loader|Loader[], opts?:any) 
 	{
+		super();
+
 		// The dev flag determines the trace that'll be shown on errors.
 		// If set to true, returns the full trace from the error point,
 		// otherwise will return trace starting from Template.render
@@ -100,20 +108,27 @@ class Environment extends EmitterObj
 
 		lib._entries(filters).forEach(([name, filter]) => this.addFilter(name, filter));
 		lib._entries(tests).forEach(([name, test]) => this.addTest(name, test));
+
+console.log('init()  this:',this);	
   	}
 
 	_initLoaders() 
 	{
+		const me = this;
+
 		this.loaders.forEach(loader => {
 			// Caching and cache busting
 			loader.cache = {};
 			if (typeof loader.on === 'function') {
 				loader.on('update', function(name, fullname) {
 					loader.cache[name] = null;
-					this.emit('update', name, fullname, loader);
+console.log('environment _initLoaders()  emit update');	
+//FIXME use a mixin to support emit?
+					me.emit('update', name, fullname, loader);
 				});
+//XXX BB possibly just used for Chokidar
 				loader.on('load', function(name, source) {
-					this.emit('load', name, source, loader);
+					me.emit('load', name, source, loader);
 				});
 			}
 		});
@@ -301,6 +316,8 @@ class Environment extends EmitterObj
 
 	render(name, ctx, cb) 
 	{
+console.log('environment  render()  START this.loaders:',this.loaders);	
+
 		if (lib.isFunction(ctx)) {
 			cb = ctx;
 			ctx = null;
@@ -345,15 +362,17 @@ class Environment extends EmitterObj
 
 //TODO split into separate files
 
-class Context extends Obj 
+class Context extends Obj2
 {
 	env;
 	ctx;
 	blocks;
 	exported;
 
-	init(ctx, blocks, env) 
+	constructor(ctx, blocks, env) 
 	{
+		super();
+
 		// Has to be tied to an environment so we can tap into its globals.
 		this.env = env || new Environment();
 
@@ -430,7 +449,7 @@ class Context extends Obj
 }
 
 
-class Template extends Obj 
+class Template extends Obj2
 {
 	env;
 	path;
@@ -440,8 +459,10 @@ class Template extends Obj
     blocks;
     rootRenderFunc;
 
-	init(src, env, path, eagerCompile) 
+	constructor(src, env, path, eagerCompile=undefined) 
 	{
+		super();
+
 		this.env = env || new Environment();
 
 		if (lib.isObject(src)) {

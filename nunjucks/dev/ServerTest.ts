@@ -18,7 +18,7 @@ class ServerTest
 
 	static async run():Promise<void>
 	{
-		const templateName = 'top.njk';
+		const templateName = 'nunjucks/dev/top.njk';
 		const data = {
 			a:1,
 			b:2

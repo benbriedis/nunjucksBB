@@ -16,7 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const index_js_1 = __importDefault(require("../index.js"));
 class ServerTest {
     static async run() {
-        const templateName = 'top.njk';
+        const templateName = 'nunjucks/dev/top.njk';
         const data = {
             a: 1,
             b: 2
