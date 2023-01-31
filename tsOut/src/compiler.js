@@ -1,4 +1,6 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Compiler = void 0;
 const parser = require('./parser');
 const transformer = require('./transformer');
 const nodes = require('./nodes');
@@ -955,15 +957,18 @@ class Compiler extends Obj {
         return this.codebuf.join('');
     }
 }
-module.exports = {
-    compile: function compile(src, asyncFilters, extensions, name, opts = {}) {
-        const c = new Compiler(name, opts.throwOnUndefined);
-        // Run the extension preprocessors against the source.
-        const preprocessors = (extensions || []).map(ext => ext.preprocess).filter(f => !!f);
-        const processedSrc = preprocessors.reduce((s, processor) => processor(s), src);
-        c.compile(transformer.transform(parser.parse(processedSrc, extensions, opts), asyncFilters, name));
-        return c.getCode();
-    },
+exports.Compiler = Compiler;
+function compile(src, asyncFilters, extensions, name, opts = {}) {
+    const c = new Compiler(name, opts.throwOnUndefined);
+    // Run the extension preprocessors against the source.
+    const preprocessors = (extensions || []).map(ext => ext.preprocess).filter(f => !!f);
+    const processedSrc = preprocessors.reduce((s, processor) => processor(s), src);
+    c.compile(transformer.transform(parser.parse(processedSrc, extensions, opts), asyncFilters, name));
+    return c.getCode();
+}
+;
+exports.default = {
+    compile: compile,
     Compiler: Compiler
 };
 //# sourceMappingURL=compiler.js.map

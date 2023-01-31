@@ -1,6 +1,7 @@
-export class PrecompiledLoader {
-    constructor(compiledTemplates: any);
+import Loader from './loader';
+export declare class PrecompiledLoader extends Loader {
     precompiled: any;
+    constructor(compiledTemplates: any);
     getSource(name: any): {
         src: {
             type: string;

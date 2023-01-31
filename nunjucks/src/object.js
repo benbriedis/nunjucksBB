@@ -29,6 +29,11 @@ function extendClass(cls, name, props) {
   });
 
   class subclass extends cls {
+    //BB: seems to be necessary to keep TS happy wrt variable parameters
+    constructor(...args) {
+		super(...args);
+    }
+
     get typename() {
       return name;
     }
@@ -39,7 +44,7 @@ function extendClass(cls, name, props) {
   return subclass;
 }
 
-class Obj {
+export class Obj {
   constructor(...args) {
     // Unfortunately necessary for backwards compatibility
     this.init(...args);
@@ -51,7 +56,7 @@ class Obj {
     return this.constructor.name;
   }
 
-  static extend(name, props) {
+  static extend(name, props=undefined) {
     if (typeof name === 'object') {
       props = name;
       name = 'anonymous';
@@ -60,7 +65,7 @@ class Obj {
   }
 }
 
-class EmitterObj extends EventEmitter {
+export class EmitterObj extends EventEmitter {
   constructor(...args) {
     super();
     // Unfortunately necessary for backwards compatibility

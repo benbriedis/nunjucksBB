@@ -1,12 +1,13 @@
-export class WebLoader {
-    constructor(baseURL: any, opts: any);
+import Loader from './loader';
+import { PrecompiledLoader } from './precompiled-loader.js';
+export { PrecompiledLoader };
+export declare class WebLoader extends Loader {
     baseURL: any;
-    useCache: boolean;
-    async: boolean;
-    resolve(from: any, to: any): void;
-    getSource(name: any, cb: any): undefined;
+    useCache: any;
+    async: any;
+    constructor(baseURL: any, opts?: any);
+    resolve(from: any, to: any): string;
+    getSource(name: any, cb: any): any;
     fetch(url: any, cb: any): void;
 }
-import { PrecompiledLoader } from "./precompiled-loader.js";
-export { PrecompiledLoader };
 //# sourceMappingURL=web-loaders.d.ts.map

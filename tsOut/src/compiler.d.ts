@@ -85,6 +85,11 @@ export class Compiler extends Obj {
     compile(node: any, frame: any): void;
     getCode(): string;
 }
+declare namespace _default {
+    export { compile };
+    export { Compiler };
+}
+export default _default;
 import { Obj } from "./object";
-export declare function compile(src: any, asyncFilters: any, extensions: any, name: any, opts?: {}): string;
+declare function compile(src: any, asyncFilters: any, extensions: any, name: any, opts?: {}): string;
 //# sourceMappingURL=compiler.d.ts.map

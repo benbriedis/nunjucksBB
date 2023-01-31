@@ -1,4 +1,6 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Tokenizer = void 0;
 const lib = require('./lib');
 let whitespaceChars = ' \n\t\r\u00A0';
 let delimChars = '()[]{}%*-+~/#,:|.<>=!';
@@ -468,7 +470,8 @@ class Tokenizer {
         return this.str.charAt(this.index - 1);
     }
 }
-module.exports = {
+exports.Tokenizer = Tokenizer;
+exports.default = {
     lex(src, opts) {
         return new Tokenizer(src, opts);
     },

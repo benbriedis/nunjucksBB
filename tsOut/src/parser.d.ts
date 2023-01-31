@@ -1,67 +1,36 @@
-export class Parser extends Obj {
-    init(tokens: any): void;
+import { Obj } from './object';
+export declare class Parser extends Obj {
     tokens: any;
     peeked: any;
     breakOnBlocks: any;
-    dropLeadingWhitespace: boolean;
-    extensions: any[];
-    nextToken(withWhitespace: any): any;
+    dropLeadingWhitespace: any;
+    extensions: any;
+    init(tokens: any): void;
+    nextToken(withWhitespace?: any): any;
     peekToken(): any;
     pushToken(tok: any): void;
     error(msg: any, lineno: any, colno: any): any;
-    fail(msg: any, lineno: any, colno: any): void;
+    fail(msg: any, lineno?: any, colno?: any): void;
     skip(type: any): boolean;
     expect(type: any): any;
     skipValue(type: any, val: any): boolean;
     skipSymbol(val: any): boolean;
-    advanceAfterBlockEnd(name: any): any;
+    advanceAfterBlockEnd(name?: any): any;
     advanceAfterVariableEnd(): void;
     parseFor(): any;
-    parseMacro(): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    parseCall(): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    parseWithContext(): boolean;
-    parseImport(): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    parseFrom(): {
-        readonly typename: string;
-        readonly fields: string[];
-        init(lineno: any, colno: any, template: any, names: any, withContext: any): void;
-        lineno: any;
-        colno: any;
-        findAll(type: any, results: any): any;
-        iterFields(func: any): void;
-    };
-    parseBlock(): {
-        [x: string]: any;
-        readonly typename: any;
-    };
+    parseMacro(): any;
+    parseCall(): any;
+    parseWithContext(): any;
+    parseImport(): any;
+    parseFrom(): import("./nodes").FromImport;
+    parseBlock(): any;
     parseExtends(): any;
-    parseInclude(): {
-        [x: string]: any;
-        readonly typename: any;
-    };
+    parseInclude(): any;
     parseIf(): any;
-    parseSet(): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    parseSwitch(): {
-        [x: string]: any;
-        readonly typename: any;
-    };
+    parseSet(): any;
+    parseSwitch(): any;
     parseStatement(): any;
-    parseRaw(tagName: any): {
-        [x: string]: any;
-        readonly typename: any;
-    };
+    parseRaw(tagName?: any): any;
     parsePostfix(node: any): any;
     parseExpression(): any;
     parseInlineIf(): any;
@@ -79,66 +48,23 @@ export class Parser extends Obj {
     parseFloorDiv(): any;
     parseMod(): any;
     parsePow(): any;
-    parseUnary(noFilters: any): any;
-    parsePrimary(noPostfix: any): any;
-    parseFilterName(): {
-        [x: string]: any;
-        readonly typename: any;
-    };
+    parseUnary(noFilters?: any): any;
+    parsePrimary(noPostfix?: any): any;
+    parseFilterName(): any;
     parseFilterArgs(node: any): any;
     parseFilter(node: any): any;
-    parseFilterStatement(): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    parseAggregate(): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    parseSignature(tolerant: any, noParens: any): {
-        readonly typename: string;
-        readonly fields: string[];
-        init(lineno: any, colno: any, nodes: any): void;
-        addChild(node: any): void;
-        lineno: any;
-        colno: any;
-        findAll(type: any, results: any): any;
-        iterFields(func: any): void;
-    };
-    parseUntilBlocks(...blockNames: any[]): {
-        readonly typename: string;
-        readonly fields: string[];
-        init(lineno: any, colno: any, nodes: any): void;
-        addChild(node: any): void;
-        lineno: any;
-        colno: any;
-        findAll(type: any, results: any): any;
-        iterFields(func: any): void;
-    };
+    parseFilterStatement(): any;
+    parseAggregate(): any;
+    parseSignature(tolerant?: any, noParens?: any): import("./nodes").NodeList;
+    parseUntilBlocks(...blockNames: any[]): import("./nodes").NodeList;
     parseNodes(): any[];
-    parse(): {
-        readonly typename: string;
-        readonly fields: string[];
-        init(lineno: any, colno: any, nodes: any): void;
-        addChild(node: any): void;
-        lineno: any;
-        colno: any;
-        findAll(type: any, results: any): any;
-        iterFields(func: any): void;
-    };
-    parseAsRoot(): {
-        [x: string]: any;
-        readonly typename: any;
-    };
+    parse(): import("./nodes").NodeList;
+    parseAsRoot(): any;
 }
-import Obj_1 = require("./object");
-import Obj = Obj_1.Obj;
-export declare function parse(src: any, extensions: any, opts: any): {
-    [x: string]: any;
-    readonly typename: any;
+declare function parse(src: any, extensions: any, opts: any): any;
+declare const _default: {
+    parse: typeof parse;
+    Parser: typeof Parser;
 };
-export declare function parse(src: any, extensions: any, opts: any): {
-    [x: string]: any;
-    readonly typename: any;
-};
+export default _default;
 //# sourceMappingURL=parser.d.ts.map

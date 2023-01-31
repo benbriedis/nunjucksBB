@@ -1,6 +1,6 @@
 export class Obj {
-    static extend(name: any, props: any): {
-        new (): {
+    static extend(name: any, props?: any): {
+        new (...args: any[]): {
             [x: string]: any;
             readonly typename: any;
         };
@@ -12,7 +12,7 @@ export class Obj {
 }
 export class EmitterObj extends EventEmitter {
     static extend(name: any, props: any): {
-        new (): {
+        new (...args: any[]): {
             [x: string]: any;
             readonly typename: any;
         };

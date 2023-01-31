@@ -1,4 +1,6 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.fromIterator = exports.asyncAll = exports.asyncEach = exports.handleError = exports.contextOrFrameLookup = exports.callWrap = exports.memberLookup = exports.ensureDefined = exports.suppressValue = exports.markSafe = exports.copySafeness = exports.SafeString = exports.numArgs = exports.getKeywordArgs = exports.isKeywordArgs = exports.makeKeywordArgs = exports.makeMacro = exports.Frame = void 0;
 var lib = require('./lib');
 var arrayFrom = Array.from;
 var supportsIterators = (typeof Symbol === 'function' && Symbol.iterator && typeof arrayFrom === 'function');
@@ -65,6 +67,7 @@ class Frame {
         return this.parent;
     }
 }
+exports.Frame = Frame;
 function makeMacro(argNames, kwargNames, func) {
     return function macro(...macroArgs) {
         var argCount = numArgs(macroArgs);
@@ -99,13 +102,16 @@ function makeMacro(argNames, kwargNames, func) {
         return func.apply(this, args);
     };
 }
+exports.makeMacro = makeMacro;
 function makeKeywordArgs(obj) {
     obj.__keywords = true;
     return obj;
 }
+exports.makeKeywordArgs = makeKeywordArgs;
 function isKeywordArgs(obj) {
     return obj && Object.prototype.hasOwnProperty.call(obj, '__keywords');
 }
+exports.isKeywordArgs = isKeywordArgs;
 function getKeywordArgs(args) {
     var len = args.length;
     if (len) {
@@ -116,6 +122,7 @@ function getKeywordArgs(args) {
     }
     return {};
 }
+exports.getKeywordArgs = getKeywordArgs;
 function numArgs(args) {
     var len = args.length;
     if (len === 0) {
@@ -129,6 +136,7 @@ function numArgs(args) {
         return len;
     }
 }
+exports.numArgs = numArgs;
 // A SafeString object indicates that the string should not be
 // autoescaped. This happens magically because autoescaping only
 // occurs on primitive string objects.
@@ -139,6 +147,7 @@ function SafeString(val) {
     this.val = val;
     this.length = val.length;
 }
+exports.SafeString = SafeString;
 SafeString.prototype = Object.create(String.prototype, {
     length: {
         writable: true,
@@ -158,6 +167,7 @@ function copySafeness(dest, target) {
     }
     return target.toString();
 }
+exports.copySafeness = copySafeness;
 function markSafe(val) {
     var type = typeof val;
     if (type === 'string') {
@@ -176,6 +186,7 @@ function markSafe(val) {
         };
     }
 }
+exports.markSafe = markSafe;
 function suppressValue(val, autoescape) {
     val = (val !== undefined && val !== null) ? val : '';
     if (autoescape && !(val instanceof SafeString)) {
@@ -183,12 +194,14 @@ function suppressValue(val, autoescape) {
     }
     return val;
 }
+exports.suppressValue = suppressValue;
 function ensureDefined(val, lineno, colno) {
     if (val === null || val === undefined) {
         throw new lib.TemplateError('attempted to output null or undefined value', lineno + 1, colno + 1);
     }
     return val;
 }
+exports.ensureDefined = ensureDefined;
 function memberLookup(obj, val) {
     if (obj === undefined || obj === null) {
         return undefined;
@@ -198,6 +211,7 @@ function memberLookup(obj, val) {
     }
     return obj[val];
 }
+exports.memberLookup = memberLookup;
 function callWrap(obj, name, context, args) {
     if (!obj) {
         throw new Error('Unable to call `' + name + '`, which is undefined or falsey');
@@ -207,12 +221,14 @@ function callWrap(obj, name, context, args) {
     }
     return obj.apply(context, args);
 }
+exports.callWrap = callWrap;
 function contextOrFrameLookup(context, frame, name) {
     var val = frame.lookup(name);
     return (val !== undefined) ?
         val :
         context.lookup(name);
 }
+exports.contextOrFrameLookup = contextOrFrameLookup;
 function handleError(error, lineno, colno) {
     if (error.lineno) {
         return error;
@@ -221,6 +237,7 @@ function handleError(error, lineno, colno) {
         return new lib.TemplateError(error, lineno, colno);
     }
 }
+exports.handleError = handleError;
 function asyncEach(arr, dimen, iter, cb) {
     if (lib.isArray(arr)) {
         const len = arr.length;
@@ -247,6 +264,7 @@ function asyncEach(arr, dimen, iter, cb) {
         }, cb);
     }
 }
+exports.asyncEach = asyncEach;
 function asyncAll(arr, dimen, func, cb) {
     var finished = 0;
     var len;
@@ -299,6 +317,7 @@ function asyncAll(arr, dimen, func, cb) {
         }
     }
 }
+exports.asyncAll = asyncAll;
 function fromIterator(arr) {
     if (typeof arr !== 'object' || arr === null || lib.isArray(arr)) {
         return arr;
@@ -310,7 +329,8 @@ function fromIterator(arr) {
         return arr;
     }
 }
-module.exports = {
+exports.fromIterator = fromIterator;
+exports.default = {
     Frame: Frame,
     makeMacro: makeMacro,
     makeKeywordArgs: makeKeywordArgs,

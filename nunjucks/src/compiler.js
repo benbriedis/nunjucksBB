@@ -20,7 +20,7 @@ const compareOps = {
   '>=': '>='
 };
 
-class Compiler extends Obj {
+export class Compiler extends Obj {
   init(templateName, throwOnUndefined) {
     this.templateName = templateName;
     this.codebuf = [];
@@ -1179,22 +1179,25 @@ class Compiler extends Obj {
   }
 }
 
-module.exports = {
-  compile: function compile(src, asyncFilters, extensions, name, opts = {}) {
-    const c = new Compiler(name, opts.throwOnUndefined);
+function compile(src, asyncFilters, extensions, name, opts = {}) 
+{
+	const c = new Compiler(name, opts.throwOnUndefined);
 
-    // Run the extension preprocessors against the source.
-    const preprocessors = (extensions || []).map(ext => ext.preprocess).filter(f => !!f);
+	// Run the extension preprocessors against the source.
+	const preprocessors = (extensions || []).map(ext => ext.preprocess).filter(f => !!f);
 
-    const processedSrc = preprocessors.reduce((s, processor) => processor(s), src);
+	const processedSrc = preprocessors.reduce((s, processor) => processor(s), src);
 
-    c.compile(transformer.transform(
-      parser.parse(processedSrc, extensions, opts),
-      asyncFilters,
-      name
-    ));
-    return c.getCode();
-  },
+	c.compile(transformer.transform(
+		parser.parse(processedSrc, extensions, opts),
+		asyncFilters,
+		name
+	));
+	return c.getCode();
+};
 
-  Compiler: Compiler
+
+export default{
+	compile: compile,
+	Compiler: Compiler
 };

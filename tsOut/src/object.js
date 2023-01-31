@@ -1,4 +1,6 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EmitterObj = exports.Obj = void 0;
 // A simple class system, more documentation to come
 const EventEmitter = require('events');
 const lib = require('./lib');
@@ -22,6 +24,10 @@ function extendClass(cls, name, props) {
         props[k] = parentWrap(cls.prototype[k], props[k]);
     });
     class subclass extends cls {
+        //BB: seems to be necessary to keep TS happy wrt variable parameters
+        constructor(...args) {
+            super(...args);
+        }
         get typename() {
             return name;
         }
@@ -38,7 +44,7 @@ class Obj {
     get typename() {
         return this.constructor.name;
     }
-    static extend(name, props) {
+    static extend(name, props = undefined) {
         if (typeof name === 'object') {
             props = name;
             name = 'anonymous';
@@ -46,6 +52,7 @@ class Obj {
         return extendClass(this, name, props);
     }
 }
+exports.Obj = Obj;
 class EmitterObj extends EventEmitter {
     constructor(...args) {
         super();
@@ -64,5 +71,6 @@ class EmitterObj extends EventEmitter {
         return extendClass(this, name, props);
     }
 }
+exports.EmitterObj = EmitterObj;
 module.exports = { Obj, EmitterObj };
 //# sourceMappingURL=object.js.map

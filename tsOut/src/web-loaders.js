@@ -1,8 +1,17 @@
 'use strict';
-const Loader = require('./loader');
-const { PrecompiledLoader } = require('./precompiled-loader.js');
-class WebLoader extends Loader {
-    constructor(baseURL, opts) {
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.WebLoader = exports.PrecompiledLoader = void 0;
+const loader_1 = __importDefault(require("./loader"));
+const precompiled_loader_js_1 = require("./precompiled-loader.js");
+Object.defineProperty(exports, "PrecompiledLoader", { enumerable: true, get: function () { return precompiled_loader_js_1.PrecompiledLoader; } });
+class WebLoader extends loader_1.default {
+    baseURL;
+    useCache;
+    async;
+    constructor(baseURL, opts = undefined) {
         super();
         this.baseURL = baseURL || '.';
         opts = opts || {};
@@ -80,8 +89,5 @@ class WebLoader extends Loader {
         ajax.send();
     }
 }
-module.exports = {
-    WebLoader: WebLoader,
-    PrecompiledLoader: PrecompiledLoader
-};
+exports.WebLoader = WebLoader;
 //# sourceMappingURL=web-loaders.js.map

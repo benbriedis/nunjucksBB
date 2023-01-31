@@ -1,3 +1,5 @@
+export function print(str: any, indent: any, inline: any): void;
+export function printNodes(node: any, indent: any): void;
 export class Node extends Obj {
     init(lineno: any, colno: any, ...args: any[]): void;
     lineno: any;
@@ -5,80 +7,72 @@ export class Node extends Obj {
     findAll(type: any, results: any): any;
     iterFields(func: any): void;
 }
-export const Root: {
-    new (): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
+export class Value extends Node {
+    get fields(): string[];
+}
 export class NodeList extends Node {
     get fields(): string[];
     init(lineno: any, colno: any, nodes: any): void;
     addChild(node: any): void;
 }
-export class Value extends Node {
-    get fields(): string[];
-}
+export const Root: {
+    new (...args: any[]): {
+        [x: string]: any;
+        readonly typename: any;
+    };
+    [x: string]: any;
+};
 export const Literal: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
 export const Symbol: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
 export const Group: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
-declare const ArrayNode: {
-    new (): {
+export const ArrayNode: {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
 export const Pair: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
 export const Dict: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
-export const Output: {
-    new (): {
+export const LookupVal: {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
-export const Capture: {
-    new (): {
-        [x: string]: any;
-        readonly typename: any;
-    };
-    [x: string]: any;
-};
-export const TemplateData: any;
 export const If: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
@@ -86,14 +80,14 @@ export const If: {
 };
 export const IfAsync: any;
 export const InlineIf: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
 export const For: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
@@ -102,7 +96,7 @@ export const For: {
 export const AsyncEach: any;
 export const AsyncAll: any;
 export const Macro: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
@@ -110,7 +104,7 @@ export const Macro: {
 };
 export const Caller: any;
 export const Import: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
@@ -121,7 +115,7 @@ export class FromImport extends Node {
     init(lineno: any, colno: any, template: any, names: any, withContext: any): void;
 }
 export const FunCall: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
@@ -131,14 +125,21 @@ export const Filter: any;
 export const FilterAsync: any;
 export const KeywordArgs: any;
 export const Block: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
 export const Super: {
-    new (): {
+    new (...args: any[]): {
+        [x: string]: any;
+        readonly typename: any;
+    };
+    [x: string]: any;
+};
+export const TemplateRef: {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
@@ -146,42 +147,57 @@ export const Super: {
 };
 export const Extends: any;
 export const Include: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
 export const Set: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
 export const Switch: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
 export const Case: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
-export const LookupVal: {
-    new (): {
+export const Output: {
+    new (...args: any[]): {
+        [x: string]: any;
+        readonly typename: any;
+    };
+    [x: string]: any;
+};
+export const Capture: {
+    new (...args: any[]): {
+        [x: string]: any;
+        readonly typename: any;
+    };
+    [x: string]: any;
+};
+export const TemplateData: any;
+export const UnaryOp: {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
 export const BinOp: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
@@ -203,28 +219,85 @@ export const Pow: any;
 export const Neg: any;
 export const Pos: any;
 export const Compare: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
 export const CompareOperand: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
 export const CallExtension: {
-    new (): {
+    new (...args: any[]): {
         [x: string]: any;
         readonly typename: any;
     };
     [x: string]: any;
 };
 export const CallExtensionAsync: any;
-export function printNodes(node: any, indent: any): void;
+declare namespace _default {
+    export { Node };
+    export { Root };
+    export { NodeList };
+    export { Value };
+    export { Literal };
+    export { Symbol };
+    export { Group };
+    export { ArrayNode as Array };
+    export { Pair };
+    export { Dict };
+    export { Output };
+    export { Capture };
+    export { TemplateData };
+    export { If };
+    export { IfAsync };
+    export { InlineIf };
+    export { For };
+    export { AsyncEach };
+    export { AsyncAll };
+    export { Macro };
+    export { Caller };
+    export { Import };
+    export { FromImport };
+    export { FunCall };
+    export { Filter };
+    export { FilterAsync };
+    export { KeywordArgs };
+    export { Block };
+    export { Super };
+    export { Extends };
+    export { Include };
+    export { Set };
+    export { Switch };
+    export { Case };
+    export { LookupVal };
+    export { BinOp };
+    export { In };
+    export { Is };
+    export { Or };
+    export { And };
+    export { Not };
+    export { Add };
+    export { Concat };
+    export { Sub };
+    export { Mul };
+    export { Div };
+    export { FloorDiv };
+    export { Mod };
+    export { Pow };
+    export { Neg };
+    export { Pos };
+    export { Compare };
+    export { CompareOperand };
+    export { CallExtension };
+    export { CallExtensionAsync };
+    export { printNodes };
+}
+export default _default;
 import { Obj } from "./object";
-export { ArrayNode as Array };
 //# sourceMappingURL=nodes.d.ts.map
