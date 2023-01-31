@@ -8,12 +8,10 @@
 		 https://www.pluralsight.com/guides/install-npm-packages-from-gitgithub
 */
 
-//import {render},nunjucks from 'nunjucksBB';
-//import {render} from 'nunjucksBB';
 //import nunjucks from 'nunjucksBB';
 import nunjucks from '../index.js';
 
-class ServerTest
+class Render
 {
 
 	static async run():Promise<void>
@@ -33,11 +31,9 @@ class ServerTest
 //	var env = new nunjucks.Environment(new nunjucks.FileSystemLoader(templateName));
 
 //	const result = await nunjucks.render(templateName,data);
-//console.log('HERE  nunjucks:',nunjucks);
-//	const result = nunjucks.render(templateName,data);  //XXX top level 'nunjucks' not working...
 	const result = nunjucks.render(templateName,data);
 
-console.log('result:',result);	
+	console.log('result:',result);	
 
 
 
@@ -54,8 +50,5 @@ console.log('result:',result);
 	}
 }
 
-//TODO a BrowserTest
-//TODO incorporate the TS definitions in the project (any way to share with the slim version?)
+Render.run().catch(err => console.log(err));
 
-
-ServerTest.run().catch(err => console.log(err));

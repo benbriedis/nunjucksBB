@@ -1,0 +1,19 @@
+FUNCTIONALITY
+> Remove or separate Express integration into separate project
+> Remove or separate chokidar watch into separate project
+> Would like option to insist on closed html (or whatever) tags within NJK tags
+> Remove Jinja compatible mode (but see what it has to offere first)
+> Ensure null and undefined are always interchangeable
+> Hide JS object function calls, but first include any useful ones as filters, functions, etc
+> Trawl Jinja and Twig for useful filters and functions
+> MAYBE an option to disable 'include'. But NB I do like being able to dynamically construct
+  include file names
+
+CODING
+> Remove weird (old?) object stuff in objects.js
+> Remore asyncFor, asyncAll, asyncIf
+> WebLoader - allow dynamic fetch to be disabled. Should be able to run on server for testing purposes.
+> Thinks the precompile API might be broken
+> Convert everything to Typescript. Enable strict mode, including noImplicityAny and strictNullChecks
+> Errors and stack traces should be better
+
