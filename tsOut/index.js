@@ -64,6 +64,7 @@ function renderString(src, ctx, cb) {
 }
 //XXX BB for the moment Ive had to add lots of exports to things that dont need to be exported
 //       separately to keep TS happy, in nodes, compiler, parser, lexer and runtime
+//       MAYBE MOVE OVER TO USING <any> as for nodes below
 exports.default = {
     Environment: environment_1.Environment,
     Template: environment_1.Template,
