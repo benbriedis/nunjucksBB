@@ -7,7 +7,7 @@ export default class RunPrecompiled
 {
 	static async run():Promise<void>
 	{
-		const compiledName = 'tsOut/compiledTemplates.njk.js';
+		const compiledName = 'compiledTemplates.njk.js';
 
 		const handle = await open(compiledName,'r');
 		const contents = await handle.readFile({encoding:'UTF-8' as BufferEncoding});
@@ -23,6 +23,8 @@ console.log('GOT CONTENTS:',contents);
 
 //TODO		EXECUTE contents
 
+//XXX Can I pass in a 'null' loader instead? I suspect that a cache is used in this case...
+//XXX is using something window.nunjucksPrecompiled to access
 
 		const env = new nunjucks.Environment(new nunjucks.WebLoader('/xxxx'),{
 			trimBlocks:true,
@@ -31,7 +33,7 @@ console.log('GOT CONTENTS:',contents);
 		});
 //		NunjucksExtensions.extend(this.env);
 
-		const templateName = 'nunjucks/dev/top.njk';
+		const templateName = 'nunjucks/devTests/top.njk';
 		const data = {
 			a:1,
 			b:2

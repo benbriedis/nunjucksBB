@@ -1,6 +1,6 @@
 'use strict';
 
-import lib from './src/lib';
+import * as lib from './src/lib';
 import {Environment, Template} from './src/environment';
 import Loader from './src/loader';
 import loaders from './src/loaders';
@@ -76,6 +76,8 @@ function renderString(src, ctx, cb)
 		configure();
 	return e.renderString(src, ctx, cb);
 }
+
+
 
 
 //XXX BB for the moment Ive had to add lots of exports to things that dont need to be exported

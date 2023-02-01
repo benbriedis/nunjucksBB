@@ -17,3 +17,6 @@ CODING
 > Convert everything to Typescript. Enable strict mode, including noImplicityAny and strictNullChecks
 > Errors and stack traces should be better
 
+
+WORK DONE
+

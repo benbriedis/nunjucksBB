@@ -14,7 +14,7 @@ var TEST_ENV = (process.env.NODE_ENV === 'test');
 
 var destDir = path.resolve(path.join(
   __dirname,
-  (TEST_ENV) ? '../tests/browser' : '../browser'));
+  (TEST_ENV) ? '../tsOut/tests/browser' : '../browser'));
 
 function runWebpack(opts) {
   var type = (opts.slim) ? '(slim, only works with precompiled templates)' : '';
@@ -27,7 +27,7 @@ function runWebpack(opts) {
   return new Promise(function(resolve, reject) {
     try {
       var config = {
-        entry: './nunjucks/index.js',
+        entry: './tsOut/nunjucks/index.js',
         devtool: 'source-map',
         output: {
           path: destDir,

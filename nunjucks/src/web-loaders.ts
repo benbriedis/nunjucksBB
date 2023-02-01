@@ -8,7 +8,6 @@ export class WebLoader extends Loader
 {
 	baseURL;
 	useCache;
-	async;
 
 	constructor(baseURL, opts=undefined) 
 	{

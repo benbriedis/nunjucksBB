@@ -14,7 +14,7 @@ export default class Precompile
 		});
 //		NunjucksExtensions.extend(this.env);
 
-		const templateName = 'nunjucks/dev/top.njk';
+		const templateName = 'nunjucks/devTests/top.njk';
 		const data = {
 			a:1,
 			b:2

@@ -85,11 +85,10 @@
   "bin": {
     "nunjucks-precompile": "./bin/precompile"
   },
-  "main": "tsOut/index.js",
+  "main": "tsOut/nunjucks/index.js",
   "files": [
     "bin/**",
-    "browser/**",
-    "tsOut/**"
+    "browser/**"
   ],
   "nyc": {
     "require": [

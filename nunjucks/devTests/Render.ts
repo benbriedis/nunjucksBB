@@ -16,7 +16,7 @@ class Render
 
 	static async run():Promise<void>
 	{
-		const templateName = 'nunjucks/dev/top.njk';
+		const templateName = 'nunjucks/devTests/top.njk';
 		const data = {
 			a:1,
 			b:2

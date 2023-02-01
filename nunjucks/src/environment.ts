@@ -2,7 +2,7 @@
 
 import asap from 'asap';
 import waterfall from 'a-sync-waterfall';
-import lib from './lib';
+import * as lib from './lib';
 import compiler from './compiler';
 //import filters from './filters';
 const filters = require('./filters');
@@ -152,8 +152,10 @@ class Environment extends EmitterObj2
 		var extension = this.getExtension(name);
 		if (!extension) 
 			return;
-		this.extensionsList = lib.without(this.extensionsList, extension);
-			delete this.extensions[name];
+//XXX  BB looks like a bug			
+//		this.extensionsList = lib.without(this.extensionsList, extension);
+		this.extensionsList = lib.without([extension]);
+		delete this.extensions[name];
 	}
 
 	getExtension(name) 
@@ -216,6 +218,7 @@ class Environment extends EmitterObj2
 
 	getTemplate(name, eagerCompile, parentName=undefined, ignoreMissing=undefined, cb=undefined)
 	{
+console.log('CALLED getTemplate()  name:',name,'cb:',cb);	
 		var that = this;
 		var tmpl = null;
 		if (name && name.raw) 

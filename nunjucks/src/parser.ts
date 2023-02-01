@@ -3,7 +3,7 @@
 import lexer from './lexer';
 import nodes from './nodes';
 import {Obj2} from './object';
-import lib from './lib';
+import * as lib from './lib';
 
 export class Parser extends Obj2
 {
