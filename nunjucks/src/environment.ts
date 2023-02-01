@@ -224,7 +224,6 @@ class Environment extends EmitterObj2
 		if (lib.isFunction(eagerCompile)) 
 			eagerCompile = false;
 
-		let info;
 		if (name instanceof Template) 
 			return name;
 
@@ -240,7 +239,7 @@ class Environment extends EmitterObj2
 				return tmpl;
 
 			const resolvedName = that.resolveTemplate(loader, parentName, name);
-			info = await loader.getSource(resolvedName);
+			const info = await loader.getSource(resolvedName);
 
 			if (!info) 
 				return new Template(noopTmplSrc, this, '', eagerCompile);
