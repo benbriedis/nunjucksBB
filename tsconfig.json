@@ -36,7 +36,7 @@
     /* Allow multiple folders to be treated as one when resolving modules. */
     "rootDirs": ["/home/ben/programming/nunjucksBB"],
 
-	/* Ensure 'package.json' and 'webpack.common.js' contain these paths too */
+	/* Useful if we want to use path aliases */
     "baseUrl": "..",
 	"paths": {
 //    	"Build/*":			["vos/build/*"],
@@ -124,11 +124,18 @@
 
 	//XXX the 'include' array appears to be a composite of entry points and search paths
 	"include": [
-		"./nunjucks/**/*",
+//		"./nunjucks/**/*"
+		"./**/*"
 	],
 
-	/* "exclude" does not prevent files being imported.  Only excludes them from being entry points. (Not very useful). */
-//	"exclude": ["../vos/node_modules/**/*"],
-//	"exclude": [ "**/server/*.ts" ],
+	/* "exclude" does not prevent files being imported.  Only excludes them from being entry points. */
+	"exclude": [
+		"./node_modules/**/*",
+		"./tsOut/**/*",
+		"./docs/**/*",
+		"./bench/**/*",
+		"./samples/**/*",
+		"./scripts/**/*",
+	],
 
 }
