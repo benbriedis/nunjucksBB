@@ -14,15 +14,6 @@ import {Obj,Obj2, EmitterObj,EmitterObj2} from './object';
 import globalRuntime,{handleError,Frame} from './runtime';
 import expressApp from './express-app';
 
-// If the user is using the async API, *always* call it
-// asynchronously even if the template was synchronous.
-function callbackAsap(cb, err, res=undefined) 
-{
-	asap(() => {
-		cb(err, res);
-	});
-}
-
 /**
  * A no-op template, for use with {% include ignore missing %}
  */
@@ -216,98 +207,55 @@ class Environment extends EmitterObj2
 		return (isRelative && loader.resolve) ? loader.resolve(parentName, filename) : filename;
 	}
 
-	getTemplate(name, eagerCompile, parentName=undefined, ignoreMissing=undefined, cb=undefined)
+	async getTemplate(name, eagerCompile=undefined, parentName=undefined, ignoreMissing=undefined)
 	{
-console.log('CALLED getTemplate()  name:',name,'cb:',cb);	
 		var that = this;
 		var tmpl = null;
-		if (name && name.raw) 
+
 		// this fixes autoescape for templates referenced in symbols
+		if (name && name.raw) 
 			name = name.raw;
 
 		if (lib.isFunction(parentName)) {
-			cb = parentName;
 			parentName = null;
 			eagerCompile = eagerCompile || false;
 		}
 
-		if (lib.isFunction(eagerCompile)) {
-			cb = eagerCompile;
+		if (lib.isFunction(eagerCompile)) 
 			eagerCompile = false;
-		}
 
+		let info;
 		if (name instanceof Template) 
-			tmpl = name;
-		else if (typeof name !== 'string') 
+			return name;
+
+		if (typeof name !== 'string') 
 			throw new Error('template names must be a string: ' + name);
-		else {
-			for (let i = 0; i < this.loaders.length; i++) {
-				const loader = this.loaders[i];
-				tmpl = loader.cache[this.resolveTemplate(loader, parentName, name)];
-				if (tmpl) 
-					break;
-			}
-		}
 
-		if (tmpl) {
-			if (eagerCompile) 
-				tmpl.compile();
+//XXX can we do with a single loader? (nb could be a ChainLoader if necessary)
 
-			if (cb) {
-				cb(null, tmpl);
-				return undefined;
-			} else 
+		for (let i = 0; i < this.loaders.length; i++) {
+			const loader = this.loaders[i];
+			tmpl = loader.cache[this.resolveTemplate(loader, parentName, name)];
+			if (tmpl!=null) 
 				return tmpl;
-		}
-		let syncResult;
 
-		const createTemplate = (err, info) => {
-			if (!info && !err && !ignoreMissing) 
-				err = new Error('template not found: ' + name);
+			const resolvedName = that.resolveTemplate(loader, parentName, name);
+			info = await loader.getSource(resolvedName);
 
-			if (err) {
-				if (cb) {
-					cb(err);
-					return;
-				} 
-				else 
-					throw err;
-			}
-			let newTmpl;
 			if (!info) 
-				newTmpl = new Template(noopTmplSrc, this, '', eagerCompile);
+				return new Template(noopTmplSrc, this, '', eagerCompile);
 			else {
-				newTmpl = new Template(info.src, this, info.path, eagerCompile);
+				tmpl = new Template(info.src, this, info.path, eagerCompile);
 				if (!info.noCache) 
-					info.loader.cache[name] = newTmpl;
+					info.loader.cache[<string>name] = tmpl;
+				return tmpl;
 			}
-			if (cb) 
-				cb(null, newTmpl);
-			else 
-				syncResult = newTmpl;
-		};
+		}
 
-		lib.asyncIter(this.loaders, (loader, i, next, done) => {
-			function handle(err, src) {
-				if (err) 
-					done(err);
-				else if (src) {
-					src.loader = loader;
-					done(null, src);
-				} else 
-					next();
-			}
+		if (ignoreMissing) 
+			return null;
 
-			// Resolve name relative to parentName
-			name = that.resolveTemplate(loader, parentName, name);
-
-			if (loader.async) 
-				loader.getSource(name, handle);
-			else 
-				handle(null, loader.getSource(name));
-		}, createTemplate);
-
-		return syncResult;
+		throw new Error('template not found: ' + name);
 	}
 
 	express(app) 
@@ -315,41 +263,23 @@ console.log('CALLED getTemplate()  name:',name,'cb:',cb);
 		return expressApp(this, app);
 	}
 
-	render(name, ctx, cb) 
+	async render(name, ctx):Promise<string> 
 	{
-		if (lib.isFunction(ctx)) {
-			cb = ctx;
+		if (lib.isFunction(ctx)) 
 			ctx = null;
-		}
 
-		// We support a synchronous API to make it easier to migrate
-		// existing code to async. This works because if you don't do
-		// anything async work, the whole thing is actually run
-		// synchronously.
-		let syncResult = null;
-
-		this.getTemplate(name, (err, tmpl) => {
-			if (err && cb)
-				callbackAsap(cb, err);
-			else if (err)
-				throw err;
-			else 
-				syncResult = tmpl.render(ctx, cb);
-		});
-
-		return syncResult;
+		const tmpl = await this.getTemplate(name);
+		return await tmpl.render(ctx);
 	}
 
-	renderString(src, ctx, opts, cb) 
+	async renderString(src, ctx, opts):Promise<string>
 	{
-		if (lib.isFunction(opts)) {
-			cb = opts;
+		if (lib.isFunction(opts)) 
 			opts = {};
-		}
 		opts = opts || {};
 
 		const tmpl = new Template(src, this, opts.path);
-		return tmpl.render(ctx, cb);
+		return await tmpl.render(ctx);
 	}
 
 	waterfall(tasks, callback, forceAsync) 
@@ -493,65 +423,30 @@ class Template extends Obj2
 			this.compiled = false;
 	}
 
-	render(ctx, parentFrame, cb=undefined) 
+	async render(ctx, parentFrame=undefined):Promise<string>
 	{
-		if (typeof ctx === 'function') {
-			cb = ctx;
+		if (typeof ctx === 'function') 
 			ctx = {};
-		} 
-		else if (typeof parentFrame === 'function') {
-			cb = parentFrame;
+		else if (typeof parentFrame === 'function') 
 			parentFrame = null;
-		}
-
-		// If there is a parent frame, we are being called from internal
-		// code of another template, and the internal system
-		// depends on the sync/async nature of the parent template
-		// to be inherited, so force an async callback
-		const forceAsync = !parentFrame;
 
 		// Catch compile errors for async rendering
 		try {
 			this.compile();
 		} 
 		catch (e) {
-			const err = lib._prettifyError(this.path, this.env.opts.dev, e);
-			if (cb) 
-				return callbackAsap(cb, err);
-			else 
-				throw err;
+			throw lib._prettifyError(this.path, this.env.opts.dev, e);
 		}
 
 		const context = new Context(ctx || {}, this.blocks, this.env);
 		const frame = parentFrame ? parentFrame.push(true) : new Frame();
 		frame.topLevel = true;
 		let syncResult = null;
-		let didError = false;
 
 		this.rootRenderFunc(this.env, context, frame, globalRuntime, (err, res) => {
-			// TODO: this is actually a bug in the compiled template (because waterfall
-			// tasks are both not passing errors up the chain of callbacks AND are not
-			// causing a return from the top-most render function). But fixing that
-			// will require a more substantial change to the compiler.
-			if (didError && cb && typeof res !== 'undefined') 
-				// prevent multiple calls to cb
-				return;
-
-			if (err) {
-				err = lib._prettifyError(this.path, this.env.opts.dev, err);
-				didError = true;
-			}
-
-			if (cb) {
-				if (forceAsync) 
-					callbackAsap(cb, err, res);
-				else 
-					cb(err, res);
-			} else {
-				if (err) 
-					throw err;
-				syncResult = res;
-			}
+			if (err) 
+				throw lib._prettifyError(this.path, this.env.opts.dev, err);
+			syncResult = res;
 		});
 		return syncResult;
 	}

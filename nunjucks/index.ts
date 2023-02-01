@@ -55,19 +55,11 @@ function compile(src, env, path, eagerCompile)
 	return new Template(src, env, path, eagerCompile);
 }
 
-function render(name, ctx, cb=undefined) 
+async function render(name, ctx):Promise<string>
 {
 	if (!e) 
 		configure();
-	return e.render(name, ctx, cb);
-}
-
-//XXX in time use this to replace old render()
-async function asyncRender(name,ctx) 
-{
-	if (!e) 
-		configure();
-	return await e.asyncRender(name, ctx);
+	return await e.render(name, ctx);
 }
 
 function renderString(src, ctx, cb) 

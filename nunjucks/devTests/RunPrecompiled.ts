@@ -40,8 +40,8 @@ console.log('GOT CONTENTS:',contents);
 		};
 
 //XXX can/should I combine these two?
-		const template = env.getTemplate(templateName,true);   //XXX true?
-		const content = template.render(data);
+		const template = await env.getTemplate(templateName,true);   //XXX true?
+		const content = await template.render(data);
 
 		console.log(content);
 	}
