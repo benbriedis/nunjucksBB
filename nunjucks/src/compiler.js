@@ -927,15 +927,15 @@ export class Compiler extends Obj2 {
     this._emit(`return ${funcId};})()`);
   }
 
+//XXX QQQ BB: what does parentName do? Not present in 2013
   _compileGetTemplate(node, frame, eagerCompile, ignoreMissing) {
     const parentTemplateId = this._tmpid();
     const parentName = this._templateName();
-    const cb = this._makeCallback(parentTemplateId);
     const eagerCompileArg = (eagerCompile) ? 'true' : 'false';
     const ignoreMissingArg = (ignoreMissing) ? 'true' : 'false';
-    this._emit('env.getTemplate(');
+    this._emit('await env.getTemplate(');
     this._compileExpression(node.template, frame);
-    this._emitLine(`, ${eagerCompileArg}, ${parentName}, ${ignoreMissingArg}, ${cb}`);
+    this._emitLine(`, ${eagerCompileArg}, ${parentName}, ${ignoreMissingArg} `);
     return parentTemplateId;
   }
 
@@ -943,6 +943,8 @@ export class Compiler extends Obj2 {
     const target = node.target.value;
     const id = this._compileGetTemplate(node, frame, false, false);
     this._addScopeLevel();
+
+//XXX QQQ BB: can we remove _makeCallback?
 
     this._emitLine(id + '.getExported(' +
       (node.withContext ? 'context.getVariables(), frame, ' : '') +
@@ -979,6 +981,8 @@ export class Compiler extends Obj2 {
         name = nameNode.value;
         alias = name;
       }
+
+//XXX BB Can we remove this callback?
 
       this._emitLine(`if(Object.prototype.hasOwnProperty.call(${importedId}, "${name}")) {`);
       this._emitLine(`var ${id} = ${importedId}.${name};`);
@@ -1049,28 +1053,16 @@ export class Compiler extends Obj2 {
     this._addScopeLevel();
   }
 
+//XXX QQQ BB: why do we want eagerCompile?  
+//XXX QQQ BB: remove waterfall
+
   compileInclude(node, frame) {
-    this._emitLine('var tasks = [];');
-    this._emitLine('tasks.push(');
-    this._emitLine('function(callback) {');
-    const id = this._compileGetTemplate(node, frame, false, node.ignoreMissing);
-    this._emitLine(`callback(null,${id});});`);
-    this._emitLine('});');
+    const templateId = this._compileGetTemplate(node, frame, true, false);
 
-    const id2 = this._tmpid();
-    this._emitLine('tasks.push(');
-    this._emitLine('function(template, callback){');
-    this._emitLine('template.render(context.getVariables(), frame, ' + this._makeCallback(id2));
-    this._emitLine('callback(null,' + id2 + ');});');
-    this._emitLine('});');
-
-    this._emitLine('tasks.push(');
-    this._emitLine('function(result, callback){');
-    this._emitLine(`${this.buffer} += result;`);
-    this._emitLine('callback(null);');
-    this._emitLine('});');
-    this._emitLine('env.waterfall(tasks, function(){');
-    this._addScopeLevel();
+    this._emit(`var includeTemplate = ${templateId};`);
+    this._emitLine(this.buffer +
+		' += await includeTemplate.render(' +
+        'context.getVariables(), frame.push());');  
   }
 
   compileTemplateData(node, frame) {
