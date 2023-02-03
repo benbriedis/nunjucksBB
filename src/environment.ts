@@ -7,9 +7,9 @@ import compiler from './compiler';
 //import filters from './filters';
 const filters = require('./filters');
 import type Loader from './loader';
-import {FileSystemLoader, WebLoader, PrecompiledLoader} from './loaders';
+import {Loaders} from './loaders';
 import tests from './tests';
-import globals from './globals';
+import Globals from './globals';
 import {Obj,Obj2, EmitterObj,EmitterObj2} from './object';
 import globalRuntime,{handleError,Frame} from './runtime';
 import expressApp from './express-app';
@@ -75,10 +75,10 @@ class Environment extends EmitterObj2
 
 		if (!loaders) {
 			// The filesystem loader is only available server-side
-			if (FileSystemLoader) 
-				this.loaders = [new FileSystemLoader('views')];
-			else if (WebLoader) 
-				this.loaders = [new WebLoader('/views')];
+			if (Loaders.FileSystemLoader) 
+				this.loaders = [new Loaders.FileSystemLoader('views')];
+			else if (Loaders.WebLoader) 
+				this.loaders = [new Loaders.WebLoader('/views')];
 		} 
 		else 
 			this.loaders = lib.isArray(loaders) ? loaders : [loaders];
@@ -87,11 +87,11 @@ class Environment extends EmitterObj2
 		// before you configure nunjucks and this will automatically
 		// pick it up and use it
 		if (typeof window !== 'undefined' && window.nunjucksPrecompiled) 
-			this.loaders.unshift(new PrecompiledLoader(window.nunjucksPrecompiled));
+			this.loaders.unshift(new Loaders.PrecompiledLoader(window.nunjucksPrecompiled));
 
 		this._initLoaders();
 
-		this.globals = globals();
+		this.globals2 = new Globals();
 		this.filters = {};
 		this.tests = {};
 		this.asyncFilters = [];
@@ -245,8 +245,9 @@ class Environment extends EmitterObj2
 				return new Template(noopTmplSrc, this, '', eagerCompile);
 			else {
 				tmpl = new Template(info.src, this, info.path, eagerCompile);
+console.log('loader:',loader);				
 				if (!info.noCache) 
-					info.loader.cache[<string>name] = tmpl;
+					loader.cache[<string>name] = tmpl;
 				return tmpl;
 			}
 		}

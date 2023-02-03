@@ -16,7 +16,11 @@ CODING
 > Thinks the precompile API might be broken
 > Convert everything to Typescript. Enable strict mode, including noImplicityAny and strictNullChecks
 > Errors and stack traces should be better
-
+> Dont like those Eslint settings. Use a code beautifer on Github commit instead?
+> Is there any server code that code be omitted from the browser bundles?
+> Building a 'src' directory in the root is not nice. Maybe create a 'dist' or something if this required.
+  Move 'nunjucks' subdirectory contents up.
+  Probably a Babel thing... may be able just to use Typescript
 
 WORK DONE
 

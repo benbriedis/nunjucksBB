@@ -9,12 +9,12 @@ var path = require('path');
 var webpack = require('webpack');
 var pjson = require('../package.json');
 var promiseSequence = require('./lib/utils').promiseSequence;
-var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+//var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var TEST_ENV = (process.env.NODE_ENV === 'test');
 
 var destDir = path.resolve(path.join(
   __dirname,
-  (TEST_ENV) ? '../tsOut/tests/browser' : '../browser'));
+  (TEST_ENV) ? '../tests/browser' : '../browser'));
 
 function runWebpack(opts) {
   var type = (opts.slim) ? '(slim, only works with precompiled templates)' : '';
@@ -27,7 +27,7 @@ function runWebpack(opts) {
   return new Promise(function(resolve, reject) {
     try {
       var config = {
-        entry: './tsOut/nunjucks/index.js',
+        entry: './src/index.ts',
         devtool: 'source-map',
         output: {
           path: destDir,
@@ -38,14 +38,18 @@ function runWebpack(opts) {
             return path.relative(destDir, info.absoluteResourcePath);
           }
         },
+/*		
         node: {
           process: false,
           setImmediate: false
         },
+*/		
         module: {
           rules: [{
-            test: /nunjucks/,
-            exclude: /(node_modules|browser|tests)(?!\.js)/,
+//            test: /nunjucks\/.*\.(js|ts)/,
+//            exclude: /(node_modules|browser|tests)(?!\.js)/,  //XXX This looks invalid
+//TODO support slim			
+/*			
             use: {
               loader: 'babel-loader',
               options: {
@@ -68,6 +72,21 @@ function runWebpack(opts) {
                 }]]
               }
             }
+*/			
+
+
+				test: /\.ts$/,
+
+				use: {
+					loader: 'ts-loader',
+					options: {
+						//XXX without this option MIGHT be possible to share compiled code
+						//  between server and client. Includes and excudes come from tsconfig.json.
+						//  Having trouble excluding node_modules
+	 					//onlyCompileBundledFiles: true,
+						configFile: "tsconfig.browser.json"
+					}
+				}
           }]
         },
         plugins: [
@@ -81,6 +100,7 @@ function runWebpack(opts) {
         ]
       };
 
+/* TODO ... use new optimization settings
       if (opts.min) {
         config.plugins.push(
           new UglifyJsPlugin({
@@ -98,6 +118,7 @@ function runWebpack(opts) {
           })
         );
       }
+*/	  
 
       webpack(config).run(function(err, stats) {
         if (err) {
@@ -134,3 +155,4 @@ var promises = runConfigs.map(function(opts) {
 promiseSequence(promises).catch(function(err) {
   throw err;
 });
+

@@ -357,24 +357,28 @@ export function fromIterator(arr) {
   }
 }
 
+const isArray = lib.isArray;  //XXX may be able to do without in TS
+const inOperator = lib.inOperator;
+
 export default {
-	Frame: Frame,
-	makeMacro: makeMacro,
-	makeKeywordArgs: makeKeywordArgs,
-	numArgs: numArgs,
-	suppressValue: suppressValue,
-	ensureDefined: ensureDefined,
-	memberLookup: memberLookup,
-	contextOrFrameLookup: contextOrFrameLookup,
-	callWrap: callWrap,
-	handleError: handleError,
-	isArray: lib.isArray,
+	Frame,
+	makeMacro,
+	makeKeywordArgs,
+	numArgs,
+	suppressValue,
+	ensureDefined,
+	memberLookup,
+	contextOrFrameLookup,
+	callWrap,
+	handleError,
+	isArray,
 	keys: lib.keys,
-	SafeString: SafeString,
-	copySafeness: copySafeness,
-	markSafe: markSafe,
-	asyncEach: asyncEach,
-	asyncAll: asyncAll,
-	inOperator: lib.inOperator,
-	fromIterator: fromIterator
+	SafeString,
+	copySafeness,
+	markSafe,
+	asyncEach,
+	asyncAll,
+	inOperator,
+	fromIterator
 };
+

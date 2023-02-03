@@ -31,7 +31,7 @@ class Render
 //	var env = new nunjucks.Environment(new nunjucks.FileSystemLoader(templateName));
 
 //	const result = await nunjucks.render(templateName,data);
-	const result = nunjucks.render(templateName,data);
+	const result = await nunjucks.render(templateName,data);
 
 	console.log('result:',result);	
 

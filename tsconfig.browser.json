@@ -1,0 +1,10 @@
+{
+	"extends": "./tsconfig",
+	"compilerOptions": {
+		"sourceMap": true,
+//		"target": "es2020" // <-- Latest version for which linking is working
+		"target": "es2021"
+//		"target": "es2015"
+	},
+}
+

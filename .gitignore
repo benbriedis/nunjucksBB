@@ -4,7 +4,6 @@ tsOut
 .#*
 docs/_site
 docs/files
-/index.js.map
 /tests/browser/nunjucks*
 .nyc_output
 /browser

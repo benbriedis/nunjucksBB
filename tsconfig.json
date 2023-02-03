@@ -124,7 +124,6 @@
 
 	//XXX the 'include' array appears to be a composite of entry points and search paths
 	"include": [
-//		"./nunjucks/**/*"
 		"./**/*"
 	],
 
@@ -136,6 +135,7 @@
 		"./bench/**/*",
 		"./samples/**/*",
 		"./scripts/**/*",
+		"./browser/**/*",
 	],
 
 }

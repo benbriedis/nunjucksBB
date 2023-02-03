@@ -3,7 +3,7 @@
 import * as lib from './src/lib';
 import {Environment, Template} from './src/environment';
 import Loader from './src/loader';
-import loaders from './src/loaders';
+import {Loaders} from './src/loaders';
 import precomp from './src/precompile';
 import compiler from './src/compiler';
 import parser from './src/parser';
@@ -24,13 +24,13 @@ function configure(templatesPath=undefined, opts=undefined)
 	}
 
 	let templateLoader;
-	if (loaders.FileSystemLoader) 
-		templateLoader = new loaders.FileSystemLoader(templatesPath, {
+	if (Loaders.FileSystemLoader) 
+		templateLoader = new Loaders.FileSystemLoader(templatesPath, {
 			watch: opts.watch,
 			noCache: opts.noCache
 		});
-	else if (loaders.WebLoader) 
-		templateLoader = new loaders.WebLoader(templatesPath, {
+	else if (Loaders.WebLoader) 
+		templateLoader = new Loaders.WebLoader(templatesPath, {
 			useCache: opts.web && opts.web.useCache,
 			async: opts.web && opts.web.async
 		});
@@ -79,10 +79,16 @@ export default {
 	Environment: Environment,
 	Template: Template,
 	Loader: Loader,
-	FileSystemLoader: loaders.FileSystemLoader,
-	NodeResolveLoader: loaders.NodeResolveLoader,
-	PrecompiledLoader: loaders.PrecompiledLoader,
-	WebLoader: loaders.WebLoader,
+	FileSystemLoader: Loaders.FileSystemLoader,
+	NodeResolveLoader: Loaders.NodeResolveLoader,
+	PrecompiledLoader: Loaders.PrecompiledLoader,
+	WebLoader: Loaders.WebLoader,
+/*	
+	FileSystemLoader: FileSystemLoader,
+	NodeResolveLoader: NodeResolveLoader,
+	PrecompiledLoader: PrecompiledLoader,
+	WebLoader: WebLoader,
+*/	
 	compiler: compiler,
 	parser: parser,
 	lexer: lexer,

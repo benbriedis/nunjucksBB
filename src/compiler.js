@@ -69,10 +69,11 @@ export class Compiler extends Obj2 {
     lines.forEach((line) => this._emitLine(line));
   }
 
+//XXX QQQ BB: remove cb
   _emitFuncBegin(node, name) {
     this.buffer = 'output';
     this._scopeClosers = '';
-    this._emitLine(`function ${name}(env, context, frame, runtime, cb) {`);
+    this._emitLine(`async function ${name}(env, context, frame, runtime, cb) {`);
     this._emitLine(`var lineno = ${node.lineno};`);
     this._emitLine(`var colno = ${node.colno};`);
     this._emitLine(`var ${this.buffer} = "";`);
@@ -929,19 +930,22 @@ export class Compiler extends Obj2 {
 
 //XXX QQQ BB: what does parentName do? Not present in 2013
   _compileGetTemplate(node, frame, eagerCompile, ignoreMissing) {
-    const parentTemplateId = this._tmpid();
+//    const parentTemplateId = this._tmpid();
     const parentName = this._templateName();
     const eagerCompileArg = (eagerCompile) ? 'true' : 'false';
     const ignoreMissingArg = (ignoreMissing) ? 'true' : 'false';
     this._emit('await env.getTemplate(');
     this._compileExpression(node.template, frame);
-    this._emitLine(`, ${eagerCompileArg}, ${parentName}, ${ignoreMissingArg} `);
-    return parentTemplateId;
+    this._emitLine(`, ${eagerCompileArg}, ${parentName}, ${ignoreMissingArg})`);
+//    return parentTemplateId;
   }
 
   compileImport(node, frame) {
     const target = node.target.value;
-    const id = this._compileGetTemplate(node, frame, false, false);
+    const id = this._tmpid();
+	this._emit(`${id} = `);
+    this._compileGetTemplate(node, frame, false, false);
+	this._emit(`;`);
     this._addScopeLevel();
 
 //XXX QQQ BB: can we remove _makeCallback?
@@ -961,7 +965,10 @@ export class Compiler extends Obj2 {
   }
 
   compileFromImport(node, frame) {
-    const importedId = this._compileGetTemplate(node, frame, false, false);
+    const importedId = this._tmpid();
+	this._emit(`${id} = `);
+    this._compileGetTemplate(node, frame, false, false);
+	this._emit(`;`);
     this._addScopeLevel();
 
     this._emitLine(importedId + '.getExported(' +
@@ -1039,12 +1046,12 @@ export class Compiler extends Obj2 {
   compileExtends(node, frame) {
     var k = this._tmpid();
 
-    const parentTemplateId = this._compileGetTemplate(node, frame, true, false);
-
     // extends is a dynamic tag and can occur within a block like
     // `if`, so if this happens we need to capture the parent
     // template in the top-level scope
-    this._emitLine(`parentTemplate = ${parentTemplateId}`);
+    this._emit(`parentTemplate = `);
+    this._compileGetTemplate(node, frame, true, false);
+	this._emit(`;`);
 
     this._emitLine(`for(var ${k} in parentTemplate.blocks) {`);
     this._emitLine(`context.addBlock(${k}, parentTemplate.blocks[${k}]);`);
@@ -1057,12 +1064,13 @@ export class Compiler extends Obj2 {
 //XXX QQQ BB: remove waterfall
 
   compileInclude(node, frame) {
-    const templateId = this._compileGetTemplate(node, frame, true, false);
-
-    this._emit(`var includeTemplate = ${templateId};`);
+//XXX QQQ BB: why does this have a var and most of the others not?
+    const templateId = this._tmpid();
+    this._emit(`var ${templateId} = `);
+    this._compileGetTemplate(node, frame, true, false);
+	this._emit(`;`);
     this._emitLine(this.buffer +
-		' += await includeTemplate.render(' +
-        'context.getVariables(), frame.push());');  
+		` += await ${templateId}.render(context.getVariables(), frame.push());`);  
   }
 
   compileTemplateData(node, frame) {
