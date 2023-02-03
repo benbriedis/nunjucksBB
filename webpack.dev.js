@@ -1,13 +1,24 @@
 const {merge} = require('webpack-merge');
 const common = require('./webpack.common.js');
 
+/*
+module.exports = env => { 
+	let xxx = merge(common(env), {
+    	mode: 'development',
+	});
+
+console.log('MERGED:',xxx);	
+	return xxx;
+};	
+*/
+
 module.exports = env => merge(common(env), {
     mode: 'development',
 /*	
 	output: {
 		globalObject: 'this',	
 	}
-*/	
+*/
 
 	/* 
  		See this for potential speedups to incremental builds. Currently not a problem.

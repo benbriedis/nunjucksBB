@@ -1,16 +1,16 @@
 'use strict';
 
-import * as lib from './src/lib';
-import {Environment, Template} from './src/environment';
-import Loader from './src/loader';
-import {Loaders} from './src/loaders';
-import precomp from './src/precompile';
-import compiler from './src/compiler';
-import parser from './src/parser';
-import lexer from './src/lexer';
-import runtime from './src/runtime';
-import nodes from './src/nodes';
-import installJinjaCompat from './src/jinja-compat';
+import * as lib from './lib';
+import {Environment, Template} from './environment';
+import Loader from './loader';
+import {Loaders} from './loaders';
+import precomp from './precompile';
+import compiler from './compiler';
+import parser from './parser';
+import lexer from './lexer';
+import runtime from './runtime';
+import nodes from './nodes';
+import installJinjaCompat from './jinja-compat';
 
 // A single instance of an environment, since this is so commonly used
 let e;

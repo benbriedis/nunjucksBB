@@ -1,80 +1,56 @@
-#!/usr/bin/env node
-/* eslint-disable vars-on-top, func-names */
+const path = require('path');
+const webpack = require('webpack');
 
-'use strict';
+console.log('IN COMMON');
 
-require('module-alias/register');
-
-var path = require('path');
-var webpack = require('webpack');
-var pjson = require('../package.json');
-var promiseSequence = require('./lib/utils').promiseSequence;
-//var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-var TEST_ENV = (process.env.NODE_ENV === 'test');
-
-var destDir = path.resolve(path.join(
-  __dirname,
-  (TEST_ENV) ? '../tests/browser' : '../browser'));
-
-function runWebpack(opts) {
-  var type = (opts.slim) ? '(slim, only works with precompiled templates)' : '';
-  var ext = (opts.min) ? '.min.js' : '.js';
-  if (opts.slim) {
-    ext = '-slim' + ext;
-  }
-  var filename = 'nunjucks' + ext;
-
-  return new Promise(function(resolve, reject) {
-    try {
-      var config = {
-        entry: './src/index.ts',
-        devtool: 'source-map',
+module.exports = env => {
+console.log('IN COMMON - 2');
+    return {
+        entry: {
+            index: './src/index.ts',
+        },
         output: {
-          path: destDir,
-          filename: filename,
-          library: 'nunjucks',
-          libraryTarget: 'umd',
-          devtoolModuleFilenameTemplate: function(info) {
-            return path.relative(destDir, info.absoluteResourcePath);
-          }
+			filename: '[name].js',
+//            path: path.resolve(__dirname, env.BUILDDIR),
+            path: path.resolve(__dirname, 'browser'),
+            publicPath: '/',
         },
+		devtool: 'source-map',
+		optimization: {
+			moduleIds: 'deterministic',
+			runtimeChunk: 'single',
+			splitChunks: {
+				cacheGroups: {
+					vendor: {
+						test: /[\\/]node_modules[\\/]/,
+						name: 'vendors',
+						chunks: 'all',
+					},
+				},
+			}
+		},
+		resolve: {
 /*		
-        node: {
-          process: false,
-          setImmediate: false
-        },
-*/		
-        module: {
-          rules: [{
-//            test: /nunjucks\/.*\.(js|ts)/,
-//            exclude: /(node_modules|browser|tests)(?!\.js)/,  //XXX This looks invalid
-//TODO support slim			
-/*			
-            use: {
-              loader: 'babel-loader',
-              options: {
-                plugins: [['module-resolver', {
-                  extensions: ['.js'],
-                  resolvePath: function(sourcePath) {
-                    if (sourcePath.match(/^(fs|path|chokidar)$/)) {
-                      return 'node-libs-browser/mock/empty';
-                    }
-                    if (opts.slim) {
-                      if (sourcePath.match(/(nodes|lexer|parser|precompile|transformer|compiler)(\.js)?$/)) {
-                        return 'node-libs-browser/mock/empty';
-                      }
-                    }
-                    if (sourcePath.match(/\/loaders(\.js)?$/)) {
-                      return sourcePath.replace('loaders', (opts.slim) ? 'precompiled-loader' : 'web-loaders');
-                    }
-                    return null;
-                  },
-                }]]
-              }
-            }
+			alias: {
+				Common: '/var/www/vos/src/common',
+				Browser: '/var/www/vos/src/browser',
+				BrowserOnly: '/var/www/vos/src/browser'
+				* Deliberately excluded server-side directories, e.g. Server, Deploy *
+			},
 */			
-
-
+			extensions: ['.ts','.js'],
+			fallback: {
+//XXX would be nice to separate out the server-specific code
+				'fs':false,
+				'path':false,
+				'chokidar':false,
+				'stream':false,
+				'os':false,
+				'fsevents':false
+    		}
+		},
+		module: {
+			rules: [{
 				test: /\.ts$/,
 
 				use: {
@@ -82,77 +58,17 @@ function runWebpack(opts) {
 					options: {
 						//XXX without this option MIGHT be possible to share compiled code
 						//  between server and client. Includes and excudes come from tsconfig.json.
-						//  Having trouble excluding node_modules
+						//  Having troble excluding vos/node_modules
 	 					//onlyCompileBundledFiles: true,
 						configFile: "tsconfig.browser.json"
 					}
-				}
-          }]
-        },
-        plugins: [
-          new webpack.BannerPlugin(
-            'Browser bundle of nunjucks ' + pjson.version + ' ' + type
-          ),
-          new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
-            'process.env.BUILD_TYPE': JSON.stringify((opts.slim) ? 'SLIM' : 'STD'),
-          }),
-        ]
-      };
+				},
+			}]
+		},
+       plugins: [
 
-/* TODO ... use new optimization settings
-      if (opts.min) {
-        config.plugins.push(
-          new UglifyJsPlugin({
-            sourceMap: true,
-            uglifyOptions: {
-              mangle: {
-                properties: {
-                  regex: /^_[^_]/
-                }
-              },
-              compress: {
-                unsafe: true
-              }
-            }
-          })
-        );
-      }
-*/	  
+//XXX Maybe add WorkboxPlugin to improve offline use. See "Progressive Web Application in Webpack 
 
-      webpack(config).run(function(err, stats) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(stats.toString({cached: false, cachedAssets: false}));
-        }
-      });
-    } catch (err) {
-      reject(err);
-    }
-  });
-}
-
-var runConfigs = [
-  {min: true, slim: false},
-  {min: true, slim: true}
-];
-
-if (!TEST_ENV) {
-  runConfigs.unshift(
-    {min: false, slim: false},
-    {min: false, slim: true});
-}
-
-var promises = runConfigs.map(function(opts) {
-  return function() {
-    return runWebpack(opts).then(function(stats) {
-      console.log(stats); // eslint-disable-line no-console
-    });
-  };
-});
-
-promiseSequence(promises).catch(function(err) {
-  throw err;
-});
-
+       ]
+    };
+};
