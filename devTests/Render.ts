@@ -9,14 +9,14 @@
 */
 
 //import nunjucks from 'nunjucksBB';
-import nunjucks from '../index.js';
+import nunjucks from '../src/index.js';
 
 class Render
 {
 
 	static async run():Promise<void>
 	{
-		const templateName = 'nunjucks/devTests/top.njk';
+		const templateName = 'devTests/top.njk';
 		const data = {
 			a:1,
 			b:2

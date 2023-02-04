@@ -4,12 +4,11 @@ import asap from 'asap';
 import waterfall from 'a-sync-waterfall';
 import * as lib from './lib';
 import compiler from './compiler';
-//import filters from './filters';
-const filters = require('./filters');
 import type Loader from './loader';
 import {Loaders} from './loaders';
 import tests from './tests';
 import Globals from './globals';
+import Filters from './filters';
 import {Obj,Obj2, EmitterObj,EmitterObj2} from './object';
 import globalRuntime,{handleError,Frame} from './runtime';
 import expressApp from './express-app';
@@ -24,7 +23,7 @@ const noopTmplSrc = {
 			try {
 				cb(null, '');
 			} catch (e) {
-				cb(handleError(e, null, null));
+				cb(handleError(e,null, null, null));
 			}
 		}
 	}
@@ -35,9 +34,8 @@ const noopTmplSrc = {
 class Environment extends EmitterObj2 
 {
 	globals;
-	filters = {};
+	filters;
 	tests = {};
-	asyncFilters = [];
 	extensions = {};
 	extensionsList = [];
 	opts;
@@ -91,14 +89,18 @@ class Environment extends EmitterObj2
 
 		this._initLoaders();
 
-		this.globals2 = new Globals();
-		this.filters = {};
+//TODO use new on all of these
+		this.globals = new Globals();
+//TODO ensure all filters and globals are async		
+//		this.filters = new Filters();
+		this.filters = Object.assign({},Filters);
 		this.tests = {};
-		this.asyncFilters = [];
 		this.extensions = {};
 		this.extensionsList = [];
 
-		lib._entries(filters).forEach(([name, filter]) => this.addFilter(name, filter));
+//XXX is this necessary? Perhaps globals need this treatment too. Use Object.assign()?
+//XXX only want public functions to be copied
+		/* Shallow copy filters and tests into a new objects */
 		lib._entries(tests).forEach(([name, test]) => this.addTest(name, test));
   	}
 
@@ -172,12 +174,9 @@ class Environment extends EmitterObj2
 		return this.globals[name];
 	}
 
-	addFilter(name, func, async=undefined) 
+	addFilter(name, func) 
 	{
-		var wrapped = func;
-		if (async) 
-			this.asyncFilters.push(name);
-		this.filters[name] = wrapped;
+		this.filters[name] = func;
 		return this;
 	}
 
@@ -500,7 +499,7 @@ class Template extends Obj2
 			props = this.tmplProps;
 		else {
 			const source = compiler.compile(this.tmplStr,
-			this.env.asyncFilters,
+//			this.env.asyncFilters,   XXX might we need to pass in regular filters?
 			this.env.extensionsList,
 			this.path,
 			this.env.opts);

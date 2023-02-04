@@ -124,7 +124,7 @@
 
 	//XXX the 'include' array appears to be a composite of entry points and search paths
 	"include": [
-		"src/**/*"
+		"**/*"
 	],
 
 	/* "exclude" does not prevent files being imported.  Only excludes them from being entry points. */
@@ -136,6 +136,7 @@
 		"./samples/**/*",
 		"./scripts/**/*",
 		"./browser/**/*",
+		"./webpack*",
 	],
 
 }

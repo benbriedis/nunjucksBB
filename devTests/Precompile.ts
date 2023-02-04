@@ -1,4 +1,4 @@
-import nunjucks from '../index.js';
+import nunjucks from '../src/index.js';
 import {open} from 'fs/promises';
 //import nunjucks from 'nunjucks';
 //import NunjucksExtensions from 'Browser/NunjucksEnv';
@@ -14,7 +14,7 @@ export default class Precompile
 		});
 //		NunjucksExtensions.extend(this.env);
 
-		const templateName = 'nunjucks/devTests/top.njk';
+		const templateName = 'devTests/top.njk';
 		const data = {
 			a:1,
 			b:2

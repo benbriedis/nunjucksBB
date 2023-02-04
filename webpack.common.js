@@ -1,10 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 
-console.log('IN COMMON');
-
 module.exports = env => {
-console.log('IN COMMON - 2');
     return {
         entry: {
             index: './src/index.ts',
@@ -60,7 +57,7 @@ console.log('IN COMMON - 2');
 						//  between server and client. Includes and excudes come from tsconfig.json.
 						//  Having troble excluding vos/node_modules
 	 					//onlyCompileBundledFiles: true,
-						configFile: "tsconfig.browser.json"
+						configFile: 'tsconfig.browser.json'
 					}
 				},
 			}]

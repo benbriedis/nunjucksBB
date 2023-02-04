@@ -4,6 +4,7 @@ import lexer from './lexer';
 import nodes from './nodes';
 import {Obj2} from './object';
 import * as lib from './lib';
+import {TemplateError} from './lib';
 
 export class Parser extends Obj2
 {
@@ -75,7 +76,7 @@ export class Parser extends Obj2
     if (colno !== undefined) {
       colno += 1;
     }
-    return new (<any>lib.TemplateError)(msg, lineno, colno);
+    return new TemplateError(msg,'TODO',lineno,colno);  //FIXME 'TODO'
   }
 
   fail(msg, lineno=undefined, colno=undefined) {

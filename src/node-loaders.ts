@@ -5,7 +5,7 @@
 import fs from 'fs';
 import path from 'path';
 import Loader from './loader';
-import {PrecompiledLoader} from './precompiled-loader.js';
+export {PrecompiledLoader} from './precompiled-loader';
 let chokidar;
 
 class FileSystemLoader extends Loader {
@@ -152,5 +152,5 @@ class NodeResolveLoader extends Loader
 	}
 }
 
-export {FileSystemLoader,PrecompiledLoader,NodeResolveLoader};
+export {FileSystemLoader,NodeResolveLoader};
 

@@ -30,10 +30,6 @@ function _joiner(sep)
 
 export default class Globals 
 {
-	constructor()
-	{
-	}
-
 	range(start, stop, step) 
 	{
 		if (typeof stop === 'undefined') {

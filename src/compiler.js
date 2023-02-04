@@ -1,7 +1,7 @@
 'use strict';
 
 import parser from './parser';
-import transformer from './transformer';
+import {transformer} from './transformer';
 import nodes from './nodes';
 import {TemplateError} from './lib';
 import {Frame} from './runtime';
@@ -42,7 +42,7 @@ export class Compiler extends Obj2 {
       colno += 1;
     }
 
-    throw new TemplateError(msg, lineno, colno);
+    throw new TemplateError(msg,templateName,lineno,colno);
   }
 
   _pushBuffer() {
@@ -87,7 +87,7 @@ export class Compiler extends Obj2 {
 
     this._closeScopeLevels();
     this._emitLine('} catch (e) {');
-    this._emitLine('  cb(runtime.handleError(e, lineno, colno));');
+    this._emitLine('  cb(runtime.handleError(e,"'+this._templateName()+'", lineno, colno));');
     this._emitLine('}');
     this._emitLine('}');
     this.buffer = null;

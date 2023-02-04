@@ -79,6 +79,9 @@ export class NodeList extends Node
 	{
 		(<any>this).children.push(node);
 	}
+
+	//XXX will be overridden using a dynamic field
+	children():any {}
 }
 
 class Root extends NodeList {get typename() {return 'Root';}};

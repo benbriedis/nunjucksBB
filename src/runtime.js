@@ -220,6 +220,7 @@ export function ensureDefined(val, lineno, colno) {
   if (val === null || val === undefined) {
     throw new lib.TemplateError(
       'attempted to output null or undefined value',
+	  'TODO', 	//FIXME 'TODO'
       lineno + 1,
       colno + 1
     );
@@ -256,12 +257,12 @@ export function contextOrFrameLookup(context, frame, name) {
     context.lookup(name);
 }
 
-export function handleError(error, lineno, colno) {
-  if (error.lineno) {
-    return error;
-  } else {
-    return new lib.TemplateError(error, lineno, colno);
-  }
+export function handleError(error,template,line,column) 
+{
+	if (error.line)			//XXX YUCK
+		return error;
+	else 
+		return new TemplateError(error,template,line,column);
 }
 
 export function asyncEach(arr, dimen, iter, cb) {

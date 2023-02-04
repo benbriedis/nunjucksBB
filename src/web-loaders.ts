@@ -1,8 +1,7 @@
 'use strict';
 
 import Loader from './loader';
-import {PrecompiledLoader} from './precompiled-loader.js';
-export {PrecompiledLoader};
+export {PrecompiledLoader} from './precompiled-loader';
 
 export class WebLoader extends Loader 
 {

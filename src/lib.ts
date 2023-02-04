@@ -1,4 +1,3 @@
-'use strict';
 
 var ArrayProto = Array.prototype;
 var ObjProto = Object.prototype;
@@ -25,10 +24,8 @@ function lookupEscape(ch)
 
 export function _prettifyError(path, withInternals, err)
 {
-	if (!err.Update) 
-		// not one of ours, cast it
-		err = new exports.TemplateError(err);
-	err.Update(path);
+	if (!(err instanceof TemplateError)) 
+		err = TemplateError.fromError(err,path,-1,-1);  //FIXME params
 
 	// Unless they marked the dev flag, show them a trace from here
 	if (!withInternals) {
@@ -40,90 +37,28 @@ export function _prettifyError(path, withInternals, err)
 	return err;
 }
 
-function TemplateError(message, lineno, colno) 
+//TODO BB work on this further. I deleted out the old version - it was too far gone
+export class TemplateError
 {
-	var err;
-	var cause;
+	message;
+	template;
+	line;
+	column;
 
-	if (message instanceof Error) {
-		cause = message;
-		message = `${cause.name}: ${cause.message}`;
+	constructor(message:string,template,line,column) 
+	{
+		this.message = message;
+		this.template = template;
+		this.line = line;
+		this.column = column;
 	}
 
-	if (Object.setPrototypeOf) {
-		err = new Error(message);
-		Object.setPrototypeOf(err, TemplateError.prototype);
-	} else {
-		err = this;
-		Object.defineProperty(err, 'message', {
-			enumerable: false,
-			writable: true,
-			value: message,
-		});
+	static fromError(err:Error,template,line,column)
+	{
+//TODO copy stack trace over?	
+		return new TemplateError(err.toString(),template,line,column);
 	}
-
-	Object.defineProperty(err, 'name', {
-		value: 'Template render error',
-	});
-
-	if (Error.captureStackTrace) 
-		Error.captureStackTrace(err, this.constructor);
-
-	let getStack;
-
-	if (cause) {
-		const stackDescriptor = Object.getOwnPropertyDescriptor(cause, 'stack');
-		getStack = stackDescriptor && (stackDescriptor.get || (() => stackDescriptor.value));
-		if (!getStack) 
-			getStack = () => cause.stack;
-	} else {
-		const stack = (new Error(message)).stack;
-		getStack = (() => stack);
-	}
-
-
-	Object.defineProperty(err, 'stack', { get: () => getStack.call(err), });
-	Object.defineProperty(err, 'cause', { value: cause });
-
-	err.lineno = lineno;
-	err.colno = colno;
-	err.firstUpdate = true;
-
-	err.Update = function Update(path) {
-		let msg = '(' + (path || 'unknown path') + ')';
-
-		// only show lineno + colno next to path of template
-		// where error occurred
-		if (this.firstUpdate) {
-			if (this.lineno && this.colno) 
-				msg += ` [Line ${this.lineno}, Column ${this.colno}]`;
-			else if (this.lineno) 
-				msg += ` [Line ${this.lineno}]`;
-		}
-
-		msg += '\n ';
-		if (this.firstUpdate) 
-			msg += ' ';
-
-		this.message = msg + (this.message || '');
-		this.firstUpdate = false;
-		return this;
-	};
-	return err;
 }
-
-
-if (Object.setPrototypeOf) 
-	Object.setPrototypeOf(TemplateError.prototype, Error.prototype);
-else
-	TemplateError.prototype = Object.create(Error.prototype, {
-		constructor: {
-			value: TemplateError,
-		},
-	});
-
-export {TemplateError};
-
 
 export function escape(val) 
 {
