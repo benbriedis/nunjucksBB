@@ -52,9 +52,10 @@
     "node": ">= 6.9.0"
   },
   "scripts": {
-    "build:bundle": "node scripts/bundle.js",
-    "buildOLD": "npm run build:transpile && npm run build:bundle",
-    "build": "npx webpack build --config ./webpack.dev.js",
+    "build:browser": "npx webpack build --config ./webpack.dev.js",
+    "build:server": "tsc",
+    "build": "npm run build:browser && npm run build:server",
+
     "codecov": "codecov",
     "mocha": "mocha -R spec tests",
     "lint": "eslint nunjucks scripts tests",
@@ -66,7 +67,7 @@
   "bin": {
     "nunjucks-precompile": "./bin/precompile"
   },
-  "main": "tsOut/nunjucks/index.js",
+  "main": "server/nunjucks/index.js",
   "files": [
     "bin/**",
     "browser/**"
