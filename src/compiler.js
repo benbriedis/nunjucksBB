@@ -951,8 +951,7 @@ export class Compiler extends Obj2 {
 //XXX QQQ BB: can we remove _makeCallback?
 
     this._emitLine('await '+id + '.getExported(' +
-      (node.withContext ? 'context.getVariables(), frame, ' : '') +
-      this._makeCallback(id));
+      (node.withContext ? 'context.getVariables(), frame' : ''));
     this._addScopeLevel();
 
     frame.set(target, id);
@@ -972,8 +971,7 @@ export class Compiler extends Obj2 {
     this._addScopeLevel();
 
     this._emitLine('await '+importedId + '.getExported(' +
-      (node.withContext ? 'context.getVariables(), frame, ' : '') +
-      this._makeCallback(importedId));
+      (node.withContext ? 'context.getVariables(), frame' : ''));
     this._addScopeLevel();
 
     node.names.children.forEach((nameNode) => {

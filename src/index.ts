@@ -1,7 +1,8 @@
 'use strict';
 
 import * as lib from './lib';
-import {Environment, Template} from './environment';
+import Environment from './environment';
+import Template from './template';
 import Loader from './loader';
 import {Loaders} from './loaders';
 import precomp from './precompile';

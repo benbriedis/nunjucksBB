@@ -4,9 +4,7 @@
   "version": "3.2.3",
   "author": "James Long <longster@gmail.com>",
   "dependencies": {
-    "@types/asap": "^2.0.0",
     "a-sync-waterfall": "^1.0.0",
-    "asap": "^2.0.3",
     "chokidar": "^3.5.3",
     "commander": "^5.1.0",
     "fs": "^0.0.1-security"
@@ -55,7 +53,6 @@
     "build:browser": "npx webpack build --config ./webpack.dev.js",
     "build:server": "tsc",
     "build": "npm run build:browser && npm run build:server",
-
     "codecov": "codecov",
     "mocha": "mocha -R spec tests",
     "lint": "eslint nunjucks scripts tests",
