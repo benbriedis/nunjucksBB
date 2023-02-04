@@ -1,12 +1,15 @@
-import nunjucks from '../src/index.js';
+import nunjucks from '../src/index';
 //import nunjucks from 'nunjucks';
 //import NunjucksExtensions from 'Browser/NunjucksEnv';
 
 //export default class RunPrecompiled    XXX would be useful if I had a 2nd one I could run on the server
-export default class BrowserTester
+//export default class BrowserTester
+class BrowserTester
 {
 	static async run():Promise<void>
 	{
+console.log('In BrowserTester.run() - 2');
+
 		const compiledName = 'compiledTop.njk.js';
 
 //FIXME WebLoader refuses to run on the server 
@@ -20,6 +23,7 @@ export default class BrowserTester
 //XXX Can I pass in a 'null' loader instead? I suspect that a cache is used in this case...
 //XXX is using something window.nunjucksPrecompiled to access
 
+console.log('In BrowserTester.run() - 3');
 		const env = new nunjucks.Environment(new nunjucks.WebLoader('/xxxx'),{
 			trimBlocks:true,
 			lstripBlocks:true
@@ -35,11 +39,16 @@ export default class BrowserTester
 
 //XXX can/should I combine these two?
 		const template = await env.getTemplate(templateName,true);   //XXX true?
+
+console.log('In BrowserTester.run() - 4  template:',template);
+
 		const content = await template.render(data);
 
-		console.log(content);
+		console.log('content:',content);
 	}
 }
+
+console.log('In BrowserTester - 1');
 
 BrowserTester.run().catch(err => console.log(err));
 

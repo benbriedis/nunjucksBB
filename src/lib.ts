@@ -22,8 +22,13 @@ function lookupEscape(ch)
 	return escapeMap[ch];
 }
 
+//XXX just incorporate into TemplateError?
 export function _prettifyError(path, withInternals, err)
 {
+console.log('_prettifyError  path:',path);
+console.log('_prettifyError  err:',err);
+console.log('_prettifyError  err.stack:',err.stack);
+
 	if (!(err instanceof TemplateError)) 
 		err = TemplateError.fromError(err,path,-1,-1);  //FIXME params
 

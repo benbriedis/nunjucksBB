@@ -4,15 +4,21 @@ const webpack = require('webpack');
 module.exports = env => {
     return {
         entry: {
-            index: './src/index.ts',
+            nunjucks: './src/index.ts',
+            browserTester: {
+				dependOn: 'nunjucks',
+				import: './devTests/BrowserTester.ts',
+			}
         },
         output: {
 			filename: '[name].js',
+//			filename: 'nunjucks.js',
 //            path: path.resolve(__dirname, env.BUILDDIR),
             path: path.resolve(__dirname, 'browser'),
             publicPath: '/',
         },
 		devtool: 'source-map',
+/*		
 		optimization: {
 			moduleIds: 'deterministic',
 			runtimeChunk: 'single',
@@ -26,6 +32,7 @@ module.exports = env => {
 				},
 			}
 		},
+*/		
 		resolve: {
 /*		
 			alias: {

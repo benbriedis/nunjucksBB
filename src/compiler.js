@@ -1,7 +1,7 @@
 'use strict';
 
 import parser from './parser';
-import {transformer} from './transformer';
+import {transform} from './transformer';
 import nodes from './nodes';
 import {TemplateError} from './lib';
 import {Frame} from './runtime';
@@ -87,7 +87,7 @@ export class Compiler extends Obj2 {
 
     this._closeScopeLevels();
     this._emitLine('} catch (e) {');
-    this._emitLine('  cb(runtime.handleError(e,"'+this._templateName()+'", lineno, colno));');
+    this._emitLine(`  cb(runtime.handleError(e,${this._templateName()},lineno,colno));`);
     this._emitLine('}');
     this._emitLine('}');
     this.buffer = null;
@@ -950,7 +950,7 @@ export class Compiler extends Obj2 {
 
 //XXX QQQ BB: can we remove _makeCallback?
 
-    this._emitLine(id + '.getExported(' +
+    this._emitLine('await '+id + '.getExported(' +
       (node.withContext ? 'context.getVariables(), frame, ' : '') +
       this._makeCallback(id));
     this._addScopeLevel();
@@ -971,7 +971,7 @@ export class Compiler extends Obj2 {
 	this._emit(`;`);
     this._addScopeLevel();
 
-    this._emitLine(importedId + '.getExported(' +
+    this._emitLine('await '+importedId + '.getExported(' +
       (node.withContext ? 'context.getVariables(), frame, ' : '') +
       this._makeCallback(importedId));
     this._addScopeLevel();
@@ -1191,7 +1191,7 @@ function compile(src, asyncFilters, extensions, name, opts = {})
 
 	const processedSrc = preprocessors.reduce((s, processor) => processor(s), src);
 
-	c.compile(transformer.transform(
+	c.compile(transform(
 		parser.parse(processedSrc, extensions, opts),
 		asyncFilters,
 		name

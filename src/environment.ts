@@ -1,5 +1,3 @@
-'use strict';
-
 import asap from 'asap';
 import waterfall from 'a-sync-waterfall';
 import * as lib from './lib';
@@ -376,6 +374,7 @@ class Context extends Obj2
 	}
 }
 
+//TODO chop this file up
 
 class Template extends Obj2
 {
@@ -390,6 +389,8 @@ class Template extends Obj2
 	constructor(src, env, path, eagerCompile=undefined) 
 	{
 		super();
+console.log('environment Template() path:',path);
+console.log('environment Template() src:',src);
 
 		this.env = env || new Environment();
 
@@ -424,6 +425,8 @@ class Template extends Obj2
 
 	async render(ctx, parentFrame=undefined):Promise<string>
 	{
+console.log('environment render() ctx:',ctx);
+
 		if (typeof ctx === 'function') 
 			ctx = {};
 		else if (typeof parentFrame === 'function') 
@@ -431,6 +434,7 @@ class Template extends Obj2
 
 		// Catch compile errors for async rendering
 		try {
+//TODO embed the compile() call in here - less confusing		
 			this.compile();
 		} 
 		catch (e) {
@@ -442,15 +446,23 @@ class Template extends Obj2
 		frame.topLevel = true;
 		let syncResult = null;
 
-		this.rootRenderFunc(this.env, context, frame, globalRuntime, (err, res) => {
+console.log('environment render() this.env:',this.env);
+console.log('environment render() context:',context);
+console.log('environment render() frame:',frame);
+console.log('environment render() globalRuntime:',globalRuntime);
+
+		await this.rootRenderFunc(this.env, context, frame, globalRuntime, (err, res) => {
+console.log('environment render() - rootRenderFunc()  res:',res);
+console.log('environment render() - rootRenderFunc()  err:',err);
 			if (err) 
 				throw lib._prettifyError(this.path, this.env.opts.dev, err);
 			syncResult = res;
 		});
+console.log('environment render() syncResult:',syncResult);
 		return syncResult;
 	}
 
-	getExported(ctx, parentFrame, cb) // eslint-disable-line consistent-return
+	async getExported(ctx, parentFrame, cb) // eslint-disable-line consistent-return
 	{ 
 		if (typeof ctx === 'function') {
 			cb = ctx;
@@ -477,7 +489,7 @@ class Template extends Obj2
 
 		// Run the rootRenderFunc to populate the context with exported vars
 		const context = new Context(ctx || {}, this.blocks, this.env);
-		this.rootRenderFunc(this.env, context, frame, globalRuntime, (err) => {
+		await this.rootRenderFunc(this.env, context, frame, globalRuntime, (err) => {
 			if (err) 
 				cb(err, null);
 			else 

@@ -119,6 +119,8 @@ function _precompile(str, name, env) {
       name,
       env.opts);
   } catch (err) {
+console.log('HERE  error:',err);  
+console.log('HERE  error all:',JSON.stringify(err));  
     throw _prettifyError(name, false, err);
   }
 
