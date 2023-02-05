@@ -15,11 +15,9 @@ export default class Template extends Obj2
     blocks;
     rootRenderFunc;
 
-	constructor(src, env, path, eagerCompile=undefined) 
+	constructor(src, env, path) 
 	{
 		super();
-console.log('environment Template() path:',path);
-console.log('environment Template() src:',src);
 
 		this.env = env || new Environment();
 
@@ -41,10 +39,13 @@ console.log('environment Template() src:',src);
 			throw new Error('src must be a string or an object describing the source');
 
 		this.path = path;
+	}
 
+	public async init(eagerCompile:boolean)
+	{
 		if (eagerCompile) 
 			try {
-				this._compile();
+				await this._compile();
 			} catch (err) {
 				throw lib._prettifyError(this.path, this.env.opts.dev, err);
 			}
@@ -54,8 +55,6 @@ console.log('environment Template() src:',src);
 
 	async render(ctx, parentFrame=undefined):Promise<string>
 	{
-console.log('environment render() ctx:',ctx);
-
 		if (typeof ctx === 'function') 
 			ctx = {};
 		else if (typeof parentFrame === 'function') 
@@ -64,7 +63,7 @@ console.log('environment render() ctx:',ctx);
 		// Catch compile errors for async rendering
 		try {
 //TODO embed the compile() call in here - less confusing		
-			this.compile();
+			await this.compile();
 		} 
 		catch (e) {
 			throw lib._prettifyError(this.path, this.env.opts.dev, e);
@@ -75,19 +74,14 @@ console.log('environment render() ctx:',ctx);
 		frame.topLevel = true;
 		let syncResult = null;
 
-console.log('environment render() this.env:',this.env);
-console.log('environment render() context:',context);
-console.log('environment render() frame:',frame);
-console.log('environment render() globalRuntime:',globalRuntime);
-
 		await this.rootRenderFunc(this.env, context, frame, globalRuntime, (err, res) => {
-console.log('environment render() - rootRenderFunc()  res:',res);
-console.log('environment render() - rootRenderFunc()  err:',err);
 			if (err) 
+{			
+console.log('environment render() - rootRenderFunc()  err:',err);
 				throw lib._prettifyError(this.path, this.env.opts.dev, err);
+}				
 			syncResult = res;
 		});
-console.log('environment render() syncResult:',syncResult);
 		return syncResult;
 	}
 
@@ -100,7 +94,7 @@ console.log('environment render() syncResult:',syncResult);
 			parentFrame = null;
 
 		// Catch compile errors for async rendering
-		this.compile();
+		await this.compile();
 
 		const frame = parentFrame ? parentFrame.push() : new Frame();
 		frame.topLevel = true;
@@ -114,13 +108,13 @@ console.log('environment render() syncResult:',syncResult);
 //		context.getExported();
 	}
 
-	compile() 
+	async compile() 
 	{
 		if (!this.compiled) 
-			this._compile();
+			await this._compile();
 	}
 
-	_compile() 
+	private async _compile() 
 	{
 		var props;
 
@@ -133,8 +127,17 @@ console.log('environment render() syncResult:',syncResult);
 			this.path,
 			this.env.opts);
 
+//XXX Can the source be a wrapped function???   async function root(env, context, frame, runtime, cb) {...}			
+//XXX Can the AsyncFunction source be a wrapped function???   async function root(env, context, frame, runtime, cb) {...}			
+//XXX Do we need AsyncFunction?
+
+//console.log('template._compile()  source:',source)
 			const func = new Function(source); // eslint-disable-line no-new-func
-			props = func();
+//			const AsyncFunction = async function () {}.constructor;
+//			const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+
+//			const func = new AsyncFunction(source); // eslint-disable-line no-new-func
+			props = await func();
 		}
 
 		this.blocks = this._getBlocks(props);

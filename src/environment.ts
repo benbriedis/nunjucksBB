@@ -236,15 +236,18 @@ export default class Environment extends EmitterObj2
 			const resolvedName = that.resolveTemplate(loader, parentName, name);
 			const info = await loader.getSource(resolvedName);
 
-			if (!info) 
-				return new Template(noopTmplSrc, this, '', eagerCompile);
-			else {
-				tmpl = new Template(info.src, this, info.path, eagerCompile);
-console.log('loader:',loader);				
-				if (!info.noCache) 
-					loader.cache[<string>name] = tmpl;
-				return tmpl;
+			let template;
+			if (!info) {
+				template = new Template(noopTmplSrc, this, '');
+				await template.init(eagerCompile);
 			}
+			else {
+				template = new Template(info.src, this, info.path);
+				await template.init(eagerCompile);
+				if (!info.noCache) 
+					loader.cache[<string>name] = template;
+			}
+			return template;
 		}
 
 		if (ignoreMissing) 

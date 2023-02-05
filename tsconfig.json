@@ -135,7 +135,6 @@
 		"./docs/**/*",
 		"./bench/**/*",
 		"./samples/**/*",
-		"./scripts/**/*",
 		"./webpack*",
 	],
 

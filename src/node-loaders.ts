@@ -8,7 +8,8 @@ import Loader from './loader';
 export {PrecompiledLoader} from './precompiled-loader';
 let chokidar;
 
-class FileSystemLoader extends Loader {
+export class FileSystemLoader extends Loader 
+{
 	pathsToNames;
 	noCache;
 	searchPaths;
@@ -27,6 +28,7 @@ class FileSystemLoader extends Loader {
 		this.pathsToNames = {};
 		this.noCache = !!opts.noCache;
 
+//TODO just accept array
 		if (searchPaths) {
 			searchPaths = Array.isArray(searchPaths) ? searchPaths : [searchPaths];
 			// For windows, convert to forward slashes
@@ -89,7 +91,7 @@ class FileSystemLoader extends Loader {
 }
 
 
-class NodeResolveLoader extends Loader 
+export class NodeResolveLoader extends Loader 
 {
 	pathsToNames = {};
 	noCache;
@@ -151,6 +153,4 @@ class NodeResolveLoader extends Loader
 		return source;
 	}
 }
-
-export {FileSystemLoader,NodeResolveLoader};
 

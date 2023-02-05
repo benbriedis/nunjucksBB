@@ -265,89 +265,6 @@ export function handleError(error,template,line,column)
 		return new TemplateError(error,template,line,column);
 }
 
-export function asyncEach(arr, dimen, iter, cb) {
-  if (lib.isArray(arr)) {
-    const len = arr.length;
-
-    lib.asyncIter(arr, function iterCallback(item, i, next) {
-      switch (dimen) {
-        case 1:
-          iter(item, i, len, next);
-          break;
-        case 2:
-          iter(item[0], item[1], i, len, next);
-          break;
-        case 3:
-          iter(item[0], item[1], item[2], i, len, next);
-          break;
-        default:
-          item.push(i, len, next);
-          iter.apply(this, item);
-      }
-    }, cb);
-  } else {
-    lib.asyncFor(arr, function iterCallback(key, val, i, len, next) {
-      iter(key, val, i, len, next);
-    }, cb);
-  }
-}
-
-export function asyncAll(arr, dimen, func, cb) {
-  var finished = 0;
-  var len;
-  var outputArr;
-
-  function done(i, output) {
-    finished++;
-    outputArr[i] = output;
-
-    if (finished === len) {
-      cb(null, outputArr.join(''));
-    }
-  }
-
-  if (lib.isArray(arr)) {
-    len = arr.length;
-    outputArr = new Array(len);
-
-    if (len === 0) {
-      cb(null, '');
-    } else {
-      for (let i = 0; i < arr.length; i++) {
-        const item = arr[i];
-
-        switch (dimen) {
-          case 1:
-            func(item, i, len, done);
-            break;
-          case 2:
-            func(item[0], item[1], i, len, done);
-            break;
-          case 3:
-            func(item[0], item[1], item[2], i, len, done);
-            break;
-          default:
-            item.push(i, len, done);
-            func.apply(this, item);
-        }
-      }
-    }
-  } else {
-    const keys = lib.keys(arr || {});
-    len = keys.length;
-    outputArr = new Array(len);
-
-    if (len === 0) {
-      cb(null, '');
-    } else {
-      for (let i = 0; i < keys.length; i++) {
-        const k = keys[i];
-        func(k, arr[k], i, len, done);
-      }
-    }
-  }
-}
-
 export function fromIterator(arr) {
   if (typeof arr !== 'object' || arr === null || lib.isArray(arr)) {
     return arr;
@@ -377,8 +294,6 @@ export default {
 	SafeString,
 	copySafeness,
 	markSafe,
-	asyncEach,
-	asyncAll,
 	inOperator,
 	fromIterator
 };

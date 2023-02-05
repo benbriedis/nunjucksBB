@@ -627,13 +627,6 @@ export class Compiler extends Obj2 {
     this._emitLine('}');
   }
 
-  compileIfAsync(node, frame) {
-    this._emit('(function(cb) {');
-    this.compileIf(node, frame, true);
-    this._emit('})(' + this._makeCallback());
-    this._addScopeLevel();
-  }
-
   _emitLoopBindings(node, arr, i, len) {
     const bindings = [
       {name: 'index', val: `${i} + 1`},
@@ -745,86 +738,6 @@ export class Compiler extends Obj2 {
     }
 
     this._emitLine('frame = frame.pop();');
-  }
-
-  _compileAsyncLoop(node, frame, parallel) {
-    // This shares some code with the For tag, but not enough to
-    // worry about. This iterates across an object asynchronously,
-    // but not in parallel.
-
-    var i = this._tmpid();
-    var len = this._tmpid();
-    var arr = this._tmpid();
-    var asyncMethod = parallel ? 'asyncAll' : 'asyncEach';
-    frame = frame.push();
-
-    this._emitLine('frame = frame.push();');
-
-    this._emit('var ' + arr + ' = runtime.fromIterator(');
-    this._compileExpression(node.arr, frame);
-    this._emitLine(');');
-
-    if (node.name instanceof nodes.Array) {
-      const arrayLen = node.name.children.length;
-      this._emit(`runtime.${asyncMethod}(${arr}, ${arrayLen}, function(`);
-
-      node.name.children.forEach((name) => {
-        this._emit(`${name.value},`);
-      });
-
-      this._emit(i + ',' + len + ',next) {');
-
-      node.name.children.forEach((name) => {
-        const id = name.value;
-        frame.set(id, id);
-        this._emitLine(`frame.set("${id}", ${id});`);
-      });
-    } else {
-      const id = node.name.value;
-      this._emitLine(`runtime.${asyncMethod}(${arr}, 1, function(${id}, ${i}, ${len},next) {`);
-      this._emitLine('frame.set("' + id + '", ' + id + ');');
-      frame.set(id, id);
-    }
-
-    this._emitLoopBindings(node, arr, i, len);
-
-    this._withScopedSyntax(() => {
-      let buf;
-      if (parallel) {
-        buf = this._pushBuffer();
-      }
-
-      this.compile(node.body, frame);
-      this._emitLine('next(' + i + (buf ? ',' + buf : '') + ');');
-
-      if (parallel) {
-        this._popBuffer();
-      }
-    });
-
-    const output = this._tmpid();
-    this._emitLine('}, ' + this._makeCallback(output));
-    this._addScopeLevel();
-
-    if (parallel) {
-      this._emitLine(this.buffer + ' += ' + output + ';');
-    }
-
-    if (node.else_) {
-      this._emitLine('if (!' + arr + '.length) {');
-      this.compile(node.else_, frame);
-      this._emitLine('}');
-    }
-
-    this._emitLine('frame = frame.pop();');
-  }
-
-  compileAsyncEach(node, frame) {
-    this._compileAsyncLoop(node, frame);
-  }
-
-  compileAsyncAll(node, frame) {
-    this._compileAsyncLoop(node, frame, true);
   }
 
   _compileMacro(node, frame) {

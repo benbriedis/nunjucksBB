@@ -166,12 +166,6 @@ export class Parser extends Obj2
     if (this.skipSymbol('for')) {
       node = new nodes.For(forTok.lineno, forTok.colno);
       endBlock = 'endfor';
-    } else if (this.skipSymbol('asyncEach')) {
-      node = new nodes.AsyncEach(forTok.lineno, forTok.colno);
-      endBlock = 'endeach';
-    } else if (this.skipSymbol('asyncAll')) {
-      node = new nodes.AsyncAll(forTok.lineno, forTok.colno);
-      endBlock = 'endall';
     } else {
       this.fail('parseFor: expected for{Async}', forTok.lineno, forTok.colno);
     }
@@ -468,8 +462,6 @@ export class Parser extends Obj2
 
     if (this.skipSymbol('if') || this.skipSymbol('elif') || this.skipSymbol('elseif')) {
       node = new nodes.If(tag.lineno, tag.colno);
-    } else if (this.skipSymbol('ifAsync')) {
-      node = new nodes.IfAsync(tag.lineno, tag.colno);
     } else {
       this.fail('parseIf: expected if, elif, or elseif',
         tag.lineno,
@@ -631,11 +623,8 @@ export class Parser extends Obj2
       case 'verbatim':
         return this.parseRaw('verbatim');
       case 'if':
-      case 'ifAsync':
         return this.parseIf();
       case 'for':
-      case 'asyncEach':
-      case 'asyncAll':
         return this.parseFor();
       case 'block':
         return this.parseBlock();

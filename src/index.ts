@@ -5,7 +5,7 @@ import Environment from './environment';
 import Template from './template';
 import Loader from './loader';
 import {Loaders} from './loaders';
-import precomp from './precompile';
+import {precompile,precompileString} from './precompile';
 import compiler from './compiler';
 import parser from './parser';
 import lexer from './lexer';
@@ -49,11 +49,13 @@ function reset()
 	e = undefined;
 }
 
-function compile(src, env, path, eagerCompile) 
+async function compile(src, env, path, eagerCompile) 
 {
 	if (!e) 
 		configure();
-	return new Template(src, env, path, eagerCompile);
+	const template = new Template(src,env,path);
+	await template.init(eagerCompile);
+	return template;
 }
 
 async function render(name, ctx):Promise<string>
@@ -102,7 +104,7 @@ export default {
 	compile:compile,
 	render:render,
 	renderString:renderString,
-	precompile: (precomp) ? precomp.precompile : undefined,
-	precompileString: (precomp) ? precomp.precompileString : undefined,
+	precompile: precompile,
+	precompileString: precompileString 
 };
 

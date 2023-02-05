@@ -15,8 +15,8 @@
   if (typeof require !== 'undefined') {
     expect = require('expect.js');
     util = require('./util');
-    Template = require('../nunjucks/src/environment').Template;
-    Environment = require('../nunjucks/src/environment').Environment;
+    Template = require('../src/environment').Template;
+    Environment = require('../src/environment').Environment;
     fs = require('fs');
   } else {
     expect = window.expect;
@@ -315,8 +315,8 @@
 
     function runLoopTests(block) {
       var end = {
-        asyncAll: 'endall',
-        asyncEach: 'endeach',
+//        asyncAll: 'endall',
+//        asyncEach: 'endeach',
         for: 'endfor'
       }[block];
 
@@ -525,161 +525,12 @@
     }
 
     runLoopTests('for');
-    runLoopTests('asyncEach');
-    runLoopTests('asyncAll');
 
     it('should allow overriding var with none inside nested scope', function(done) {
       equal(
         '{% set var = "foo" %}' +
         '{% for i in [1] %}{% set var = none %}{{ var }}{% endfor %}',
         '');
-
-      finish(done);
-    });
-
-    it('should compile async control', function(done) {
-      var opts;
-      if (!fs) {
-        this.skip();
-      } else {
-        opts = {
-          asyncFilters: {
-            getContents: function(tmpl, cb) {
-              fs.readFile(tmpl, cb);
-            },
-
-            getContentsArr: function(arr, cb) {
-              fs.readFile(arr[0], function(err, res) {
-                cb(err, [res]);
-              });
-            }
-          }
-        };
-
-        render('{{ tmpl | getContents }}',
-          {
-            tmpl: 'tests/templates/for-async-content.njk'
-          },
-          opts,
-          function(err, res) {
-            expect(res).to.be('somecontenthere');
-          });
-
-        render('{% if tmpl %}{{ tmpl | getContents }}{% endif %}',
-          {
-            tmpl: 'tests/templates/for-async-content.njk'
-          },
-          opts,
-          function(err, res) {
-            expect(res).to.be('somecontenthere');
-          });
-
-        render('{% if tmpl | getContents %}yes{% endif %}',
-          {
-            tmpl: 'tests/templates/for-async-content.njk'
-          },
-          opts,
-          function(err, res) {
-            expect(res).to.be('yes');
-          });
-
-        render('{% for t in [tmpl, tmpl] %}{{ t | getContents }}*{% endfor %}',
-          {
-            tmpl: 'tests/templates/for-async-content.njk'
-          },
-          opts,
-          function(err, res) {
-            expect(res).to.be('somecontenthere*somecontenthere*');
-          });
-
-        render('{% for t in [tmpl, tmpl] | getContentsArr %}{{ t }}{% endfor %}',
-          {
-            tmpl: 'tests/templates/for-async-content.njk'
-          },
-          opts,
-          function(err, res) {
-            expect(res).to.be('somecontenthere');
-          });
-
-        render('{% if test %}{{ tmpl | getContents }}{% endif %}oof',
-          {
-            tmpl: 'tests/templates/for-async-content.njk'
-          },
-          opts,
-          function(err, res) {
-            expect(res).to.be('oof');
-          });
-
-        render(
-          '{% if tmpl %}' +
-          '{% for i in [0, 1] %}{{ tmpl | getContents }}*{% endfor %}' +
-          '{% endif %}',
-          {
-            tmpl: 'tests/templates/for-async-content.njk'
-          },
-          opts,
-          function(err, res) {
-            expect(res).to.be('somecontenthere*somecontenthere*');
-          });
-
-        render('{% block content %}{{ tmpl | getContents }}{% endblock %}',
-          {
-            tmpl: 'tests/templates/for-async-content.njk'
-          },
-          opts,
-          function(err, res) {
-            expect(res).to.be('somecontenthere');
-          });
-
-        render('{% block content %}hello{% endblock %} {{ tmpl | getContents }}',
-          {
-            tmpl: 'tests/templates/for-async-content.njk'
-          },
-          opts,
-          function(err, res) {
-            expect(res).to.be('hello somecontenthere');
-          });
-
-        render('{% block content %}{% set foo = tmpl | getContents %}{{ foo }}{% endblock %}',
-          {
-            tmpl: 'tests/templates/for-async-content.njk'
-          },
-          opts,
-          function(err, res) {
-            expect(res).to.be('somecontenthere');
-          });
-
-        render('{% block content %}{% include "async.njk" %}{% endblock %}',
-          {
-            tmpl: 'tests/templates/for-async-content.njk'
-          },
-          opts,
-          function(err, res) {
-            expect(res).to.be('somecontenthere\n');
-          });
-
-        render('{% asyncEach i in [0, 1] %}{% include "async.njk" %}{% endeach %}',
-          {
-            tmpl: 'tests/templates/for-async-content.njk'
-          },
-          opts,
-          function(err, res) {
-            expect(res).to.be('somecontenthere\nsomecontenthere\n');
-          });
-
-        render('{% asyncAll i in [0, 1, 2, 3, 4] %}-{{ i }}:{% include "async.njk" %}-{% endall %}',
-          {
-            tmpl: 'tests/templates/for-async-content.njk'
-          },
-          opts,
-          function(err, res) {
-            expect(res).to.be('-0:somecontenthere\n-' +
-              '-1:somecontenthere\n-' +
-              '-2:somecontenthere\n-' +
-              '-3:somecontenthere\n-' +
-              '-4:somecontenthere\n-');
-          });
-      }
 
       finish(done);
     });

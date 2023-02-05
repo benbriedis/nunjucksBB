@@ -94,11 +94,8 @@ class Pair extends Node {get typename() {return 'Pair';}  get fields() { return 
 class Dict extends NodeList {get typename() {return 'Dict';} };
 class LookupVal extends Node {get typename() {return 'LookupVal';}  get fields() { return ['target', 'val']; } };
 class If extends Node {get typename() {return 'If';}  get fields() { return ['cond', 'body', 'else_']; } };
-class IfAsync extends If {get typename() {return 'IfAsync';} };
 class InlineIf extends Node {get typename() {return 'InlineIf';}  get fields() { return ['cond', 'body', 'else_']; } };
 class For extends Node {get typename() {return 'For';}  get fields() { return ['arr', 'name', 'body', 'else_']; } };
-class AsyncEach extends For {get typename() {return 'AsyncEach';} };
-class AsyncAll extends For {get typename() {return 'AsyncAll';} };
 class Macro extends Node {get typename() {return 'Macro';}  get fields() { return ['name', 'args', 'body']; } };
 class Caller extends Macro {get typename() {return 'Caller';} };
 class Import extends Node {get typename() {return 'Import';}  get fields() { return ['template', 'target', 'withContext']; } };
@@ -265,11 +262,8 @@ export default {
 	Capture: Capture,
 	TemplateData: TemplateData,
 	If: If,
-	IfAsync: IfAsync,
 	InlineIf: InlineIf,
 	For: For,
-	AsyncEach: AsyncEach,
-	AsyncAll: AsyncAll,
 	Macro: Macro,
 	Caller: Caller,
 	Import: Import,

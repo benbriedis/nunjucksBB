@@ -164,46 +164,14 @@ function convertStatements(ast)
 		if (!(node instanceof nodes.If) && !(node instanceof nodes.For)) 
 			return undefined;
 
-		let async = false;
 		walk(node, (child) => {
 			if (child instanceof nodes.FilterAsync ||
-				child instanceof nodes.IfAsync ||
-				child instanceof nodes.AsyncEach ||
-				child instanceof nodes.AsyncAll ||
 				child instanceof nodes.CallExtensionAsync) {
-				async = true;
 				// Stop iterating by returning the node
 				return child;
 			}
 			return undefined;
 		});
-
-		if (async) {
-			if (node instanceof nodes.If) 
-				return new nodes.IfAsync(
-					node.lineno,
-					node.colno,
-//					node.cond,        TODO tighten types
-					node['cond'],
-//					node.body,
-					node['body'],
-//					node.else_
-					node['else_']
-				);
-			else if (node instanceof nodes.For && !(node instanceof nodes.AsyncAll)) 
-				return new nodes.AsyncEach(
-					node.lineno,
-					node.colno,
-//					node.arr,
-					node['arr'],
-//					node.name,
-					node['name'],
-//					node.body,
-					node['body'],
-//					node.else_
-					node['else_']
-				);
-		}
 		return undefined;
 	});
 }
