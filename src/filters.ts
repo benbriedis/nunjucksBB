@@ -1,6 +1,7 @@
 import * as lib from './lib';
 import TemplateError from './TemplateError';
 import * as runtime from './runtime';
+import SafeString,{copySafeness,markSafe} from './SafeString';
 
 
 // For the jinja regexp, see
@@ -90,7 +91,7 @@ export const Filters = {
 	{
 		str = normalize(str, '');
 		const ret = str.toLowerCase();
-		return runtime.copySafeness(str, ret.charAt(0).toUpperCase() + ret.slice(1));
+		return copySafeness(str, ret.charAt(0).toUpperCase() + ret.slice(1));
 	},
 
 	center: async function(str,width) 
@@ -105,7 +106,7 @@ export const Filters = {
 		const spaces = width - str.length;
 		const pre = lib.repeat(' ', (spaces / 2) - (spaces % 2));
 		const post = lib.repeat(' ', spaces / 2);
-		return runtime.copySafeness(str, pre + str + post);
+		return copySafeness(str, pre + str + post);
 	},
 
 	'default': async function(val, def, bool)   
@@ -166,10 +167,10 @@ export const Filters = {
 
 	'escape': async function(str) 
 	{
-		if (str instanceof runtime.SafeString) 
+		if (str instanceof SafeString) 
 			return str;
 		str = (str === null || str === undefined) ? '' : str;
-		return runtime.markSafe(lib.escape(str.toString()));
+		return markSafe(lib.escape(str.toString()));
 	},
 
 	e: async function(str)
@@ -179,10 +180,10 @@ export const Filters = {
 
 	safe: async function(str) 
 	{
-		if (str instanceof runtime.SafeString) 
+		if (str instanceof SafeString) 
 			return str;
 		str = (str === null || str === undefined) ? '' : str;
-		return runtime.markSafe(str.toString());
+		return markSafe(str.toString());
 	},
 
 	first: async function(arr) 
@@ -199,7 +200,7 @@ export const Filters = {
 	forceescape: async function(str) 
 	{
 		str = (str === null || str === undefined) ? '' : str;
-		return runtime.markSafe(lib.escape(str.toString()));
+		return markSafe(lib.escape(str.toString()));
 	},
 
 	groupby: async function(arr, attr) 
@@ -223,7 +224,7 @@ export const Filters = {
 			return (i === 0 && !indentfirst) ? l : `${sp}${l}`;
 		}).join('\n');
 
-		return runtime.copySafeness(str, res);
+		return copySafeness(str, res);
 	},
 
 	'int': async function(value,def,base)
@@ -258,7 +259,7 @@ export const Filters = {
 				// ECMAScript 2015 Maps and Sets
 				return value.size;
 
-			if (lib.isObject(value) && !(value instanceof runtime.SafeString)) 
+			if (lib.isObject(value) && !(value instanceof SafeString)) 
 				// Objects (besides SafeStrings), non-primative Arrays
 				return lib.keys(value).length;
 
@@ -292,12 +293,7 @@ export const Filters = {
 	{
 		if (str === null || str === undefined) 
 			return '';
-console.log('filters.ts  nl2br()  str:',str);
-console.log('filters.ts  nl2br()  replaced:',str.valueOf().replace(/\r\n|\n/g, '<br />\n'));
-
-const xxx = runtime.copySafeness(str, str.replace(/\r\n|\n/g, '<br />\n'));
-console.log('filters.ts  nl2br()  xxx:',xxx);
-//		return runtime.copySafeness(str, str.replace(/\r\n|\n/g, '<br />\n'));
+		return copySafeness(str, str.replace(/\r\n|\n/g, '<br />\n'));
 	},
 
 	random: async function(arr) 
@@ -361,7 +357,7 @@ console.log('filters.ts  nl2br()  xxx:',xxx);
 			str = '' + str;
 
 		// If by now, we don't have a string, throw it back
-		if (typeof str !== 'string' && !(<any>str instanceof runtime.SafeString))   //XXX nasty cast
+		if (typeof str !== 'string' && !(<any>str instanceof SafeString))   //XXX nasty cast
 			return str;
 
 		// ShortCircuits
@@ -369,7 +365,7 @@ console.log('filters.ts  nl2br()  xxx:',xxx);
 			// Mimic the python behaviour: empty string is replaced
 			// by replacement e.g. "abc"|replace("", ".") -> .a.b.c.
 			res = new_ + str.split('').join(new_) + new_;
-			return runtime.copySafeness(str, res);
+			return copySafeness(str, res);
 		}
 
 		let nextIndex = str.indexOf(old);
@@ -397,7 +393,7 @@ console.log('filters.ts  nl2br()  xxx:',xxx);
 		if (pos < str.length) 
 			res += str.substring(pos);
 
-		return runtime.copySafeness(originalStr, res);
+		return copySafeness(originalStr, res);
 	},
 
 	reverse: async function(val) 
@@ -412,7 +408,7 @@ console.log('filters.ts  nl2br()  xxx:',xxx);
 		arr.reverse();
 
 		if (lib.isString(val)) 
-			return runtime.copySafeness(val, arr.join(''));
+			return copySafeness(val, arr.join(''));
 		return arr;
 	},
 
@@ -469,7 +465,7 @@ console.log('filters.ts  nl2br()  xxx:',xxx);
 
 	'string': async function(obj) 
 	{
-		return runtime.copySafeness(obj, obj);
+		return copySafeness(obj, obj);
 	},
 
 	striptags: async function(input:string, preserveLinebreaks:boolean) 
@@ -487,19 +483,19 @@ console.log('filters.ts  nl2br()  xxx:',xxx);
 		else 
 			res = trimmedInput.replace(/\s+/gi, ' ');
 
-		return runtime.copySafeness(input, res);
+		return copySafeness(input, res);
 	},
 
 	title: async function(str) 
 	{
 		str = normalize(str, '');
 		let words = str.split(' ').map(word => this.capitalize(word));
-		return runtime.copySafeness(str, words.join(' '));
+		return copySafeness(str, words.join(' '));
 	},
 
 	trim: async function(str) 
 	{
-		return runtime.copySafeness(str, str.replace(/^\s*|\s*$/g, ''));
+		return copySafeness(str, str.replace(/^\s*|\s*$/g, ''));
 	},
 
 	truncate: async function(input, length, killwords, end) 
@@ -522,7 +518,7 @@ console.log('filters.ts  nl2br()  xxx:',xxx);
 		}
 
 		input += (end !== undefined && end !== null) ? end : '...';
-		return runtime.copySafeness(orig, input);
+		return copySafeness(orig, input);
 	},
 
 	upper: async function(str) 

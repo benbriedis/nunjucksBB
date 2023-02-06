@@ -1,6 +1,7 @@
 import * as lib from './lib';
 import TemplateError from './TemplateError';
 export {isArray,inOperator} from './lib';
+export {SafeString,markSafe,suppressValue} from './SafeString';
 
 
 var arrayFrom = Array.from;
@@ -166,82 +167,6 @@ export function numArgs(args)
 		return len;
 }
 
-// A SafeString object indicates that the string should not be
-// autoescaped. This happens magically because autoescaping only
-// occurs on primitive string objects.
-export class SafeString
-{
-	val;
-	length;
-
-	constructor(val)
-	{
-		if (typeof val !== 'string') 
-			return val;
-		this.val = val;
-		this.length = val.length;
-	}
-
-	valueOf()
-	{
-		return this.val;
-	}
-
-	toString()
-	{
-		return this.val;
-	}
-
-/*
-	length()
-	{
-		return {
-			writable: true,
-			configurable: true,
-			value: 0
-		};
-	}
-*/	
-}
-
-//TODO move into SafeString...
-
-export function copySafeness(dest, target) 
-{
-	if (dest instanceof SafeString) 
-		return new SafeString(target);
-	return target.toString();
-}
-
-export function markSafe(val) 
-{
-	var type = typeof val;
-
-	if (type === 'string') 
-		return new SafeString(val);
-	else if (type !== 'function') 
-		return val;
-	else {
-		return async function wrapSafe(args) {
-			var ret = await val.apply(this, args);
-
-			if (typeof ret === 'string') 
-				return new SafeString(ret);
-
-			return ret;
-		};
-	}
-}
-
-export function suppressValue(val,autoescape) 
-{
-	val = (val !== undefined && val !== null) ? val : '';
-
-	if (autoescape && !(val instanceof SafeString)) 
-		val = lib.escape(val.toString());
-
-	return val;
-}
 
 export function ensureDefined(val, lineno, colno) 
 {
