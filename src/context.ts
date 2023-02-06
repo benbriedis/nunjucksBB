@@ -61,7 +61,7 @@ export default class Context extends Obj2
 		return this.blocks[name][0];
 	}
 
-	getSuper(env, name, block, frame, runtime, cb) 
+	getSuper(env,name,block,frame,runtime) 
 	{
 		var idx = lib.indexOf(this.blocks[name] || [], block);
 		var blk = this.blocks[name][idx + 1];
@@ -70,7 +70,7 @@ export default class Context extends Obj2
 		if (idx === -1 || !blk) 
 			throw new Error('no super block available for "' + name + '"');
 
-		blk(env, context, frame, runtime, cb);
+		blk(env,context,frame,runtime);
 	}
 
 	addExport(name) 

@@ -882,7 +882,7 @@ TODO sort this stuff out
 */	
 
 	//if(!this.isChild)    XXX This was in the 2013 code instead of the inBlock test
-    this._emitLine(this.buffer + ' += context.getBlock("' +
+    this._emitLine(this.buffer + ' += await context.getBlock("' +
      	node.name.value + '")(env, context, frame, runtime);');
   }
 
@@ -979,7 +979,7 @@ TODO sort this stuff out
     this._emitLine('var parentTemplate = null;');
     this._compileChildren(node, frame);
     this._emitLine('if(parentTemplate) {');
-    this._emitLine('parentTemplate.rootRenderFunc(env, context, frame, runtime);');
+    this._emitLine('return await parentTemplate.rootRenderFunc(env, context, frame, runtime);');
     this._emitLine('} else {');
 //    this._emitLine(`cb(null, ${this.buffer});`);
     this._emitLine(`return ${this.buffer};`);

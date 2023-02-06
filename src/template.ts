@@ -124,7 +124,7 @@ console.log('template.js render()  e:',e);
 //XXX Can the AsyncFunction source be a wrapped function???   async function root(env, context, frame, runtime, cb) {...}			
 //XXX Do we need AsyncFunction?
 
-//console.log('template._compile()  source:',source)
+//console.log('template._compile() this.path:',this.path,'source:',source)
 			const func = new Function(source); // eslint-disable-line no-new-func
 //			const AsyncFunction = async function () {}.constructor;
 //			const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
