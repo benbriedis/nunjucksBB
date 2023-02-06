@@ -26,11 +26,14 @@ const noopTmplSrc = {
 	}
 };
 
+type AsyncFunc = (...args:any[]) => Promise<any>;
+
+
 //XXX use an emit mixin
 export default class Environment extends EmitterObj2 
 {
 	globals;
-	filters;
+	filters: AsyncFunc[] = <any>null;
 	tests = {};
 	extensions = {};
 	extensionsList = [];
@@ -89,7 +92,7 @@ export default class Environment extends EmitterObj2
 		this.globals = new Globals();
 //TODO ensure all filters and globals are async		
 //		this.filters = new Filters();
-		this.filters = Object.assign({},Filters);
+		this.filters = <any>Object.assign({},Filters);
 		this.tests = {};
 		this.extensions = {};
 		this.extensionsList = [];

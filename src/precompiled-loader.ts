@@ -12,7 +12,7 @@ export class PrecompiledLoader extends Loader
 		this.precompiled = compiledTemplates || {};
 	}
 
-	getSource(name) 
+	async getSource(name):Promise<any|null>
 	{
 		if (this.precompiled[name]) 
 			return {

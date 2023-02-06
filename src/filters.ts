@@ -21,8 +21,8 @@ const sort = runtime.makeMacro(
 		let getAttribute = lib.getAttrGetter(attr);
 
 		array.sort((a, b) => {
-			let x = (attr) ? getAttribute(a) : a;
-			let y = (attr) ? getAttribute(b) : b;
+			let x = attr ? getAttribute(a) : a;
+			let y = attr ? getAttribute(b) : b;
 
 			if (
 				this.env.opts.throwOnUndefined &&
@@ -57,12 +57,12 @@ const intFilter = runtime.makeMacro(
 
 
 export const Filters = {
-	abs: function(value)
+	abs: async function(value)
 	{
 		return Math.abs(value);
 	},
 
-	batch: function(arr, linecount, fillWith) 
+	batch: async function(arr, linecount, fillWith) 
 	{
 		var i;
 		var res = [];
@@ -86,14 +86,14 @@ export const Filters = {
 		return res;
 	},
 
-	capitalize:function(str) 
+	capitalize: async function(str) 
 	{
 		str = normalize(str, '');
 		const ret = str.toLowerCase();
 		return runtime.copySafeness(str, ret.charAt(0).toUpperCase() + ret.slice(1));
 	},
 
-	center:function(str, width) 
+	center: async function(str,width) 
 	{
 		str = normalize(str, '');
 		width = width || 80;
@@ -108,7 +108,7 @@ export const Filters = {
 		return runtime.copySafeness(str, pre + str + post);
 	},
 
-	'default':function(val, def, bool)   
+	'default': async function(val, def, bool)   
 	{
 		if (bool) 
 			return val || def;
@@ -118,13 +118,13 @@ export const Filters = {
 			return (val != null) ? val : def;
 	},
 
-	d:function(val, def, bool) 
+	d: async function(val, def, bool) 
 	{
 		return this['default'](val, def, bool);
 	},
 
 
-	dictsort:function(val, caseSensitive, by) 
+	dictsort: async function(val, caseSensitive, by) 
 	{
 		if (!lib.isObject(val)) 
 			throw new TemplateError('dictsort filter: val must be an object','TODO',-1,-1);  //FIXME params
@@ -159,12 +159,12 @@ export const Filters = {
 		return array;
 	},
 
-	dump:function(obj, spaces) 
+	dump: async function(obj, spaces) 
 	{
 		return JSON.stringify(obj, null, spaces);
 	},
 
-	'escape':function(str) 
+	'escape': async function(str) 
 	{
 		if (str instanceof runtime.SafeString) 
 			return str;
@@ -172,12 +172,12 @@ export const Filters = {
 		return runtime.markSafe(lib.escape(str.toString()));
 	},
 
-	e:function(str)
+	e: async function(str)
 	{
 		return this['escape'](str);
 	},
 
-	safe:function(str) 
+	safe: async function(str) 
 	{
 		if (str instanceof runtime.SafeString) 
 			return str;
@@ -185,29 +185,29 @@ export const Filters = {
 		return runtime.markSafe(str.toString());
 	},
 
-	first:function(arr) 
+	first: async function(arr) 
 	{
 		return arr[0];
 	},
 
-	'float':function(val, def) 
+	'float': async function(val, def) 
 	{
 		var res = parseFloat(val);
 		return (isNaN(res)) ? def : res;
 	},
 
-	forceescape:function(str) 
+	forceescape: async function(str) 
 	{
 		str = (str === null || str === undefined) ? '' : str;
 		return runtime.markSafe(lib.escape(str.toString()));
 	},
 
-	groupby:function(arr, attr) 
+	groupby: async function(arr, attr) 
 	{
 		return lib.groupBy(arr, attr, this.env.opts.throwOnUndefined);
 	},
 
-	indent:function(str, width, indentfirst) 
+	indent: async function(str, width, indentfirst) 
 	{
 		str = normalize(str, '');
 
@@ -226,12 +226,12 @@ export const Filters = {
 		return runtime.copySafeness(str, res);
 	},
 
-	'int':function(value,def,base)
+	'int': async function(value,def,base)
 	{
 		return intFilter(value,def,base);
 	},
 
-	join:function(arr, del, attr) 
+	join: async function(arr, del, attr) 
 	{
 		del = del || '';
 
@@ -241,12 +241,12 @@ export const Filters = {
 		return arr.join(del);
 	},
 
-	last:function(arr) 
+	last: async function(arr) 
 	{
 		return arr[arr.length - 1];
 	},
 
-	length:function(val) 
+	length: async function(val) 
 	{
 		var value = normalize(val, '');
 
@@ -267,7 +267,7 @@ export const Filters = {
 		return 0;
 	},
 
-	list:function(val) 
+	list: async function(val) 
 	{
 		if (lib.isString(val)) 
 			return val.split('');
@@ -282,25 +282,30 @@ export const Filters = {
 			throw new TemplateError('list filter: type not iterable','TODO',-1,-1);
 	},
 
-	lower:function(str) 
+	lower: async function(str) 
 	{
 		str = normalize(str, '');
 		return str.toLowerCase();
 	},
 
-	nl2br:function(str) 
+	nl2br: async function(str) 
 	{
 		if (str === null || str === undefined) 
 			return '';
-		return runtime.copySafeness(str, str.replace(/\r\n|\n/g, '<br />\n'));
+console.log('filters.ts  nl2br()  str:',str);
+console.log('filters.ts  nl2br()  replaced:',str.valueOf().replace(/\r\n|\n/g, '<br />\n'));
+
+const xxx = runtime.copySafeness(str, str.replace(/\r\n|\n/g, '<br />\n'));
+console.log('filters.ts  nl2br()  xxx:',xxx);
+//		return runtime.copySafeness(str, str.replace(/\r\n|\n/g, '<br />\n'));
 	},
 
-	random:function(arr) 
+	random: async function(arr) 
 	{
 		return arr[Math.floor(Math.random() * arr.length)];
 	},
 
-	reject:function(arr, testName = 'truthy', secondArg)
+	reject: async function(arr, testName = 'truthy', secondArg)
 	{
 		const context = this;
 		const test = context.env.getTest(testName);
@@ -310,12 +315,12 @@ export const Filters = {
 		});
 	},
 
-	rejectattr:function(arr, attr) 
+	rejectattr: async function(arr, attr) 
 	{
 		return arr.filter((item) => !item[attr]);
 	},
 
-	select:function(arr, testName = 'truthy', secondArg)
+	select: async function(arr, testName = 'truthy', secondArg)
 	{
 		const context = this;
 		const test = context.env.getTest(testName);
@@ -325,13 +330,13 @@ export const Filters = {
 		});
 	},
 
-	selectattr:function(arr, attr) 
+	selectattr: async function(arr, attr) 
 	{
 		return arr.filter((item) => !!item[attr]);
 	},
 
 //XXX should str and/or old be (optionally) SafeString?
-	replace:function(str:string, old, new_, maxCount:number) 
+	replace: async function(str:string, old, new_, maxCount:number) 
 	{
 		var originalStr = str;
 
@@ -395,7 +400,7 @@ export const Filters = {
 		return runtime.copySafeness(originalStr, res);
 	},
 
-	reverse:function(val) 
+	reverse: async function(val) 
 	{
 		var arr;
 		if (lib.isString(val)) 
@@ -411,7 +416,7 @@ export const Filters = {
 		return arr;
 	},
 
-	round:function(val, precision, method) 
+	round: async function(val, precision, method) 
 	{
 		precision = precision || 0;
 		const factor = Math.pow(10, precision);
@@ -427,7 +432,7 @@ export const Filters = {
 		return rounder(val * factor) / factor;
 	},
 
-	slice:function(arr, slices, fillWith) 
+	slice: async function(arr, slices, fillWith) 
 	{
 		const sliceLength = Math.floor(arr.length / slices);
 		const extra = arr.length % slices;
@@ -449,7 +454,7 @@ export const Filters = {
 		return res;
 	},
 
-	sum:function(arr, attr, start = 0) 
+	sum: async function(arr, attr, start = 0) 
 	{
 		if (attr) 
 			arr = lib.map(arr, (v) => v[attr]);
@@ -457,17 +462,17 @@ export const Filters = {
 		return start + arr.reduce((a, b) => a + b, 0);
 	},
 
-	sort:function(value,reverse,case_sensitive,attribute)
+	sort: async function(value,reverse,case_sensitive,attribute)
 	{
 		sort(value,reverse,case_sensitive,attribute);
 	},
 
-	'string':function(obj) 
+	'string': async function(obj) 
 	{
 		return runtime.copySafeness(obj, obj);
 	},
 
-	striptags:function(input:string, preserveLinebreaks:boolean) 
+	striptags: async function(input:string, preserveLinebreaks:boolean) 
 	{
 		input = normalize(input, '');
 		let tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>|<!--[\s\S]*?-->/gi;
@@ -485,19 +490,19 @@ export const Filters = {
 		return runtime.copySafeness(input, res);
 	},
 
-	title:function(str) 
+	title: async function(str) 
 	{
 		str = normalize(str, '');
 		let words = str.split(' ').map(word => this.capitalize(word));
 		return runtime.copySafeness(str, words.join(' '));
 	},
 
-	trim:function(str) 
+	trim: async function(str) 
 	{
 		return runtime.copySafeness(str, str.replace(/^\s*|\s*$/g, ''));
 	},
 
-	truncate:function(input, length, killwords, end) 
+	truncate: async function(input, length, killwords, end) 
 	{
 		var orig = input;
 		input = normalize(input, '');
@@ -520,13 +525,13 @@ export const Filters = {
 		return runtime.copySafeness(orig, input);
 	},
 
-	upper:function(str) 
+	upper: async function(str) 
 	{
 		str = normalize(str, '');
 		return str.toUpperCase();
 	},
 
-	urlencode:function(obj) 
+	urlencode: async function(obj) 
 	{
 		var enc = encodeURIComponent;
 		if (lib.isString(obj)) 
@@ -537,7 +542,7 @@ export const Filters = {
 		}
 	},
 
-	urlize:function(str, length, nofollow) 
+	urlize: async function(str, length, nofollow) 
 	{
 		if (isNaN(length)) 
 			length = Infinity;
@@ -575,7 +580,7 @@ export const Filters = {
 		return words.join('');
 	},
 
-	wordcount:function(str) 
+	wordcount: async function(str) 
 	{
 		str = normalize(str, '');
 		const words = (str) ? str.match(/\w+/g) : null;

@@ -60,13 +60,13 @@
 		expect(res).to.be(str2);
 	}
 
-	function jinjaEqual(str, ctx, str2, env) {
+	async function jinjaEqual(str, ctx, str2, env) {
 		var jinjaUninstalls = [nunjucks.installJinjaCompat()];
 		if (nunjucksFull !== nunjucks) {
 			jinjaUninstalls.push(nunjucksFull.installJinjaCompat());
 		}
 		try {
-			return equal(str, ctx, str2, env);
+			return await equal(str, ctx, str2, env);
 		} finally {
 			for (var i = 0; i < jinjaUninstalls.length; i++) {
 				jinjaUninstalls[i]();
@@ -160,7 +160,7 @@
 		var t;
 
 		if (isSlim) {
-			var tmplSource = loader.getSource(tmplName);
+			var tmplSource = await loader.getSource(tmplName);
 			t = new Template(tmplSource.src, e, tmplSource.path);
 		} else {
 			t = new Template(str, e);
@@ -194,3 +194,4 @@
 		};
 	}
 }());
+

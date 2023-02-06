@@ -1,6 +1,6 @@
 'use strict';
 
-import Loader from './loader';
+import Loader, {LoaderSource} from './loader';
 export {PrecompiledLoader} from './precompiled-loader';
 
 export class WebLoader extends Loader 
@@ -33,67 +33,55 @@ export class WebLoader extends Loader
 		throw new Error('relative templates not support in the browser yet');
 	}
 
-	getSource(name, cb) 
+	async getSource(name): Promise<LoaderSource> 
 	{
 		var useCache = this.useCache;
 		var result;
-		this.fetch(this.baseURL + '/' + name, (err, src) => {
-			if (err) {
-				if (cb) {
-					cb(err.content);
-				} else if (err.status === 404) {
-					result = null;
-				} else {
-					throw err.content;
-				}
-			} else {
-				result = {
-					src: src,
-					path: name,
-					noCache: !useCache
-				};
-				this.emit('load', name, result);
-				if (cb) {
-					cb(null, result);
-				}
-			}
-		});
+		try {
+			const src = await this.fetch(this.baseURL + '/' + name);
 
-		// if this WebLoader isn't running asynchronously, the
-		// fetch above would actually run sync and we'll have a
-		// result here
+			result = { src: src, path: name, noCache: !useCache };
+			this.emit('load', name, result);
+		}
+		catch(err) {
+			if (err.status === 404) 
+				result = null;
+			else 
+				throw err.content;
+		}
 		return result;
 	}
 
-	fetch(url, cb) 
+	fetch(url):Promise<any> 
 	{
 		// Only in the browser please
-		if (typeof window === 'undefined') {
+		if (typeof window === 'undefined') 
 			throw new Error('WebLoader can only by used in a browser');
-		}
 
-		const ajax = new XMLHttpRequest();
-		let loading = true;
+		return new Promise((resolve,reject) => {
+			const ajax = new XMLHttpRequest();
+			let loading = true;
 
-		ajax.onreadystatechange = () => {
-			if (ajax.readyState === 4 && loading) {
-				loading = false;
-				if (ajax.status === 0 || ajax.status === 200) {
-					cb(null, ajax.responseText);
-				} else {
-					cb({
-						status: ajax.status,
-						content: ajax.responseText
-					});
+			ajax.onreadystatechange = () => {
+				if (ajax.readyState === 4 && loading) {
+					loading = false;
+					if (ajax.status === 0 || ajax.status === 200) {
+						resolve(ajax.responseText);
+					} else {
+						reject({
+							status: ajax.status,
+							content: ajax.responseText
+						});
+					}
 				}
-			}
-		};
+			};
 
-		url += (url.indexOf('?') === -1 ? '?' : '&') + 's=' +
-		(new Date().getTime());
+			url += (url.indexOf('?') === -1 ? '?' : '&') + 's=' +
+			(new Date().getTime());
 
-		ajax.open('GET', url, this.async);
-		ajax.send();
+			ajax.open('GET',url,true);
+			ajax.send();
+		});
 	}
 }
 

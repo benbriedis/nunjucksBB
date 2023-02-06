@@ -13,7 +13,7 @@ export default class Template extends Obj2
 	tmplProps;
 	tmplStr;
 	compiled;
-    blocks;
+    blocks: (...args:any[])=>Promise<any>;   //XXX may be possible to use stronger type
     rootRenderFunc;
 
 	constructor(src, env, path) 
@@ -138,9 +138,9 @@ console.log('template.js render()  e:',e);
 		this.compiled = true;
 	}
 
-	_getBlocks(props) 
+	_getBlocks(props):typeof this.blocks 
 	{
-		var blocks = {};
+		var blocks:any = {};
 
 		lib.keys(props).forEach((k) => {
 			if (k.slice(0, 2) === 'b_') 

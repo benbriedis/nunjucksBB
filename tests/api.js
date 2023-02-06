@@ -16,13 +16,12 @@
     templatesPath = 'tests/templates';
     path = require('path');
   } else {
+//XXX do we want?  
     expect = window.expect;
     Environment = nunjucks.Environment;
     Loader = nunjucks.WebLoader;
     templatesPath = '../templates';
   }
-
-//XXX are it() and describe() going to await?
 
   describe('api', () => {
     it('should always force compilation of parent template', async () => {

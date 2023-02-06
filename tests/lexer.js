@@ -8,7 +8,7 @@
   if (typeof require !== 'undefined') {
     expect = require('expect.js');
     lib = require('../src/lib');
-    lexer = require('../src/lexer');
+    lexer = require('../src/lexer').default;
   } else {
     expect = window.expect;
     lib = nunjucks.lib;

@@ -1,10 +1,8 @@
 /* eslint-disable no-console */
 
-'use strict';
-
-import fs from 'fs';
+import fs,{access} from 'fs/promises';
 import path from 'path';
-import Loader from './loader';
+import Loader, {LoaderSource} from './loader';
 export {PrecompiledLoader} from './precompiled-loader';
 let chokidar;
 
@@ -45,7 +43,7 @@ export class FileSystemLoader extends Loader
 			} catch (e) {
 				throw new Error('watch requires chokidar to be installed');
 			}
-			const paths = this.searchPaths.filter(fs.existsSync);
+			const paths = this.searchPaths.filter(fileExists);
 			const watcher = chokidar.watch(paths);
 			watcher.on('all', function (event, fullname) {
 				fullname = path.resolve(fullname);
@@ -58,7 +56,7 @@ export class FileSystemLoader extends Loader
 		}
 	}
 
-	getSource(name) 
+	async getSource(name):Promise<LoaderSource>
 	{
 		var fullpath = null;
 		var paths = this.searchPaths;
@@ -69,7 +67,7 @@ export class FileSystemLoader extends Loader
 
 			// Only allow the current directory and anything
 			// underneath it to be searched
-			if (p.indexOf(basePath) === 0 && fs.existsSync(p)) {
+			if (p.indexOf(basePath) === 0 && await fileExists(p)) {
 				fullpath = p;
 				break;
 			}
@@ -81,7 +79,7 @@ export class FileSystemLoader extends Loader
 		this.pathsToNames[fullpath] = name;
 
 		const source = {
-			src: fs.readFileSync(fullpath, 'utf-8'),
+			src: await fs.readFile(fullpath, 'utf-8'),
 			path: fullpath,
 			noCache: this.noCache
 		};
@@ -125,7 +123,7 @@ export class NodeResolveLoader extends Loader
 		}
 	}
 
-	getSource(name) 
+	async getSource(name:string): Promise<LoaderSource>
 	{
 		// Don't allow file-system traversal
 		if ((/^\.?\.?(\/|\\)/).test(name)) 
@@ -144,13 +142,25 @@ export class NodeResolveLoader extends Loader
 		this.pathsToNames[fullpath] = name;
 
 		const source = {
-			src: fs.readFileSync(fullpath, 'utf-8'),
+			src: await fs.readFile(fullpath,'utf-8'),
 			path: fullpath,
 			noCache: this.noCache,
 		};
 
 		this.emit('load', name, source);
 		return source;
+	}
+}
+
+
+async function fileExists(path:string): Promise<boolean>
+{
+	try {
+		await access(path);
+		return true;
+	}
+	catch(err) {
+		return false;
 	}
 }
 

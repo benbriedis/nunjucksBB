@@ -476,7 +476,7 @@ export class Compiler extends Obj2 {
   compileFilter(node, frame) {
     var name = node.name;
     this.assertType(name, nodes.Symbol);
-    this._emit('env.getFilter("' + name.value + '").call(context, ');
+    this._emit('await env.getFilter("' + name.value + '").call(context, ');
     this._compileAggregate(node.args, frame);
     this._emit(')');
   }
@@ -889,7 +889,7 @@ TODO sort this stuff out
   compileSuper(node, frame) {
     var name = node.blockName.value;
     var id = node.symbol.value;
-    this._emitLine(`var ${id} = runtime.markSafe(context.getSuper(env,"${name}",b_${name},frame,runtime));`);
+    this._emitLine(`var ${id} = runtime.markSafe(await context.getSuper(env,"${name}",b_${name},frame,runtime));`);
     frame.set(id, id);
   }
 

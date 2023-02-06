@@ -9,8 +9,8 @@
   if (typeof require !== 'undefined') {
     expect = require('expect.js');
     lib = require('../src/lib');
-    nodes = require('../src/nodes');
-    parser = require('../src/parser');
+    nodes = require('../src/nodes').default;
+    parser = require('../src/parser').default;
   } else {
     expect = window.expect;
     lib = nunjucks.lib;

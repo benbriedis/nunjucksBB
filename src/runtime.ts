@@ -222,8 +222,8 @@ export function markSafe(val)
 	else if (type !== 'function') 
 		return val;
 	else {
-		return function wrapSafe(args) {
-			var ret = val.apply(this, arguments);
+		return async function wrapSafe(args) {
+			var ret = await val.apply(this, args);
 
 			if (typeof ret === 'string') 
 				return new SafeString(ret);

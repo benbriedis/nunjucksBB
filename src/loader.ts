@@ -17,13 +17,7 @@ export abstract class Loader extends EmitterObj2
     async?: boolean | undefined;
  	es6Async?: boolean | undefined;
 
-    //getSource(name: string): LoaderSource;
-    getSource(name: string, callback?: Callback<Error,LoaderSource>): void {return <any>null;} ;
-
-//XXX MAKE THIS THE ONLY OPTION
-//TODO make abstract
-    getSourceAsync(name: string) : Promise<LoaderSource> { return <any>null}
-
+    async getSource(name: string) : Promise<LoaderSource> { return <any>null}
 
 	resolve(from, to) 
 	{

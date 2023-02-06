@@ -27,7 +27,8 @@
   render = util.render;
   equal = util.equal;
   isSlim = util.isSlim;
-  Loader = util.Loader;
+//  Loader = util.Loader;
+   Loader = require('../src/node-loaders').FileSystemLoader;
 
   describe('compiler', function() {
     it('should compile templates', async () => {
