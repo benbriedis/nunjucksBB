@@ -1,4 +1,6 @@
 
+var TemplateError = require('./TemplateError').default;
+
 var ArrayProto = Array.prototype;
 var ObjProto = Object.prototype;
 
@@ -25,9 +27,9 @@ function lookupEscape(ch)
 //XXX just incorporate into TemplateError?
 export function _prettifyError(path, withInternals, err)
 {
-console.log('_prettifyError  path:',path);
-console.log('_prettifyError  err:',err);
-console.log('_prettifyError  err.stack:',err.stack);
+//console.log('_prettifyError  path:',path);
+//console.log('_prettifyError  err:',err);
+//console.log('_prettifyError  err.stack:',err.stack);
 
 	if (!(err instanceof TemplateError)) 
 		err = TemplateError.fromError(err,path,-1,-1);  //FIXME params
@@ -40,29 +42,6 @@ console.log('_prettifyError  err.stack:',err.stack);
 	}
 
 	return err;
-}
-
-//TODO BB work on this further. I deleted out the old version - it was too far gone
-export class TemplateError
-{
-	message;
-	template;
-	line;
-	column;
-
-	constructor(message:string,template,line,column) 
-	{
-		this.message = message;
-		this.template = template;
-		this.line = line;
-		this.column = column;
-	}
-
-	static fromError(err:Error,template,line,column)
-	{
-//TODO copy stack trace over?	
-		return new TemplateError(err.toString(),template,line,column);
-	}
 }
 
 export function escape(val) 
@@ -203,41 +182,6 @@ export function map(obj, func)
 		results.length = obj.length;
 
 	return results;
-}
-
-
-export async function asyncIter(arr, iter, cb)
-{
-	let i = -1;
-
-	function next() {
-		i++;
-
-		if (i < arr.length) 
-			iter(arr[i], i, next, cb);
-		else 
-			cb();
-	}
-	next();
-}
-
-
-export function asyncFor(obj, iter, cb) 
-{
-	const keys = keys_(obj || {});
-	const len = keys.length;
-	let i = -1;
-
-	function next() {
-		i++;
-		const k = keys[i];
-
-		if (i < len) 
-			iter(k, obj[k], i, len, next);
-		else 
-			cb();
-	}
-	next();
 }
 
 

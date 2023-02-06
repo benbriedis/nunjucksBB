@@ -9,7 +9,7 @@ import {precompile,precompileString} from './precompile';
 import compiler from './compiler';
 import parser from './parser';
 import lexer from './lexer';
-import runtime from './runtime';
+import * as runtime from './runtime';
 import nodes from './nodes';
 import installJinjaCompat from './jinja-compat';
 

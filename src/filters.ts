@@ -1,6 +1,6 @@
 import * as lib from './lib';
-import {TemplateError} from './lib';
-import runtime from './runtime';
+import TemplateError from './TemplateError';
+import * as runtime from './runtime';
 
 
 // For the jinja regexp, see

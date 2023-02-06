@@ -43,7 +43,7 @@
 		doneHandler = null;
 	});
 
-	function equal(str, ctx, opts, str2, env) {
+	async function equal(str, ctx, opts, str2, env) {
 		if (typeof ctx === 'string') {
 			env = opts;
 			str2 = ctx;
@@ -56,7 +56,7 @@
 			opts = {};
 		}
 		opts = opts || {};
-		var res = render(str, ctx, opts, env);
+		var res = await render(str,ctx,opts,env);
 		expect(res).to.be(str2);
 	}
 
@@ -95,20 +95,17 @@
 	}
 
 	// eslint-disable-next-line consistent-return
-	function render(str, ctx, opts, env, cb) {
+	async function render(str, ctx, opts, env) 
+	{
 		if (typeof ctx === 'function') {
-			cb = ctx;
 			ctx = null;
 			opts = null;
 			env = null;
 		} else if (typeof opts === 'function') {
-			cb = opts;
 			opts = null;
 			env = null;
-		} else if (typeof env === 'function') {
-			cb = env;
+		} else if (typeof env === 'function') 
 			env = null;
-		}
 
 		opts = opts || {};
 		opts.dev = true;
@@ -169,34 +166,12 @@
 			t = new Template(str, e);
 		}
 
-		if (!cb) {
-			return t.render(ctx);
-		} else {
-			numAsyncs++;
-			t.render(ctx, function(err, res) {
-				if (err && !opts.noThrow) {
-					throw err;
-				}
 
-				try {
-					cb(err, normEOL(res));
-				} catch (exc) {
-					if (doneHandler) {
-						doneHandler(exc);
-						numAsyncs = 0;
-						doneHandler = null;
-					} else {
-						throw exc;
-					}
-				}
+//const content = await t.render(ctx);
+//console.log('render()  content:',content);
+//return content;
 
-				numAsyncs--;
-
-				if (numAsyncs === 0 && doneHandler) {
-					doneHandler();
-				}
-			});
-		}
+		return await t.render(ctx);
 	}
 
 	if (typeof window === 'undefined') {

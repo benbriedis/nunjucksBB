@@ -69,29 +69,26 @@ export class Compiler extends Obj2 {
     lines.forEach((line) => this._emitLine(line));
   }
 
-//XXX QQQ BB: remove cb
   _emitFuncBegin(node, name) {
     this.buffer = 'output';
     this._scopeClosers = '';
-    this._emitLine(`async function ${name}(env, context, frame, runtime, cb) {`);
+    this._emitLine(`async function ${name}(env, context, frame, runtime) {`);
     this._emitLine(`var lineno = ${node.lineno};`);
     this._emitLine(`var colno = ${node.colno};`);
     this._emitLine(`var ${this.buffer} = "";`);
     this._emitLine('try {');
   }
 
-  _emitFuncEnd(noReturn) {
-    if (!noReturn) {
-      this._emitLine('cb(null, ' + this.buffer + ');');
-    }
+    _emitFuncEnd(noReturn) {
+        if (!noReturn) 
+            this._emitLine('return ' + this.buffer + ';');
 
-    this._closeScopeLevels();
-    this._emitLine('} catch (e) {');
-    this._emitLine(`  cb(runtime.handleError(e,${this._templateName()},lineno,colno));`);
-    this._emitLine('}');
-    this._emitLine('}');
-    this.buffer = null;
-  }
+        this._emitLine('} catch (e) {');
+        this._emitLine('  runtime.handleError(e, lineno, colno);');
+        this._emitLine('}');
+        this._emitLine('}');
+        this.buffer = null;
+    }
 
   _addScopeLevel() {
     this._scopeClosers += '})';
@@ -110,13 +107,6 @@ export class Compiler extends Obj2 {
 
     this._closeScopeLevels();
     this._scopeClosers = _scopeClosers;
-  }
-
-  _makeCallback(res) {
-    var err = this._tmpid();
-
-    return 'function(' + err + (res ? ',' + res : '') + ') {\n' +
-      'if(' + err + ') { cb(' + err + '); return; }';
   }
 
   _tmpid() {
@@ -195,14 +185,12 @@ export class Compiler extends Obj2 {
     }
   }
 
-  compileCallExtension(node, frame, async) {
+  compileCallExtension(node, frame) {
     var args = node.args;
     var contentArgs = node.contentArgs;
     var autoescape = typeof node.autoescape === 'boolean' ? node.autoescape : true;
 
-    if (!async) {
-      this._emit(`${this.buffer} += runtime.suppressValue(`);
-    }
+    this._emit(`${this.buffer} += runtime.suppressValue(`);
 
     this._emit(`env.getExtension("${node.extName}")["${node.prop}"](`);
     this._emit('context');
@@ -236,34 +224,23 @@ export class Compiler extends Obj2 {
         }
 
         if (arg) {
-          this._emitLine('function(cb) {');
-          this._emitLine('if(!cb) { cb = function(err) { if(err) { throw err; }}}');
-          const id = this._pushBuffer();
+			//var id = this.tmpid();
+          	const id = this._pushBuffer();
 
-          this._withScopedSyntax(() => {
-            this.compile(arg, frame);
-            this._emitLine(`cb(null, ${id});`);
-          });
-
-          this._popBuffer();
-          this._emitLine(`return ${id};`);
-          this._emitLine('}');
+			this.emit('function() {');
+			//this.pushBufferId(id);
+            this._popBuffer();
+			this.compile(arg, frame);
+			this.popBufferId();
+			this.emitLine('return ' + id + ';\n' + '}');		
         } else {
           this._emit('null');
         }
       });
     }
 
-    if (async) {
-      const res = this._tmpid();
-      this._emitLine(', ' + this._makeCallback(res));
-      this._emitLine(
-        `${this.buffer} += runtime.suppressValue(${res}, ${autoescape} && env.opts.autoescape);`);
-      this._addScopeLevel();
-    } else {
-      this._emit(')');
-      this._emit(`, ${autoescape} && env.opts.autoescape);\n`);
-    }
+    this._emit(')');
+    this._emit(`, ${autoescape} && env.opts.autoescape);\n`);
   }
 
   compileCallExtensionAsync(node, frame) {
@@ -483,7 +460,7 @@ export class Compiler extends Obj2 {
     this._emit('(lineno = ' + node.lineno +
       ', colno = ' + node.colno + ', ');
 
-    this._emit('runtime.callWrap(');
+    this._emit('await runtime.callWrap(');
     // Compile it as normal.
     this._compileExpression(node.name, frame);
 
@@ -502,21 +479,6 @@ export class Compiler extends Obj2 {
     this._emit('env.getFilter("' + name.value + '").call(context, ');
     this._compileAggregate(node.args, frame);
     this._emit(')');
-  }
-
-  compileFilterAsync(node, frame) {
-    var name = node.name;
-    var symbol = node.symbol.value;
-
-    this.assertType(name, nodes.Symbol);
-
-    frame.set(symbol, symbol);
-
-    this._emit('env.getFilter("' + name.value + '").call(context, ');
-    this._compileAggregate(node.args, frame);
-    this._emitLine(', ' + this._makeCallback(symbol));
-
-    this._addScopeLevel();
   }
 
   compileKeywordArgs(node, frame) {
@@ -600,30 +562,12 @@ export class Compiler extends Obj2 {
     this._emit('if(');
     this._compileExpression(node.cond, frame);
     this._emitLine(') {');
-
-    this._withScopedSyntax(() => {
-      this.compile(node.body, frame);
-
-      if (async) {
-        this._emit('cb()');
-      }
-    });
+    this.compile(node.body, frame);
 
     if (node.else_) {
       this._emitLine('}\nelse {');
-
-      this._withScopedSyntax(() => {
-        this.compile(node.else_, frame);
-
-        if (async) {
-          this._emit('cb()');
-        }
-      });
-    } else if (async) {
-      this._emitLine('}\nelse {');
-      this._emit('cb()');
-    }
-
+      this.compile(node.else_, frame);
+	}
     this._emitLine('}');
   }
 
@@ -776,7 +720,7 @@ export class Compiler extends Obj2 {
       `var ${funcId} = runtime.makeMacro(`,
       `[${argNames.join(', ')}], `,
       `[${kwargNames.join(', ')}], `,
-      `function (${realNames.join(', ')}) {`,
+      `async function (${realNames.join(', ')}) {`,
       'var callerFrame = frame;',
       'frame = ' + ((keepFrame) ? 'frame.push(true);' : 'new runtime.Frame();'),
       'kwargs = kwargs || {};',
@@ -861,11 +805,7 @@ export class Compiler extends Obj2 {
 	this._emit(`;`);
     this._addScopeLevel();
 
-//XXX QQQ BB: can we remove _makeCallback?
-
-    this._emitLine('await '+id + '.getExported(' +
-      (node.withContext ? 'context.getVariables(), frame' : ''));
-    this._addScopeLevel();
+    this._emitLine('await '+id + '.getExported()');
 
     frame.set(target, id);
 
@@ -878,14 +818,12 @@ export class Compiler extends Obj2 {
 
   compileFromImport(node, frame) {
     const importedId = this._tmpid();
-	this._emit(`${id} = `);
+	this._emit(`${importedId} = `);
     this._compileGetTemplate(node, frame, false, false);
 	this._emit(`;`);
     this._addScopeLevel();
 
-    this._emitLine('await '+importedId + '.getExported(' +
-      (node.withContext ? 'context.getVariables(), frame' : ''));
-    this._addScopeLevel();
+    this._emitLine('await '+importedId + '.getExported();');
 
     node.names.children.forEach((nameNode) => {
       var name;
@@ -905,7 +843,7 @@ export class Compiler extends Obj2 {
       this._emitLine(`if(Object.prototype.hasOwnProperty.call(${importedId}, "${name}")) {`);
       this._emitLine(`var ${id} = ${importedId}.${name};`);
       this._emitLine('} else {');
-      this._emitLine(`cb(new Error("cannot import '${name}'")); return;`);
+	  this._emitLine(`throw new Error("cannot import ${name}")`);
       this._emitLine('}');
 
       frame.set(alias, id);
@@ -931,26 +869,27 @@ export class Compiler extends Obj2 {
     // because blocks can have side effects, but it seems like a
     // waste of performance to always execute huge top-level
     // blocks twice
+/*	
+TODO sort this stuff out
+
     if (!this.inBlock) {
-      this._emit('(parentTemplate ? function(e, c, f, r, cb) { cb(""); } : ');
+      this._emit('(parentTemplate ? function(e, c, f, r) { } : ');
     }
     this._emit(`context.getBlock("${node.name.value}")`);
     if (!this.inBlock) {
       this._emit(')');
     }
-    this._emitLine('(env, context, frame, runtime, ' + this._makeCallback(id));
-    this._emitLine(`${this.buffer} += ${id};`);
-    this._addScopeLevel();
+*/	
+
+	//if(!this.isChild)    XXX This was in the 2013 code instead of the inBlock test
+    this._emitLine(this.buffer + ' += context.getBlock("' +
+     	node.name.value + '")(env, context, frame, runtime);');
   }
 
   compileSuper(node, frame) {
     var name = node.blockName.value;
     var id = node.symbol.value;
-
-    const cb = this._makeCallback(id);
-    this._emitLine(`context.getSuper(env, "${name}", b_${name}, frame, runtime, ${cb}`);
-    this._emitLine(`${id} = runtime.markSafe(${id});`);
-    this._addScopeLevel();
+    this._emitLine(`var ${id} = runtime.markSafe(context.getSuper(env,"${name}",b_${name},frame,runtime));`);
     frame.set(id, id);
   }
 
@@ -1040,9 +979,10 @@ export class Compiler extends Obj2 {
     this._emitLine('var parentTemplate = null;');
     this._compileChildren(node, frame);
     this._emitLine('if(parentTemplate) {');
-    this._emitLine('parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);');
+    this._emitLine('parentTemplate.rootRenderFunc(env, context, frame, runtime);');
     this._emitLine('} else {');
-    this._emitLine(`cb(null, ${this.buffer});`);
+//    this._emitLine(`cb(null, ${this.buffer});`);
+    this._emitLine(`return ${this.buffer};`);
     this._emitLine('}');
     this._emitFuncEnd(true);
 

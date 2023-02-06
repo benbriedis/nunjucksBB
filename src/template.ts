@@ -1,7 +1,8 @@
 import * as lib from './lib';
 import compiler from './compiler';
 import {Obj2} from './object';
-import globalRuntime,{Frame} from './runtime';
+import {Frame} from './runtime';
+import * as globalRuntime from './runtime';
 import Environment from './environment';
 import Context from './context';
 
@@ -66,23 +67,15 @@ export default class Template extends Obj2
 			await this.compile();
 		} 
 		catch (e) {
+console.log('template.js render()  e:',e);		
 			throw lib._prettifyError(this.path, this.env.opts.dev, e);
 		}
 
 		const context = new Context(ctx || {}, this.blocks, this.env);
 		const frame = parentFrame ? parentFrame.push(true) : new Frame();
 		frame.topLevel = true;
-		let syncResult = null;
 
-		await this.rootRenderFunc(this.env, context, frame, globalRuntime, (err, res) => {
-			if (err) 
-{			
-console.log('environment render() - rootRenderFunc()  err:',err);
-				throw lib._prettifyError(this.path, this.env.opts.dev, err);
-}				
-			syncResult = res;
-		});
-		return syncResult;
+		return await this.rootRenderFunc(this.env, context, frame, globalRuntime);
 	}
 
 	async getExported(ctx, parentFrame) // eslint-disable-line consistent-return
@@ -101,7 +94,7 @@ console.log('environment render() - rootRenderFunc()  err:',err);
 
 		// Run the rootRenderFunc to populate the context with exported vars
 		const context = new Context(ctx || {}, this.blocks, this.env);
-		await this.rootRenderFunc(this.env, context, frame, globalRuntime, (err) => { }); //XXX callback?
+		return await this.rootRenderFunc(this.env, context, frame, globalRuntime); 
 //XXX return value?		
 
 //XXX return this 		
@@ -122,10 +115,10 @@ console.log('environment render() - rootRenderFunc()  err:',err);
 			props = this.tmplProps;
 		else {
 			const source = compiler.compile(this.tmplStr,
-//			this.env.asyncFilters,   XXX might we need to pass in regular filters?
-			this.env.extensionsList,
-			this.path,
-			this.env.opts);
+				this.env.asyncFilters,   //XXX might we need to pass in regular filters?
+				this.env.extensionsList,
+				this.path,
+				this.env.opts);
 
 //XXX Can the source be a wrapped function???   async function root(env, context, frame, runtime, cb) {...}			
 //XXX Can the AsyncFunction source be a wrapped function???   async function root(env, context, frame, runtime, cb) {...}			
