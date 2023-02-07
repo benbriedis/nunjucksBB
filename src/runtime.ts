@@ -208,12 +208,24 @@ export function contextOrFrameLookup(context, frame, name)
 	return (val !== undefined) ? val : context.lookup(name);
 }
 
+/*
 export function handleError(error, template, line, column) 
 {
+console.log('runtime.js  handleError()  template:',template,'error:',error);
 	if (error.line) //XXX YUCK
 		return error;
 	else
 		return new TemplateError(error, template, line, column);
+}
+*/
+
+export function handleError(error,template,lineno,colno) 
+{
+	if (error.lineno) 
+		throw error;
+	else 
+//		throw new TemplateError(error,template,lineno,colno);
+		throw new TemplateError(error.toString(),template,lineno,colno);
 }
 
 export function fromIterator(arr) 

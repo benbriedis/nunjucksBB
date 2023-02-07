@@ -58,19 +58,12 @@ export class FileSystemLoader extends Loader
 
 	async getSource(name):Promise<LoaderSource>
 	{
-console.log('node-loaders.js getSource()-1  name:',name);
-
 		var fullpath = null;
 		var paths = this.searchPaths;
-console.log('node-loaders.js getSource()-1Z  paths:',paths);
 
 		for (let i = 0; i < paths.length; i++) {
 			const basePath = path.resolve(paths[i]);
 			const p = path.resolve(paths[i], name);
-
-console.log('node-loaders.js getSource()-1A  paths[i]:',paths[i]);
-console.log('node-loaders.js getSource()-1B  basePath:',basePath);
-console.log('node-loaders.js getSource()-1C  p:',p);
 
 			// Only allow the current directory and anything
 			// underneath it to be searched
@@ -80,10 +73,8 @@ console.log('node-loaders.js getSource()-1C  p:',p);
 			}
 		}
 
-console.log('node-loaders.js getSource()-2  fullpath:',fullpath);
 		if (!fullpath) 
 			return null;
-console.log('node-loaders.js getSource()-3');
 
 		this.pathsToNames[fullpath] = name;
 
@@ -93,8 +84,6 @@ console.log('node-loaders.js getSource()-3');
 			noCache: this.noCache
 		};
 		this.emit('load', name, source);
-
-console.log('node-loaders.js getSource()-4  source:',source);
 
 		return source;
 	}

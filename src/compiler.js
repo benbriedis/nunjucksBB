@@ -84,7 +84,7 @@ export class Compiler extends Obj2 {
             this._emitLine('return ' + this.buffer + ';');
 
         this._emitLine('} catch (e) {');
-        this._emitLine('  runtime.handleError(e, lineno, colno);');
+        this._emitLine(`  runtime.handleError(e,'TODO',lineno, colno);`);
         this._emitLine('}');
         this._emitLine('}');
         this.buffer = null;
@@ -837,8 +837,6 @@ export class Compiler extends Obj2 {
         name = nameNode.value;
         alias = name;
       }
-
-//XXX BB Can we remove this callback?
 
       this._emitLine(`if(Object.prototype.hasOwnProperty.call(${importedId}, "${name}")) {`);
       this._emitLine(`var ${id} = ${importedId}.${name};`);

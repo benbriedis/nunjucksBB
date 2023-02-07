@@ -298,30 +298,17 @@ function mainCompilerTests1()
 	});
 
 	it('should throw an error when using the "in" operator on unexpected types', async () => {
-		try {
-			await render('{% if "a" in 1 %}yes{% endif %}', {});
-			expect(true).to.not.be.ok();
-		} catch (err) {
-			expect(err).to.match(/Cannot use "in" operator to search for "a" in unexpected types\./);
-		}
+		const promise1 = render('{% if "a" in 1 %}yes{% endif %}',{});
+		await assert.rejects(promise1,new TemplateError('Error: Cannot use "in" operator to search for "a" in unexpected types.','TODO',0,0));
 
-		try {
-			await render('{% if "a" in obj %}yes{% endif %}', {});
-			expect(true).to.not.be.ok();
-		} catch (err) {
-			expect(err).to.match(/Cannot use "in" operator to search for "a" in unexpected types\./);
-		}
+		const promise2 = render('{% if "a" in obj %}yes{% endif %}',{});
+		await assert.rejects(promise2,new TemplateError('Error: Cannot use "in" operator to search for "a" in unexpected types.','TODO',0,0));
 	});
 
 	it('should throw exceptions when called synchronously', async () => {
 		var tmpl = new Template('{% from "doesnotexist" import foo %}',{},null);
-		try {
-			await tmpl.render({});
-			expect(true).to.not.be.ok();
-		}
-		catch(err) {
-			expect(err).to.throwException(/template not found: doesnotexist/);
-		}
+		const promise = tmpl.render({});
+		await assert.rejects(promise,new TemplateError('template not found: doesnotexist','TODO',0,0));
 	});
 
 	it('should include error line in raised TemplateError', async () => {
@@ -334,13 +321,9 @@ function mainCompilerTests1()
 		var env = new Environment(loader);
 		var tmpl = new Template(tmplStr, env, 'parse-error.njk');
 
-		await tmpl.render({}, function(err, res) {
-			expect(res).to.be(undefined);
-			expect(err.toString()).to.be([
-				'Template render error: (parse-error.njk) [Line 1, Column 26]',
-				'  unexpected token: ,',
-			].join('\n'));
-		});
+		const promise = tmpl.render({});
+		await assert.rejects(promise,new TemplateError('unexpected token: ,','TODO',0,0));
+
 	});
 
 	it('should include error line when exception raised in user function', async () => {
@@ -356,24 +339,17 @@ function mainCompilerTests1()
 			throw new Error('ERROR');
 		}
 
-		await tmpl.render({
-			foo: foo
-		}, function(err, res) {
-			expect(res).to.be(undefined);
-			expect(err.toString()).to.be([
+		const promise = tmpl.render({foo: foo});
+		await assert.rejects(promise,new TemplateError(
+			[
 				'Template render error: (user-error.njk) [Line 1, Column 11]',
 				'  Error: ERROR',
-			].join('\n'));
-		});
+			].join('\n'),'TODO',0,0));
 	});
 
 	it('template attempts to include non-existent template', async () => {
-		try {
-			await render('{% include "broken-import.njk" %}', {str:'abc'});
-			expect(true).to.not.be.ok();
-		} catch (err) {
-			expect(err).to.throwException(/template not found: doesnotexist/);
-		}
+		const promise = render('{% include "broken-import.njk" %}', {str:'abc'});
+		await assert.rejects(promise,new TemplateError('template not found: doesnotexist','TODO',0,0));
 	});
 
 	it('should compile string concatenations with tilde', async () => {
@@ -527,7 +503,6 @@ function mainCompilerTests2()
 
 	it('should include templates', async () => {
 		const result = await render('hello world {% include "include.njk" %}');
-console.log('ZZZZZ result:',result);		
 		assert(result == 'hello world FooInclude ');
 	});
 
@@ -556,40 +531,29 @@ console.log('ZZZZZ result:',result);
 	});
 
 	it('should include templates dynamically based on a set var', async () => {
-		await equal('hello world {% set tmpl = "include.njk" %}{% include tmpl %}', {
-				name: 'thedude'
-			},
+		await equal('hello world {% set tmpl = "include.njk" %}{% include tmpl %}', 
+			{ name: 'thedude' },
 			'hello world FooInclude thedude');
 	});
 
 	it('should include templates dynamically based on an object attr', async () => {
 		await equal('hello world {% include data.tmpl %}', {
 				name: 'thedude',
-				data: {
-					tmpl: 'include.njk'
-				}
+				data: { tmpl: 'include.njk' }
 			},
 			'hello world FooInclude thedude');
 	});
 
 	it('should throw an error when including a file that does not exist', async () => {
-		await render(
-			'{% include "missing.njk" %}', {},
-			function(err, res) {
-				expect(res).to.be(undefined);
-				expect(err).to.match(/template not found: missing.njk/);
-			}
-		);
+		const promise = render('{% include "missing.njk" %}', {});
+		await assert.rejects(promise,new TemplateError('template not found: missing.njk','TODO',0,0));
 	});
 
 	it('should fail silently on missing templates if requested', async () => {
-		await equal('hello world {% include "missing.njk" ignore missing %}',
-			'hello world ');
+		await equal('hello world {% include "missing.njk" ignore missing %}', 'hello world ');
 
-		await equal('hello world {% include "missing.njk" ignore missing %}', {
-				name: 'thedude'
-			},
-			'hello world ');
+		await equal('hello world {% include "missing.njk" ignore missing %}', 
+			{ name: 'thedude' }, 'hello world ');
 	});
 
 	/**
@@ -771,14 +735,8 @@ console.log('ZZZZZ result:',result);
 	});
 
 	it('should throw errors', async () => {
-		try {
-			const result = await render('{% from "import.njk" import boozle %}',{},null);
-console.log('WWWW -1C  result:',result);
-			expect(true).to.not.be.ok();
-		}
-		catch(err) {
-			expect(err).to.match(/Cannot import 'boozle'/);
-		}
+		const promise = render('{% from "import.njk" import boozle %}',{},null);
+		await assert.rejects(promise,new TemplateError('Error: cannot import boozle','TODO',0,0));
 	});
 
 	it('should allow custom tag compilation', async () => {
@@ -1095,48 +1053,23 @@ console.log('WWWW -1C  result:',result);
 	});
 
 	it('should throw an error when {% call %} is passed an object that is not a function', async () => {
-		try {
-			await render('{% call foo() %}{% endcall %}',{foo:'bar'});
-			expect(true).to.not.be.ok();
-		}
-		catch(err) {
-console.log('FFFF err:',err);		
-			expect(err).to.match(/Unable to call `\w+`, which is not a function/);
-		}
+		const promise = render('{% call foo() %}{% endcall %}',{foo:'bar'});
+		await assert.rejects(promise,new TemplateError('Error: Unable to call `foo`, which is not a function','TODO',0,0));
 	});
 
 	it('should throw an error when including a file that calls an undefined macro', async () => {
-//XXX Try Node assertion test in here instead	 QQQQ
-		try {
-			await render('{% include "undefined-macro.njk" %}',{});
-			expect(true).to.not.be.ok();
-		}
-		catch(err) {
-console.log('GGGG err:',err);		
-			expect(err).to.match(/Unable to call `\w+`, which is undefined or falsey/);
-		}
+		const promise = render('{% include "undefined-macro.njk" %}',{});
+		await assert.rejects(promise,new TemplateError('Error: Unable to call `\w+`, which is undefined or falsey','TODO',0,0));
 	});
 
 	it('should throw an error when including a file that calls an undefined macro even inside {% if %} tag', async () => {
-		await render(
-			'{% if true %}{% include "undefined-macro.njk" %}{% endif %}', {},
-			function(err, res) {
-				expect(res).to.be(undefined);
-				expect(err).to.match(/Unable to call `\w+`, which is undefined or falsey/);
-			}
-		);
+		const promise = render('{% if true %}{% include "undefined-macro.njk" %}{% endif %}',{});
+		await assert.rejects(promise,new TemplateError('Error: Unable to call `\w+`, which is undefined or falsey','TODO',0,0));
 	});
 
 	it('should throw an error when including a file that imports macro that calls an undefined macro', async () => {
-		await render(
-			'{% include "import-macro-call-undefined-macro.njk" %}', {
-				list: [1, 2, 3]
-			},
-			function(err, res) {
-				expect(res).to.be(undefined);
-				expect(err).to.match(/Unable to call `\w+`, which is undefined or falsey/);
-			}
-		);
+		const promise = render('{% include "import-macro-call-undefined-macro.njk" %}',{list:[1, 2, 3]});
+		await assert.rejects(promise,new TemplateError('Error: Unable to call `\w+`, which is undefined or falsey','TODO',0,0));
 	});
 
 
@@ -1283,13 +1216,8 @@ console.log('GGGG err:',err);
 	});
 
 	it('should throw an error when invalid expression whitespaces are used', async () => {
-		await render(
-			' {{ 2 + 2- }}', {},
-			function(err, res) {
-				expect(res).to.be(undefined);
-				expect(err).to.match(/unexpected token: }}/);
-			}
-		);
+		const promise = render(' {{ 2 + 2- }}',{});
+		await assert.rejects(promise,new TemplateError('unexpected token: }}','TODO',1,12));
 	});
 }		
 

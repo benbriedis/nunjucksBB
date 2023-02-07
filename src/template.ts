@@ -76,19 +76,22 @@ export default class Template extends Obj2
 		const frame = parentFrame ? parentFrame.push(true) : new Frame();
 		frame.topLevel = true;
 
-//let out;
-//try{
-//		out = await this.rootRenderFunc(this.env, context, frame, globalRuntime);
-//console.log('AAA out:',out);		
-//}
-//catch(err) {
-//console.log('AAA err:',err);		
-//throw err;
-//}
+//console.log('AAA0 this.rootRenderFunc:',this.rootRenderFunc);		
 
-		return await this.rootRenderFunc(this.env, context, frame, globalRuntime);
+/*
+let out;
+try{
+		out = await this.rootRenderFunc(this.env, context, frame, globalRuntime);
+console.log('AAA out:',out);		
+}
+catch(err) {
+console.log('AAA err:',err);		
+throw err;
+}
+return out;
+*/
 
-		//return out;
+		return await this.rootRenderFunc(this.env,context,frame,globalRuntime);
 	}
 
 	async getExported(ctx, parentFrame) // eslint-disable-line consistent-return
