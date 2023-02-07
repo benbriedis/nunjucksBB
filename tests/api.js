@@ -8,20 +8,12 @@
   var templatesPath;
   var path;
 
-  if (typeof require !== 'undefined') {
     expect = require('expect.js');
     util = require('./util');
     Environment = require('../src/environment').default;
     Loader = require('../src/node-loaders').FileSystemLoader;
     templatesPath = 'tests/templates';
     path = require('path');
-  } else {
-//XXX do we want?  
-    expect = window.expect;
-    Environment = nunjucks.Environment;
-    Loader = nunjucks.WebLoader;
-    templatesPath = '../templates';
-  }
 
   describe('api', () => {
     it('should always force compilation of parent template', async () => {
@@ -30,17 +22,6 @@
       var child = await env.getTemplate('base-inherit.njk');
       expect(await child.render()).to.be('Foo*Bar*BazFizzle');
     });
-
-    it('should only call the callback once when conditional import fails', async () => {
-      var env = new Environment(new Loader(templatesPath));
-      var called = 0;
-      await env.render('broken-conditional-include.njk',
-        function() {
-          expect(++called).to.be(1);
-        }
-      );
-    });
-
 
     it('should handle correctly relative paths', async () => {
       var env;

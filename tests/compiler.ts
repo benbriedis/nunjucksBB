@@ -80,12 +80,8 @@ function mainCompilerTests1()
 	});
 
 	it('should not treat falsy values the same as undefined', async () => {
-		await equal('{{ foo }}', {
-			foo: 0
-		}, '0');
-		await equal('{{ foo }}', {
-			foo: false
-		}, 'false');
+		await equal('{{ foo }}', {foo:0}, '0');
+		await equal('{{ foo }}', {foo:false}, 'false');
 	});
 
 	it('should display none as empty string', async () => {
@@ -102,19 +98,14 @@ function mainCompilerTests1()
 
 	it('should compile function calls', async () => {
 		await equal('{{ foo("msg") }}', {
-				foo: function(str) {
-					return str + 'hi';
-				}
-			},
-			'msghi');
+				foo: function(str) { return str + 'hi'; }
+			}, 'msghi');
 	});
 
 	it('should compile function calls with correct scope', async () => {
 		await equal('{{ foo.bar() }}', {
 			foo: {
-				bar: function() {
-					return this.baz;
-				},
+				bar: function() { return this.baz; },
 				baz: 'hello'
 			}
 		}, 'hello');
@@ -122,30 +113,21 @@ function mainCompilerTests1()
 
 	it('should compile switch statements', async () => {
 		// standard switches
-		var tpl1 = '{% switch foo %}{% case "bar" %}BAR{% case "baz" %}BAZ{% default %}NEITHER FOO NOR BAR{% endswitch %}';
+		const tpl1 = '{% switch foo %}{% case "bar" %}BAR{% case "baz" %}BAZ{% default %}NEITHER FOO NOR BAR{% endswitch %}';
 		// test no-default switches
-		var tpl2 = '{% switch foo %}{% case "bar" %}BAR{% case "baz" %}BAZ{% endswitch %}';
+		const tpl2 = '{% switch foo %}{% case "bar" %}BAR{% case "baz" %}BAZ{% endswitch %}';
 		// test fall-through cases
 		var tpl3 = '{% switch foo %}{% case "bar" %}{% case "baz" %}BAR{% endswitch %}';
 		await equal(tpl1, 'NEITHER FOO NOR BAR');
-		await equal(tpl1, {
-			foo: 'bar'
-		}, 'BAR');
-		await equal(tpl1, {
-			foo: 'baz'
-		}, 'BAZ');
+		await equal(tpl1, {foo:'bar'}, 'BAR');
+		await equal(tpl1, {foo:'baz'}, 'BAZ');
 		await equal(tpl2, '');
-		await equal(tpl3, {
-			foo: 'bar'
-		}, 'BAR');
-		await equal(tpl3, {
-			foo: 'baz'
-		}, 'BAR');
+		await equal(tpl3, {foo:'bar'}, 'BAR');
+		await equal(tpl3, {foo:'baz'}, 'BAR');
 	});
 
 	it('should compile if blocks', async () => {
-		var tmpl = ('Give me some {% if hungry %}pizza' +
-			'{% else %}water{% endif %}');
+		var tmpl = ('Give me some {% if hungry %}pizza{% else %}water{% endif %}');
 
 		await equal(tmpl, {hungry: true}, 'Give me some pizza');
 		await equal(tmpl, { hungry: false}, 'Give me some water');
@@ -172,10 +154,7 @@ function mainCompilerTests1()
 
 		await equal(
 			'{% if food == "pizza" %}pizza{% endif %}' +
-			'{% if food =="beer" %}beer{% endif %}', {
-				food: 'beer'
-			},
-			'beer');
+			'{% if food =="beer" %}beer{% endif %}', {food:'beer'},'beer');
 
 		await equal('{% if "pizza" in food %}yum{% endif %}',{food:{pizza:true}},'yum');
 		await equal('{% if pizza %}yum{% elif anchovies %}yuck{% endif %}',{pizza:true},'yum');
