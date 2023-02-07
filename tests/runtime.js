@@ -16,9 +16,7 @@
 
   describe('runtime', function() {
     it('should report the failed function calls to symbols', function(done) {
-      render('{{ foo("cvan") }}', {}, {
-        noThrow: true
-      }, function(err) {
+      render('{{ foo("cvan") }}', {}, function(err) {
         expect(err).to.match(/Unable to call `foo`, which is undefined/);
       });
 
@@ -26,9 +24,7 @@
     });
 
     it('should report the failed function calls to lookups', function(done) {
-      render('{{ foo["bar"]("cvan") }}', {}, {
-        noThrow: true
-      }, function(err) {
+      render('{{ foo["bar"]("cvan") }}', {}, function(err) {
         expect(err).to.match(/foo\["bar"\]/);
       });
 
@@ -36,9 +32,7 @@
     });
 
     it('should report the failed function calls to calls', function(done) {
-      render('{{ foo.bar("second call") }}', {}, {
-        noThrow: true
-      }, function(err) {
+      render('{{ foo.bar("second call") }}', {}, function(err) {
         expect(err).to.match(/foo\["bar"\]/);
       });
 
@@ -46,9 +40,7 @@
     });
 
     it('should report full function name in error', function(done) {
-      render('{{ foo.barThatIsLongerThanTen() }}', {}, {
-        noThrow: true
-      }, function(err) {
+      render('{{ foo.barThatIsLongerThanTen() }}', {}, function(err) {
         expect(err).to.match(/foo\["barThatIsLongerThanTen"\]/);
       });
 
@@ -56,17 +48,12 @@
     });
 
     it('should report the failed function calls w/multiple args', function(done) {
-      render('{{ foo.bar("multiple", "args") }}', {}, {
-        noThrow: true
-      }, function(err) {
+      render('{{ foo.bar("multiple", "args") }}', {}, function(err) {
         expect(err).to.match(/foo\["bar"\]/);
       });
 
       render('{{ foo["bar"]["zip"]("multiple", "args") }}',
         {},
-        {
-          noThrow: true
-        },
         function(err) {
           expect(err).to.match(/foo\["bar"\]\["zip"\]/);
         });
@@ -79,9 +66,6 @@
         '{{ bar }} {{ baz }}{% endmacro %}' +
         '{{ foo("hello", nosuchvar) }}',
       {},
-      {
-        noThrow: true
-      },
       function(err, res) {
         expect(err).to.equal(null);
         expect(typeof res).to.be('string');
@@ -100,9 +84,6 @@
       {
         noProto: noProto
       },
-      {
-        noThrow: true
-      },
       function(err, res) {
         expect(err).to.equal(null);
         expect(res).to.equal('hello world');
@@ -116,9 +97,7 @@
       var data = {};
       Object.getPrototypeOf(data).payload = payload;
 
-      render('{{ payload }}', data, {
-        noThrow: true
-      }, function(err, res) {
+      render('{{ payload }}', data, function(err, res) {
         expect(err).to.equal(null);
         expect(res).to.equal(payload);
       });

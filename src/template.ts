@@ -56,6 +56,7 @@ export default class Template extends Obj2
 
 	async render(ctx, parentFrame=undefined):Promise<string>
 	{
+//console.log('template.js  render()  path:',this.path);	
 		if (typeof ctx === 'function') 
 			ctx = {};
 		else if (typeof parentFrame === 'function') 
@@ -67,7 +68,7 @@ export default class Template extends Obj2
 			await this.compile();
 		} 
 		catch (e) {
-console.log('template.js render()  e:',e);		
+//console.log('template.js render()  e:',e);		
 			throw lib._prettifyError(this.path, this.env.opts.dev, e);
 		}
 
@@ -75,7 +76,19 @@ console.log('template.js render()  e:',e);
 		const frame = parentFrame ? parentFrame.push(true) : new Frame();
 		frame.topLevel = true;
 
+//let out;
+//try{
+//		out = await this.rootRenderFunc(this.env, context, frame, globalRuntime);
+//console.log('AAA out:',out);		
+//}
+//catch(err) {
+//console.log('AAA err:',err);		
+//throw err;
+//}
+
 		return await this.rootRenderFunc(this.env, context, frame, globalRuntime);
+
+		//return out;
 	}
 
 	async getExported(ctx, parentFrame) // eslint-disable-line consistent-return

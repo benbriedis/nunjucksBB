@@ -6,7 +6,6 @@ import tests from './tests';
 import Globals from './globals';
 import Filters from './filters';
 import {EmitterObj2} from './object';
-import {handleError} from './runtime';
 import expressApp from './express-app';
 import Template from './template';
 
@@ -16,13 +15,7 @@ import Template from './template';
 const noopTmplSrc = {
 	type: 'code',
 	obj: {
-		root(env, context, frame, runtime, cb) {
-			try {
-				cb(null, '');
-			} catch (e) {
-				cb(handleError(e,null, null, null));
-			}
-		}
+		root(env, context, frame, runtime, ) { return ''; }
 	}
 };
 
@@ -207,6 +200,8 @@ export default class Environment extends EmitterObj2
 
 	async getTemplate(name, eagerCompile=undefined, parentName=undefined, ignoreMissing=undefined)
 	{
+//console.log('environment.js  getTemplate()  name:',name);
+
 		var that = this;
 		var tmpl = null;
 
@@ -255,6 +250,8 @@ export default class Environment extends EmitterObj2
 
 		if (ignoreMissing) 
 			return null;
+
+///console.log('environment.js  getTemplate()  THROWING ERROR name:',name);
 
 		throw new Error('template not found: ' + name);
 	}
