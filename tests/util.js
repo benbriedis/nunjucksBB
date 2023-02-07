@@ -12,28 +12,18 @@
 		precompileString,
 		expect;
 
-	if (typeof window === 'undefined') {
-		nunjucks = nunjucksFull = require('../src/index.js').default;
-		loader = new nunjucks.FileSystemLoader('tests/templates');
-		expect = require('expect.js');
-	} else {
+	nunjucks = nunjucksFull = require('../src/index.js').default;
+	loader = new nunjucks.FileSystemLoader('tests/templates');
+	expect = require('expect.js');
+	Env = require('../src/environment.js').default;
 
-//XXX not sure we need to run tests in browsers
-		nunjucks = window.nunjucks;
-		if (window.nunjucksFull) {
-			isSlim = true;
-			nunjucksFull = window.nunjucksFull;
-			// These must be the same for instanceof checks to succeed
-			nunjucksFull.runtime.SafeString.prototype = nunjucks.runtime.SafeString.prototype;
-		} else {
-			nunjucksFull = window.nunjucksFull = nunjucks;
-		}
-		loader = nunjucksFull.WebLoader('../templates');
-		expect = window.expect;
-	}
+console.log('VVVVV  Env:',Env);
+
+
 	precompileString = nunjucksFull.precompileString;
-	Environment = nunjucks.Environment;
 	Template = nunjucks.Template;
+//	Environment = nunjucks.Environment;
+	Environment = new Env(loader,{});
 
 	var numAsyncs;
 	var doneHandler;
