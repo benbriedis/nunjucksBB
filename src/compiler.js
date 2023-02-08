@@ -466,7 +466,7 @@ export class Compiler extends Obj2 {
 
     // Output the name of what we're calling so we can get friendly errors
     // if the lookup fails.
-    this._emit(', "' + this._getNodeName(node.name).replace(/"/g, '\\"') + '", context, ');
+    this._emit(', "' + this._getNodeName(node.name).replace(/"/g, '\\"') + '",context,');
 
     this._compileAggregate(node.args, frame, '[', '])');
 
@@ -476,7 +476,7 @@ export class Compiler extends Obj2 {
   compileFilter(node, frame) {
     var name = node.name;
     this.assertType(name, nodes.Symbol);
-    this._emit('await env.getFilter("' + name.value + '").call(context, ');
+    this._emit('await env.getFilter("' + name.value + '").call(context,');
     this._compileAggregate(node.args, frame);
     this._emit(')');
   }

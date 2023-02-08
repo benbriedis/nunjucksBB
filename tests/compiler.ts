@@ -715,7 +715,7 @@ function mainCompilerTests2()
 
 	it('should throw errors', async () => {
 		const promise = render('{% from "import.njk" import boozle %}',{},null);
-		await assert.rejects(promise,new TemplateError('Error: cannot import boozle','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('cannot import boozle','TODO',0,0));
 	});
 
 	it('should allow custom tag compilation', async () => {
@@ -1033,22 +1033,22 @@ function mainCompilerTests2()
 
 	it('should throw an error when {% call %} is passed an object that is not a function', async () => {
 		const promise = render('{% call foo() %}{% endcall %}',{foo:'bar'});
-		await assert.rejects(promise,new TemplateError('Error: Unable to call `foo`, which is not a function','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('Unable to call `foo`, which is not a function','TODO',0,11));
 	});
 
 	it('should throw an error when including a file that calls an undefined macro', async () => {
 		const promise = render('{% include "undefined-macro.njk" %}',{});
-		await assert.rejects(promise,new TemplateError('Error: Unable to call `\w+`, which is undefined or falsey','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('Unable to call `undef`, which is undefined or falsey','TODO',0,0));
 	});
 
 	it('should throw an error when including a file that calls an undefined macro even inside {% if %} tag', async () => {
 		const promise = render('{% if true %}{% include "undefined-macro.njk" %}{% endif %}',{});
-		await assert.rejects(promise,new TemplateError('Error: Unable to call `\w+`, which is undefined or falsey','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('Unable to call `undef`, which is undefined or falsey','TODO',0,0));
 	});
 
 	it('should throw an error when including a file that imports macro that calls an undefined macro', async () => {
 		const promise = render('{% include "import-macro-call-undefined-macro.njk" %}',{list:[1, 2, 3]});
-		await assert.rejects(promise,new TemplateError('Error: Unable to call `\w+`, which is undefined or falsey','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('Unable to call `t["defined_macro"]`, which is undefined or falsey','TODO',0,0));
 	});
 
 

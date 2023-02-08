@@ -26,7 +26,8 @@ type AsyncFunc = (...args:any[]) => Promise<any>;
 export default class Environment extends EmitterObj2 
 {
 	globals;
-	filters: AsyncFunc[] = <any>null;
+//	filters: AsyncFunc[] = <any>null;
+	filters: Filters;
 	tests = {};
 	extensions = {};
 	extensionsList = [];
@@ -84,8 +85,8 @@ export default class Environment extends EmitterObj2
 //TODO use new on all of these
 		this.globals = new Globals();
 //TODO ensure all filters and globals are async		
-//		this.filters = new Filters();
-		this.filters = <any>Object.assign({},Filters);
+		this.filters = new Filters();
+//		this.filters = <any>Object.assign({},Filters);
 		this.tests = {};
 		this.extensions = {};
 		this.extensionsList = [];

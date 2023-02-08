@@ -1,7 +1,8 @@
 import * as lib from './lib';
 import TemplateError from './TemplateError';
-import * as runtime from './runtime';
 import SafeString,{copySafeness,markSafe} from './SafeString';
+import type Context from './context';
+import Environment from './environment';
 
 
 // For the jinja regexp, see
@@ -14,56 +15,16 @@ const wwwRe = /^www\./;
 const tldRe = /\.(?:org|net|com)(?:\:|\/|$)/;
 
 
-const sort = runtime.makeMacro(
-	['value', 'reverse', 'case_sensitive', 'attribute'], [],
-	function sortFilter(arr, reversed, caseSens, attr) {
-		// Copy it
-		let array = lib.map(arr, v => v);
-		let getAttribute = lib.getAttrGetter(attr);
+export default class Filters 
+{
+	/* 'this' is actually a Context as it it called dynamically from compiled code */
 
-		array.sort((a, b) => {
-			let x = attr ? getAttribute(a) : a;
-			let y = attr ? getAttribute(b) : b;
-
-			if (
-				this.env.opts.throwOnUndefined &&
-				attr && (x === undefined || y === undefined)
-			) 
-				throw new TypeError(`sort: attribute "${attr}" resolved to undefined`);
-
-			if (!caseSens && lib.isString(x) && lib.isString(y)) {
-				x = x.toLowerCase();
-				y = y.toLowerCase();
-			}
-
-			if (x < y) 
-				return reversed ? 1 : -1;
-			else if (x > y) 
-				return reversed ? -1 : 1;
-			else 
-				return 0;
-		});
-
-		return array;
-	});
-
-const intFilter = runtime.makeMacro(
-	['value', 'default', 'base'],
-	[],
-	function doInt(value, defaultValue, base = 10) {
-		var res = parseInt(value, base);
-		return (isNaN(res)) ? defaultValue : res;
-	}
-);
-
-
-export const Filters = {
-	abs: async function(value)
+	async abs(value)
 	{
 		return Math.abs(value);
-	},
+	}
 
-	batch: async function(arr, linecount, fillWith) 
+	async batch(arr, linecount, fillWith) 
 	{
 		var i;
 		var res = [];
@@ -85,16 +46,16 @@ export const Filters = {
 		}
 
 		return res;
-	},
+	}
 
-	capitalize: async function(str) 
+	async capitalize(str) 
 	{
 		str = normalize(str, '');
 		const ret = str.toLowerCase();
 		return copySafeness(str, ret.charAt(0).toUpperCase() + ret.slice(1));
-	},
+	}
 
-	center: async function(str,width) 
+	async center(str,width) 
 	{
 		str = normalize(str, '');
 		width = width || 80;
@@ -107,9 +68,9 @@ export const Filters = {
 		const pre = lib.repeat(' ', (spaces / 2) - (spaces % 2));
 		const post = lib.repeat(' ', spaces / 2);
 		return copySafeness(str, pre + str + post);
-	},
+	}
 
-	'default': async function(val, def, bool)   
+	async 'default'(val, def, bool)   
 	{
 		if (bool) 
 			return val || def;
@@ -117,15 +78,15 @@ export const Filters = {
 //XXX Look elsewhere for similar crimes. Dont want to distringuish between null and undefined in NJK
 //			return (val !== undefined) ? val : def;
 			return (val != null) ? val : def;
-	},
+	}
 
-	d: async function(val, def, bool) 
+	async d(val, def, bool) 
 	{
 		return this['default'](val, def, bool);
-	},
+	}
 
 
-	dictsort: async function(val, caseSensitive, by) 
+	async dictsort(val, caseSensitive, by) 
 	{
 		if (!lib.isObject(val)) 
 			throw new TemplateError('dictsort filter: val must be an object','TODO',-1,-1);  //FIXME params
@@ -158,57 +119,57 @@ export const Filters = {
 		});
 
 		return array;
-	},
+	}
 
-	dump: async function(obj, spaces) 
+	async dump(obj, spaces) 
 	{
 		return JSON.stringify(obj, null, spaces);
-	},
+	}
 
-	'escape': async function(str) 
+	async 'escape'(str) 
 	{
 		if (str instanceof SafeString) 
 			return str;
 		str = (str === null || str === undefined) ? '' : str;
 		return markSafe(lib.escape(str.toString()));
-	},
+	}
 
-	e: async function(str)
+	async e(str)
 	{
 		return this['escape'](str);
-	},
+	}
 
-	safe: async function(str) 
+	async safe(str) 
 	{
 		if (str instanceof SafeString) 
 			return str;
 		str = (str === null || str === undefined) ? '' : str;
 		return markSafe(str.toString());
-	},
+	}
 
-	first: async function(arr) 
+	async first(arr) 
 	{
 		return arr[0];
-	},
+	}
 
-	'float': async function(val, def) 
+	async 'float'(val, def) 
 	{
 		var res = parseFloat(val);
 		return (isNaN(res)) ? def : res;
-	},
+	}
 
-	forceescape: async function(str) 
+	async forceescape(str) 
 	{
 		str = (str === null || str === undefined) ? '' : str;
 		return markSafe(lib.escape(str.toString()));
-	},
+	}
 
-	groupby: async function(arr, attr) 
+	async groupby(arr, attr) 
 	{
-		return lib.groupBy(arr, attr, this.env.opts.throwOnUndefined);
-	},
+		return lib.groupBy(arr, attr, env(this).opts.throwOnUndefined);
+	}
 
-	indent: async function(str, width, indentfirst) 
+	async indent(str, width, indentfirst) 
 	{
 		str = normalize(str, '');
 
@@ -225,14 +186,15 @@ export const Filters = {
 		}).join('\n');
 
 		return copySafeness(str, res);
-	},
+	}
 
-	'int': async function(value,def,base)
+	async 'int'(value,defaultValue,base)
 	{
-		return intFilter(value,def,base);
-	},
+		const res = parseInt(value, base ?? 10);
+		return (isNaN(res)) ? defaultValue : res;
+	}
 
-	join: async function(arr, del, attr) 
+	async join(arr, del, attr) 
 	{
 		del = del || '';
 
@@ -240,14 +202,14 @@ export const Filters = {
 			arr = lib.map(arr, (v) => v[attr]);
 
 		return arr.join(del);
-	},
+	}
 
-	last: async function(arr) 
+	async last(arr) 
 	{
 		return arr[arr.length - 1];
-	},
+	}
 
-	length: async function(val) 
+	async length(val) 
 	{
 		var value = normalize(val, '');
 
@@ -266,9 +228,9 @@ export const Filters = {
 			return value.length;
 		}
 		return 0;
-	},
+	}
 
-	list: async function(val) 
+	async list(val) 
 	{
 		if (lib.isString(val)) 
 			return val.split('');
@@ -281,58 +243,59 @@ export const Filters = {
 			return val;
 		else 
 			throw new TemplateError('list filter: type not iterable','TODO',-1,-1);
-	},
+	}
 
-	lower: async function(str) 
+	async lower(str) 
 	{
 		str = normalize(str, '');
 		return str.toLowerCase();
-	},
+	}
 
-	nl2br: async function(str) 
+	async nl2br(str) 
 	{
 		if (str === null || str === undefined) 
 			return '';
 		return copySafeness(str, str.replace(/\r\n|\n/g, '<br />\n'));
-	},
+	}
 
-	random: async function(arr) 
+	async random(arr) 
 	{
 		return arr[Math.floor(Math.random() * arr.length)];
-	},
+	}
 
-	reject: async function(arr, testName = 'truthy', secondArg)
+	async reject(arr, testName = 'truthy', secondArg)
 	{
 		const context = this;
-		const test = context.env.getTest(testName);
-
+		const test = env(this).getTest(testName);
+//QQQQ
 		return lib.toArray(arr).filter(function examineTestResult(item) {
 			return test.call(context, item, secondArg) === false;
 		});
-	},
+	}
 
-	rejectattr: async function(arr, attr) 
+	async rejectattr(arr, attr) 
 	{
 		return arr.filter((item) => !item[attr]);
-	},
+	}
 
-	select: async function(arr, testName = 'truthy', secondArg)
+	async select(arr, testName = 'truthy', secondArg)
 	{
 		const context = this;
-		const test = context.env.getTest(testName);
+		const test = env(this).getTest(testName);
+//QQQQ		
 
 		return lib.toArray(arr).filter(function examineTestResult(item) {
 			return test.call(context, item, secondArg) === true;
 		});
-	},
+	}
 
-	selectattr: async function(arr, attr) 
+	async selectattr(arr, attr) 
 	{
 		return arr.filter((item) => !!item[attr]);
-	},
+	}
 
 //XXX should str and/or old be (optionally) SafeString?
-	replace: async function(str:string, old, new_, maxCount:number) 
+	async replace(str:string, old, new_, maxCount:number) 
 	{
 		var originalStr = str;
 
@@ -394,13 +357,13 @@ export const Filters = {
 			res += str.substring(pos);
 
 		return copySafeness(originalStr, res);
-	},
+	}
 
-	reverse: async function(val) 
+	async reverse(val) 
 	{
 		var arr;
 		if (lib.isString(val)) 
-			arr = this.list(val);
+			arr = await env(this).filters.list(val);
 		else 
 			// Copy it
 			arr = lib.map(val, v => v);
@@ -409,10 +372,11 @@ export const Filters = {
 
 		if (lib.isString(val)) 
 			return copySafeness(val, arr.join(''));
-		return arr;
-	},
 
-	round: async function(val, precision, method) 
+		return arr;
+	}
+
+	async round(val, precision, method) 
 	{
 		precision = precision || 0;
 		const factor = Math.pow(10, precision);
@@ -426,9 +390,9 @@ export const Filters = {
 			rounder = Math.round;
 
 		return rounder(val * factor) / factor;
-	},
+	}
 
-	slice: async function(arr, slices, fillWith) 
+	async slice(arr, slices, fillWith) 
 	{
 		const sliceLength = Math.floor(arr.length / slices);
 		const extra = arr.length % slices;
@@ -448,31 +412,59 @@ export const Filters = {
 		}
 
 		return res;
-	},
+	}
 
-	sum: async function(arr, attr, start = 0) 
+	async sum(arr, attr, start = 0) 
 	{
 		if (attr) 
 			arr = lib.map(arr, (v) => v[attr]);
 
 		return start + arr.reduce((a, b) => a + b, 0);
-	},
+	}
 
-	sort: async function(value,reverse,case_sensitive,attribute)
+	async sort(value,reverse,caseSensitive,attr)
 	{
-		sort(value,reverse,case_sensitive,attribute);
-	},
+//		sort(value,reverse,case_sensitive,attribute);
 
-	'string': async function(obj) 
+console.log('filters.js sort()   IN array:',value,'attr:',attr);
+
+		// Copy it
+		const array = lib.map(value, v => v);
+		const getAttribute = lib.getAttrGetter(attr);
+
+		array.sort((a, b) => {
+			let x = attr ? getAttribute(a) : a;
+			let y = attr ? getAttribute(b) : b;
+
+			if (env(this).opts.throwOnUndefined && attr && (x === undefined || y === undefined)) 
+				throw new TypeError(`sort: attribute "${attr}" resolved to undefined`);
+
+			if (!caseSensitive && lib.isString(x) && lib.isString(y)) {
+				x = x.toLowerCase();
+				y = y.toLowerCase();
+			}
+
+			if (x < y) 
+				return reverse ? 1 : -1;
+			else if (x > y) 
+				return reverse ? -1 : 1;
+			else 
+				return 0;
+		});
+
+		return array;
+	}
+
+	async 'string'(obj) 
 	{
 		return copySafeness(obj, obj);
-	},
+	}
 
-	striptags: async function(input:string, preserveLinebreaks:boolean) 
+	async striptags(input:string, preserveLinebreaks:boolean) 
 	{
 		input = normalize(input, '');
 		let tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>|<!--[\s\S]*?-->/gi;
-		let trimmedInput = this.trim(input.replace(tags, ''));
+		let trimmedInput = await env(this).filters.trim(input.replace(tags, ''));
 		let res = '';
 		if (preserveLinebreaks) 
 			res = trimmedInput
@@ -484,26 +476,24 @@ export const Filters = {
 			res = trimmedInput.replace(/\s+/gi, ' ');
 
 		return copySafeness(input, res);
-	},
+	}
 
-	title: async function(str) 
+	async title(str) 
 	{
 		str = normalize(str, '');
 		let out = [];
 		for (const word of str.split(' ')) 
-			out.push(await Filters.capitalize(word)); 
-
-console.log('filters.js  title()  out:',out.join(' '));		
+			out.push(await env(this).filters.capitalize(word)); 
 
 		return copySafeness(str, out.join(' '));
-	},
+	}
 
-	trim: async function(str) 
+	async trim(str) 
 	{
 		return copySafeness(str, str.replace(/^\s*|\s*$/g, ''));
-	},
+	}
 
-	truncate: async function(input, length, killwords, end) 
+	async truncate(input, length, killwords, end) 
 	{
 		var orig = input;
 		input = normalize(input, '');
@@ -524,15 +514,15 @@ console.log('filters.js  title()  out:',out.join(' '));
 
 		input += (end !== undefined && end !== null) ? end : '...';
 		return copySafeness(orig, input);
-	},
+	}
 
-	upper: async function(str) 
+	async upper(str) 
 	{
 		str = normalize(str, '');
 		return str.toUpperCase();
-	},
+	}
 
-	urlencode: async function(obj) 
+	async urlencode(obj) 
 	{
 		var enc = encodeURIComponent;
 		if (lib.isString(obj)) 
@@ -541,9 +531,9 @@ console.log('filters.js  title()  out:',out.join(' '));
 			let keyvals = (lib.isArray(obj)) ? obj : lib._entries(obj);
 			return keyvals.map(([k, v]) => `${enc(k)}=${enc(v)}`).join('&');
 		}
-	},
+	}
 
-	urlize: async function(str, length, nofollow) 
+	async urlize(str, length, nofollow) 
 	{
 		if (isNaN(length)) 
 			length = Infinity;
@@ -579,9 +569,9 @@ console.log('filters.js  title()  out:',out.join(' '));
 		});
 
 		return words.join('');
-	},
+	}
 
-	wordcount: async function(str) 
+	async wordcount(str) 
 	{
 		str = normalize(str, '');
 		const words = str ? str.match(/\w+/g) : null;
@@ -589,7 +579,13 @@ console.log('filters.js  title()  out:',out.join(' '));
 	}
 }
 
-export default Filters;
+
+function env(thisObj:Filters):Environment
+{
+	return (<Context><unknown>thisObj).env;
+}
+
+
 
 
 function normalize(value,defaultValue) 
