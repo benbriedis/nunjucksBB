@@ -1,5 +1,8 @@
 import 'mocha';
+import assert from 'assert';
 import {equal} from './util';
+import Template from '../src/template';
+import Environment from '../src/environment';
 
 export function testCompileMacros()
 {
@@ -19,10 +22,9 @@ export function testCompileMacros()
 	});
 
 	it('should compile macros with args that can be passed to filters', async () => {
-		await equal(
-			'{% macro foo(x) %}{{ x|title }}{% endmacro %}' +
-			'{{ foo("foo") }}',
-			'Foo');
+		const tmpl = new Template(`{% macro foo(x) %}{{ x|title }}{% endmacro %}{{ foo("foo") }}`, new Environment(),null);
+		const result = await tmpl.render({});
+		assert(result == 'Foo');
 	});
 
 	it('should compile macros with positional args', async () => {
@@ -212,10 +214,15 @@ export function testCompileMacros()
 	});
 
 	it('should compile call blocks using imported macros', async () => {
-		await equal(
+console.log('VVVVVV-1'); 
+		const tmpl = new Template(
 			'{% import "import.njk" as imp %}' +
 			'{% call imp.wrap("span") %}Hey{% endcall %}',
-			'<span>Hey</span>');
+			new Environment(),null);
+console.log('VVVVVV-2'); 
+		const result = await tmpl.render({});
+console.log('VVVVVV result:',result);		
+		assert(result == '<span>Hey</span>');
 	});
 
 	it('should import templates', async () => {

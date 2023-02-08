@@ -489,8 +489,13 @@ export const Filters = {
 	title: async function(str) 
 	{
 		str = normalize(str, '');
-		let words = str.split(' ').map(word => this.capitalize(word));
-		return copySafeness(str, words.join(' '));
+		let out = [];
+		for (const word of str.split(' ')) 
+			out.push(await Filters.capitalize(word)); 
+
+console.log('filters.js  title()  out:',out.join(' '));		
+
+		return copySafeness(str, out.join(' '));
 	},
 
 	trim: async function(str) 
@@ -579,8 +584,8 @@ export const Filters = {
 	wordcount: async function(str) 
 	{
 		str = normalize(str, '');
-		const words = (str) ? str.match(/\w+/g) : null;
-		return (words) ? words.length : null;
+		const words = str ? str.match(/\w+/g) : null;
+		return words ? words.length : null;
 	}
 }
 

@@ -28,7 +28,7 @@ export class WebLoader extends Loader
 		this.async = !!opts.async;
 	}
 
-	resolve(from, to):string 
+	createPath(from:string,to:string):string 
 	{
 		throw new Error('relative templates not support in the browser yet');
 	}

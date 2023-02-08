@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import fs,{access} from 'fs/promises';
 import path from 'path';
 import Loader, {LoaderSource} from './loader';

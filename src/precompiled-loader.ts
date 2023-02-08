@@ -1,5 +1,3 @@
-'use strict';
-
 import Loader from './loader';
 
 export class PrecompiledLoader extends Loader 
@@ -12,7 +10,7 @@ export class PrecompiledLoader extends Loader
 		this.precompiled = compiledTemplates || {};
 	}
 
-	async getSource(name):Promise<any|null>
+	async getSource(name:string):Promise<any|null>
 	{
 		if (this.precompiled[name]) 
 			return {

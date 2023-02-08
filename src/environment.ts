@@ -192,20 +192,18 @@ export default class Environment extends EmitterObj2
 		return this.tests[name];
 	}
 
-	resolveTemplate(loader, parentName, filename) 
+	resolveTemplate(loader:Loader, parentName, filename) 
 	{
 		var isRelative = (loader.isRelative && parentName) ? loader.isRelative(filename) : false;
-		return (isRelative && loader.resolve) ? loader.resolve(parentName, filename) : filename;
+		return isRelative ? loader.createPath(parentName, filename) : filename;
 	}
 
 	async getTemplate(name, eagerCompile=undefined, parentName=undefined, ignoreMissing=undefined)
 	{
-//console.log('environment.js  getTemplate()  name:',name);
-
-		var that = this;
 		var tmpl = null;
 
 		// this fixes autoescape for templates referenced in symbols
+//XXX should be done in caller
 		if (name && name.raw) 
 			name = name.raw;
 
@@ -217,6 +215,7 @@ export default class Environment extends EmitterObj2
 		if (lib.isFunction(eagerCompile)) 
 			eagerCompile = false;
 
+//XXX YUCK:
 		if (name instanceof Template) 
 			return name;
 
@@ -231,27 +230,22 @@ export default class Environment extends EmitterObj2
 			if (tmpl!=null) 
 				return tmpl;
 
-			const resolvedName = that.resolveTemplate(loader, parentName, name);
+			const resolvedName = this.resolveTemplate(loader, parentName, name);
 			const info = await loader.getSource(resolvedName);
 
-			let template;
-			if (!info) {
-				template = new Template(noopTmplSrc, this, '');
-				await template.init(eagerCompile);
-			}
-			else {
-				template = new Template(info.src, this, info.path);
+			if (info != null) {
+				const template = new Template(info.src, this, info.path);
 				await template.init(eagerCompile);
 				if (!info.noCache) 
 					loader.cache[<string>name] = template;
+				return template;
 			}
-			return template;
 		}
 
-		if (ignoreMissing) 
-			return null;
-
-///console.log('environment.js  getTemplate()  THROWING ERROR name:',name);
+		if (ignoreMissing) {
+			const template = new Template(noopTmplSrc, this, '');
+			return await template.init(eagerCompile);
+		}
 
 		throw new Error('template not found: ' + name);
 	}

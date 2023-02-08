@@ -287,7 +287,16 @@ function mainCompilerTests1()
 	it('should throw exceptions when missing import', async () => {
 		var tmpl = new Template('{% from "doesnotexist" import foo %}',new Environment(),null);
 		const promise = tmpl.render({});
-		await assert.rejects(promise,new TemplateError('cannot import foo','TODO',0,0));
+
+/*
+promise.catch(err => {
+  console.log('ZZZZ1  typeof err:',typeof err);
+  console.log('ZZZZ2:',err);
+  console.log('ZZZZ3:',JSON.stringify(err));
+});
+*/
+
+		await assert.rejects(promise,new TemplateError('template not found: doesnotexist','TODO',0,0));
 	});
 
 	it('should include error line in raised TemplateError', async () => {
@@ -299,13 +308,7 @@ function mainCompilerTests1()
 		const tmpl = new Template(tmplStr,env,'parse-error.njk');
 
 		const promise = tmpl.render({});
-promise.catch(err => {
-  console.log('ZZZZ1  typeof err:',typeof err);
-  console.log('ZZZZ2:',err);
-  console.log('ZZZZ3:',JSON.stringify(err));
-});
-
-		await assert.rejects(promise,new TemplateError('Error: unexpected token: ,','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('unexpected token: ,','TODO',1,26));
 	});
 
 	it('should include error line when exception raised in user function', async () => {

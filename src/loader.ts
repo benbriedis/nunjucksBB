@@ -14,17 +14,14 @@ export type Callback<E, T> = (err: E | null, res: T | null) => void;
 
 export abstract class Loader extends EmitterObj2 
 {
-    async?: boolean | undefined;
- 	es6Async?: boolean | undefined;
+    async getSource(name:string) : Promise<LoaderSource> { return <any>null; }
 
-    async getSource(name: string) : Promise<LoaderSource> { return <any>null}
-
-	resolve(from, to) 
+	createPath(from:string,to:string):string
 	{
 		return path.resolve(path.dirname(from), to);
 	}
 
-	isRelative(filename) 
+	isRelative(filename:string):boolean
 	{
 		return (filename.indexOf('./') === 0 || filename.indexOf('../') === 0);
 	}

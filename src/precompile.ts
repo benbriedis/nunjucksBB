@@ -109,12 +109,12 @@ function _precompile(str, name, env)
 
 	name = name.replace(/\\/g, '/');
 
-	try {
+//	try {
 		template = compiler.compile(str,asyncFilters,extensions,name,env.opts);
-	} 
-	catch (err) {
-		throw _prettifyError(name, false, err);
-	}
+//	} 
+//	catch (err) {
+//		throw _prettifyError(name, false, err);
+//	}
 
 	return {name:name,template:template};
 }
