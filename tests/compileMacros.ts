@@ -152,12 +152,12 @@ export function testCompileMacros()
 	it('should not leak variables set in nested scope within macro out to calling scope', async () => {
 		await equal(
 			'{% macro setFoo() %}' +
-			'{% for y in [1] %}{% set x = "foo" %}{{ x }}{% endfor %}' +
+				'{% for y in [1] %}{% set x = "foo" %}{{ x }}{% endfor %}' +
 			'{% endmacro %}' +
 			'{% macro display() %}' +
-			'{% set x = "bar" %}' +
-			'{{ setFoo() }}' +
-			'{{ x }}' +
+				'{% set x = "bar" %}' +
+				'{{ setFoo() }}' +
+				'{{ x }}' +
 			'{% endmacro %}' +
 			'{{ display() }}',
 			'foobar');

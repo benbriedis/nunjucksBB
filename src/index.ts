@@ -36,12 +36,7 @@ function configure(templatesPath=undefined, opts=undefined)
 			async: opts.web && opts.web.async
 		});
 
-	e = new Environment(templateLoader, opts);
-
-	if (opts && opts.express) 
-		e.express(opts.express);
-
-	return e;
+	return new Environment(templateLoader, opts);
 }
 
 function reset() 
@@ -86,12 +81,6 @@ export default {
 	NodeResolveLoader: Loaders.NodeResolveLoader,
 	PrecompiledLoader: Loaders.PrecompiledLoader,
 	WebLoader: Loaders.WebLoader,
-/*	
-	FileSystemLoader: FileSystemLoader,
-	NodeResolveLoader: NodeResolveLoader,
-	PrecompiledLoader: PrecompiledLoader,
-	WebLoader: WebLoader,
-*/	
 	compiler: compiler,
 	parser: parser,
 	lexer: lexer,

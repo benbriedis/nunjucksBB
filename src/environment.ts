@@ -6,7 +6,6 @@ import tests from './tests';
 import Globals from './globals';
 import Filters from './filters';
 import {EmitterObj2} from './object';
-import expressApp from './express-app';
 import Template from './template';
 
 /**
@@ -247,11 +246,6 @@ export default class Environment extends EmitterObj2
 		}
 
 		throw new Error('template not found: ' + name);
-	}
-
-	express(app) 
-	{
-		return expressApp(this, app);
 	}
 
 	async render(name, ctx):Promise<string> 

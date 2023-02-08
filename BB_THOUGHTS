@@ -23,4 +23,5 @@ CODING
   Probably a Babel thing... may be able just to use Typescript
 
 WORK DONE
-
+> Removed Express app. 
+  WHY? Its easy to use Nunjucks in Express without it, and this is just more fussy detail that needs to be maintained.

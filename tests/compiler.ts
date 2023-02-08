@@ -6,9 +6,9 @@ import Template from '../src/template';
 import Environment from '../src/environment';
 import {FileSystemLoader as Loader} from '../src/node-loaders';
 import {render,equal} from './util';
-import {runLoopTests} from './compilerLoops';
+import {runLoopTests} from './compileLoops';
 import {testCompileMacros} from './compileMacros';
-import {testFilterTag} from './compilerFilterTag';
+import {testFilterTag} from './compileFilterTag';
 
 describe('compiler',function() {
 	mainCompilerTests1();

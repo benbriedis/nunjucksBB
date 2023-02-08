@@ -4,8 +4,6 @@ coverage
 dist
 browser
 docs
-tests/express-sample
-tests/express
 tests/browser
 bench
 src/loaders.js

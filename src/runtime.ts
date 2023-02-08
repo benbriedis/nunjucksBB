@@ -1,7 +1,7 @@
 import * as lib from './lib';
 import TemplateError from './TemplateError';
-export {isArray,inOperator} from './lib';
 export {SafeString,markSafe,suppressValue} from './SafeString';
+export {isArray,inOperator,keys} from './lib';
 
 
 var arrayFrom = Array.from;
