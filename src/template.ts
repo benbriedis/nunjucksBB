@@ -8,7 +8,7 @@ import Context from './context';
 
 export default class Template extends Obj2
 {
-	env;
+	env:Environment;
 	path;
 	tmplProps;
 	tmplStr;
@@ -16,7 +16,7 @@ export default class Template extends Obj2
     blocks: (...args:any[])=>Promise<any>;   //XXX may be possible to use stronger type
     rootRenderFunc;
 
-	constructor(src, env, path) 
+	constructor(src,env:Environment,path) 
 	{
 		super();
 
@@ -136,16 +136,8 @@ return out;
 				this.path,
 				this.env.opts);
 
-//XXX Can the source be a wrapped function???   async function root(env, context, frame, runtime, cb) {...}			
-//XXX Can the AsyncFunction source be a wrapped function???   async function root(env, context, frame, runtime, cb) {...}			
-//XXX Do we need AsyncFunction?
-
 //console.log('template._compile() this.path:',this.path,'source:',source)
 			const func = new Function(source); // eslint-disable-line no-new-func
-//			const AsyncFunction = async function () {}.constructor;
-//			const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-
-//			const func = new AsyncFunction(source); // eslint-disable-line no-new-func
 			props = await func();
 		}
 

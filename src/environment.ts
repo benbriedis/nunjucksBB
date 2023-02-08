@@ -15,7 +15,7 @@ import Template from './template';
 const noopTmplSrc = {
 	type: 'code',
 	obj: {
-		root(env, context, frame, runtime, ) { return ''; }
+		root(env, context, frame, runtime) { return ''; }
 	}
 };
 

@@ -789,8 +789,8 @@ export class Compiler extends Obj2 {
   _compileGetTemplate(node, frame, eagerCompile, ignoreMissing) {
 //    const parentTemplateId = this._tmpid();
     const parentName = this._templateName();
-    const eagerCompileArg = (eagerCompile) ? 'true' : 'false';
-    const ignoreMissingArg = (ignoreMissing) ? 'true' : 'false';
+    const eagerCompileArg = eagerCompile ? 'true' : 'false';
+    const ignoreMissingArg = ignoreMissing ? 'true' : 'false';
     this._emit('await env.getTemplate(');
     this._compileExpression(node.template, frame);
     this._emitLine(`, ${eagerCompileArg}, ${parentName}, ${ignoreMissingArg})`);

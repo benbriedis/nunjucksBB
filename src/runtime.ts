@@ -225,7 +225,8 @@ export function handleError(error,template,lineno,colno)
 		throw error;
 	else 
 //		throw new TemplateError(error,template,lineno,colno);
-		throw new TemplateError(error.toString(),template,lineno,colno);
+//		throw new TemplateError(error.toString(),template,lineno,colno);
+		throw new TemplateError(error.message ?? 'unspecified cause',template,lineno,colno);
 }
 
 export function fromIterator(arr) 

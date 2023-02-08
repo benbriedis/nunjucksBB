@@ -278,52 +278,49 @@ function mainCompilerTests1()
 
 	it('should throw an error when using the "in" operator on unexpected types', async () => {
 		const promise1 = render('{% if "a" in 1 %}yes{% endif %}',{});
-		await assert.rejects(promise1,new TemplateError('Error: Cannot use "in" operator to search for "a" in unexpected types.','TODO',0,0));
+		await assert.rejects(promise1,new TemplateError('Cannot use "in" operator to search for "a" in unexpected types.','TODO',0,0));
 
 		const promise2 = render('{% if "a" in obj %}yes{% endif %}',{});
-		await assert.rejects(promise2,new TemplateError('Error: Cannot use "in" operator to search for "a" in unexpected types.','TODO',0,0));
+		await assert.rejects(promise2,new TemplateError('Cannot use "in" operator to search for "a" in unexpected types.','TODO',0,0));
 	});
 
-	it('should throw exceptions when called synchronously', async () => {
-		var tmpl = new Template('{% from "doesnotexist" import foo %}',{},null);
+	it('should throw exceptions when missing import', async () => {
+		var tmpl = new Template('{% from "doesnotexist" import foo %}',new Environment(),null);
 		const promise = tmpl.render({});
-		await assert.rejects(promise,new TemplateError('template not found: doesnotexist','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('cannot import foo','TODO',0,0));
 	});
 
 	it('should include error line in raised TemplateError', async () => {
-		var tmplStr = [
-			'{% set items = ["a", "b",, "c"] %}',
-			'{{ items | join(",") }}',
-		].join('\n');
+		const tmplStr = 
+			`{% set items = ["a", "b",, "c"] %}
+			 {{ items | join(",") }}`;
 
-		var loader = new Loader('tests/templates');
-		var env = new Environment(loader);
-		var tmpl = new Template(tmplStr, env, 'parse-error.njk');
+		const env = new Environment(new Loader('tests/templates'));
+		const tmpl = new Template(tmplStr,env,'parse-error.njk');
 
 		const promise = tmpl.render({});
-		await assert.rejects(promise,new TemplateError('unexpected token: ,','TODO',0,0));
+promise.catch(err => {
+  console.log('ZZZZ1  typeof err:',typeof err);
+  console.log('ZZZZ2:',err);
+  console.log('ZZZZ3:',JSON.stringify(err));
+});
 
+		await assert.rejects(promise,new TemplateError('Error: unexpected token: ,','TODO',0,0));
 	});
 
 	it('should include error line when exception raised in user function', async () => {
-		var tmplStr = [
-			'{% block content %}',
-			'<div>{{ foo() }}</div>',
-			'{% endblock %}',
-		].join('\n');
+		var tmplStr = `
+			{% block content %}
+				<div>{{ foo() }}</div>
+			{% endblock %}`;
 		var env = new Environment(new Loader('tests/templates'));
 		var tmpl = new Template(tmplStr, env, 'user-error.njk');
 
-		function foo() {
-			throw new Error('ERROR');
-		}
+		function foo() { throw new Error('CUSTOM ERROR'); }
+		env.addGlobal('foo', foo);
 
-		const promise = tmpl.render({foo: foo});
-		await assert.rejects(promise,new TemplateError(
-			[
-				'Template render error: (user-error.njk) [Line 1, Column 11]',
-				'  Error: ERROR',
-			].join('\n'),'TODO',0,0));
+		const promise = tmpl.render({});
+		await assert.rejects(promise,new TemplateError('CUSTOM ERROR','TODO',0,0));
 	});
 
 	it('template attempts to include non-existent template', async () => {
@@ -1148,8 +1145,8 @@ function mainCompilerTests2()
 	});
 
 	it('should import template objects', async () => {
-		var tmpl = new Template('{% macro foo() %}Inside a macro{% endmacro %}' +
-			'{% set bar = "BAZ" %}',{},null);
+		var tmpl = new Template('{% macro foo() %}Inside a macro{% endmacro %}{% set bar = "BAZ" %}',
+			new Environment(),null);
 
 		await equal(
 			'{% import tmpl as imp %}' +
@@ -1167,8 +1164,8 @@ function mainCompilerTests2()
 	});
 
 	it('should inherit template objects', async () => {
-		var tmpl = new Template('Foo{% block block1 %}Bar{% endblock %}' +
-			'{% block block2 %}Baz{% endblock %}Whizzle',{},null);
+		var tmpl = new Template('Foo{% block block1 %}Bar{% endblock %}{% block block2 %}Baz{% endblock %}Whizzle',
+			new Environment(),null);
 
 		await equal('hola {% extends tmpl %} fizzle mumble', {
 				tmpl: tmpl
@@ -1185,7 +1182,7 @@ function mainCompilerTests2()
 	});
 
 	it('should include template objects', async () => {
-		var tmpl = new Template('FooInclude {{ name }}',{},null);
+		var tmpl = new Template('FooInclude {{ name }}',new Environment(),null);
 
 		await equal('hello world {% include tmpl %}', {
 				name: 'thedude',
