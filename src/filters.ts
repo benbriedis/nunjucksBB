@@ -71,19 +71,14 @@ export default class Filters
 		return copySafeness(str, pre + str + post);
 	}
 
-	async 'default'(val, def, bool)   
+	async 'default'(val,def) 
 	{
-		if (bool) 
-			return val || def;
-		else 
-//XXX Look elsewhere for similar crimes. Dont want to distringuish between null and undefined in NJK
-//			return (val !== undefined) ? val : def;
-			return (val != null) ? val : def;
+		return val!=null ? val : def;
 	}
 
-	async d(val, def, bool) 
+	async d(val,def) 
 	{
-		return this['default'](val, def, bool);
+		return env(this).filters['default'](val,def);
 	}
 
 

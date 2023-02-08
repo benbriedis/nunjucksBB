@@ -8,6 +8,7 @@ FUNCTIONALITY
 > Trawl Jinja and Twig for useful filters and functions
 > MAYBE an option to disable 'include'. But NB I do like being able to dynamically construct
   include file names
+> Remove explicit 'null' and 'undefined' in templates. Use 'none' instead.
 
 CODING
 > Remove weird (old?) object stuff in objects.js
@@ -22,6 +23,23 @@ CODING
   Move 'nunjucks' subdirectory contents up.
   Probably a Babel thing... may be able just to use Typescript
 
+DOCUMENTATION
+> think 'none' is undocumented
+> Remove 'value' from 'default(value, default, [boolean])', its very confusing
+
 WORK DONE
 > Removed Express app. 
   WHY? Its easy to use Nunjucks in Express without it, and this is just more fussy detail that needs to be maintained.
+> Removed optional second argument in 'default()' filter.
+  WHY? Historical backward-compatibity thing. Confusing and time to move on.
+> Modified 'default()' so that it treats 'null' as the same as 'undefined.'
+  WHY? Javascript has an awkward distinction between 'null' and 'undefined'. 
+  It also has a concept of 'nullish' whereby null==undefined (note though that null!==undefined), which helps a bit
+  It is probably best to simplify things in Nunjucks by mapping both 'null' and 'undefined' to 'none' in Nunjucks. 
+  Note that custom filters and globals could potentially return 'null's or 'undefined's and these both need to be handled.
+
+
+
+TODO 
+> update doco with work done
+

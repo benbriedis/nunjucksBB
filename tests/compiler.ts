@@ -88,12 +88,30 @@ function mainCompilerTests1()
 		await equal('{{ none }}', '');
 	});
 
-	it('should compile none as falsy', async () => {
+	it('none should be falsy', async () => {
 		await equal('{% if not none %}yes{% endif %}', 'yes');
 	});
 
-	it('should compile none as null, not undefined', async () => {
-		await equal('{{ none|default("d", false) }}', '');
+	it('none should use default', async () => {
+		await equal('{{ none|d("d") }}', 'd');
+	});
+
+	// TODO remove 'null' from templates. Use 'none' instead' 
+	it('null should use default', async () => {
+		await equal('{{ null|d("d") }}', 'd');
+	});
+
+	// TODO remove 'undefined' from templates. Use 'none' instead'
+	it('undefined should use default', async () => {
+		await equal('{{ undefined|d("d") }}', 'd');
+	});
+
+	it('true should not use default', async () => {
+		await equal('{{ true|d("d") }}', 'true');
+	});
+
+	it('false should not use default', async () => {
+		await equal('{{ false|d("d") }}', 'false');
 	});
 
 	it('should compile function calls', async () => {
@@ -196,10 +214,12 @@ function mainCompilerTests1()
 
 
 	it('should allow overriding var with none inside nested scope', async () => {
-		await equal(
+
+		const promise = render(
 			'{% set var = "foo" %}' +
-			'{% for i in [1] %}{% set var = none %}{{ var }}{% endfor %}',
-			'');
+			'{% for i in [1] %}{% set var = none %}{{ var }}{% endfor %}',{});
+console.log('DDDDD  result:',await promise);			
+		assert(await promise=='');
 	});
 
 	it('should compile basic arithmetic operators', async () => {
@@ -323,7 +343,7 @@ promise.catch(err => {
 		env.addGlobal('foo', foo);
 
 		const promise = tmpl.render({});
-//		await assert.rejects(promise,new TemplateError('CUSTOM ERROR','user-error.njk',0,0));
+//		await assert.rejects(promise,new TemplateError('CUSTOM ERROR','user-error.njk',0,0));  FIXME
 		await assert.rejects(promise,new TemplateError('CUSTOM ERROR','"user-error.njk"',0,0));
 	});
 
