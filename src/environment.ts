@@ -19,8 +19,6 @@ const noopTmplSrc = {
 	}
 };
 
-type AsyncFunc = (...args:any[]) => Promise<any>;
-
 
 //XXX use an emit mixin
 export default class Environment extends EmitterObj2 

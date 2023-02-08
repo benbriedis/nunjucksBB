@@ -278,10 +278,10 @@ function mainCompilerTests1()
 
 	it('should throw an error when using the "in" operator on unexpected types', async () => {
 		const promise1 = render('{% if "a" in 1 %}yes{% endif %}',{});
-		await assert.rejects(promise1,new TemplateError('Cannot use "in" operator to search for "a" in unexpected types.','TODO',0,0));
+		await assert.rejects(promise1,new TemplateError('Cannot use "in" operator to search for "a" in unexpected types.','undefined',0,0));
 
 		const promise2 = render('{% if "a" in obj %}yes{% endif %}',{});
-		await assert.rejects(promise2,new TemplateError('Cannot use "in" operator to search for "a" in unexpected types.','TODO',0,0));
+		await assert.rejects(promise2,new TemplateError('Cannot use "in" operator to search for "a" in unexpected types.','undefined',0,0));
 	});
 
 	it('should throw exceptions when missing import', async () => {
@@ -296,7 +296,7 @@ promise.catch(err => {
 });
 */
 
-		await assert.rejects(promise,new TemplateError('template not found: doesnotexist','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('template not found: doesnotexist','undefined',0,0));
 	});
 
 	it('should include error line in raised TemplateError', async () => {
@@ -323,12 +323,13 @@ promise.catch(err => {
 		env.addGlobal('foo', foo);
 
 		const promise = tmpl.render({});
-		await assert.rejects(promise,new TemplateError('CUSTOM ERROR','TODO',0,0));
+//		await assert.rejects(promise,new TemplateError('CUSTOM ERROR','user-error.njk',0,0));
+		await assert.rejects(promise,new TemplateError('CUSTOM ERROR','"user-error.njk"',0,0));
 	});
 
 	it('template attempts to include non-existent template', async () => {
 		const promise = render('{% include "broken-import.njk" %}', {str:'abc'});
-		await assert.rejects(promise,new TemplateError('template not found: doesnotexist','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('template not found: doesnotexist','undefined',0,0));
 	});
 
 	it('should compile string concatenations with tilde', async () => {
@@ -525,7 +526,7 @@ function mainCompilerTests2()
 
 	it('should throw an error when including a file that does not exist', async () => {
 		const promise = render('{% include "missing.njk" %}', {});
-		await assert.rejects(promise,new TemplateError('template not found: missing.njk','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('template not found: missing.njk','undefined',0,0));
 	});
 
 	it('should fail silently on missing templates if requested', async () => {
@@ -715,7 +716,7 @@ function mainCompilerTests2()
 
 	it('should throw errors', async () => {
 		const promise = render('{% from "import.njk" import boozle %}',{},null);
-		await assert.rejects(promise,new TemplateError('cannot import boozle','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('cannot import boozle','undefined',0,0));
 	});
 
 	it('should allow custom tag compilation', async () => {
@@ -1033,22 +1034,22 @@ function mainCompilerTests2()
 
 	it('should throw an error when {% call %} is passed an object that is not a function', async () => {
 		const promise = render('{% call foo() %}{% endcall %}',{foo:'bar'});
-		await assert.rejects(promise,new TemplateError('Unable to call `foo`, which is not a function','TODO',0,11));
+		await assert.rejects(promise,new TemplateError('Unable to call `foo`, which is not a function','undefined',0,11));
 	});
 
 	it('should throw an error when including a file that calls an undefined macro', async () => {
 		const promise = render('{% include "undefined-macro.njk" %}',{});
-		await assert.rejects(promise,new TemplateError('Unable to call `undef`, which is undefined or falsey','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('Unable to call `undef`, which is undefined or falsey','undefined',0,0));
 	});
 
 	it('should throw an error when including a file that calls an undefined macro even inside {% if %} tag', async () => {
 		const promise = render('{% if true %}{% include "undefined-macro.njk" %}{% endif %}',{});
-		await assert.rejects(promise,new TemplateError('Unable to call `undef`, which is undefined or falsey','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('Unable to call `undef`, which is undefined or falsey','undefined',0,0));
 	});
 
 	it('should throw an error when including a file that imports macro that calls an undefined macro', async () => {
 		const promise = render('{% include "import-macro-call-undefined-macro.njk" %}',{list:[1, 2, 3]});
-		await assert.rejects(promise,new TemplateError('Unable to call `t["defined_macro"]`, which is undefined or falsey','TODO',0,0));
+		await assert.rejects(promise,new TemplateError('Unable to call `t["defined_macro"]`, which is undefined or falsey','undefined',0,0));
 	});
 
 

@@ -214,14 +214,11 @@ export function testCompileMacros()
 	});
 
 	it('should compile call blocks using imported macros', async () => {
-console.log('VVVVVV-1'); 
 		const tmpl = new Template(
 			'{% import "import.njk" as imp %}' +
 			'{% call imp.wrap("span") %}Hey{% endcall %}',
 			new Environment(),null);
-console.log('VVVVVV-2'); 
 		const result = await tmpl.render({});
-console.log('VVVVVV result:',result);		
 		assert(result == '<span>Hey</span>');
 	});
 

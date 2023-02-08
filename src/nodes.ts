@@ -13,11 +13,11 @@ function traverseAndCheck(obj, type, results)
 
 export class Node extends Obj2
 {
-	lineno;
-	colno;
+	lineno:number;
+	colno:number;
 	get fields() { return []; }  //XXX I'd rather fields were not dynamically added
 
-	constructor(lineno, colno, ...args) 
+	constructor(lineno:number, colno:number, ...args) 
 	{
 		super();
 		this.lineno = lineno;

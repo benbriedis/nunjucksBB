@@ -1,4 +1,5 @@
 import * as lib from './lib';
+import * as runtime from './runtime';
 import TemplateError from './TemplateError';
 import SafeString,{copySafeness,markSafe} from './SafeString';
 import type Context from './context';
@@ -188,11 +189,14 @@ export default class Filters
 		return copySafeness(str, res);
 	}
 
-	async 'int'(value,defaultValue,base)
-	{
-		const res = parseInt(value, base ?? 10);
-		return (isNaN(res)) ? defaultValue : res;
-	}
+	'int' = runtime.makeMacro(
+		['value', 'default', 'base'],
+		[],
+		function doInt(value, defaultValue, base = 10) {
+			var res = parseInt(value, base);
+			return (isNaN(res)) ? defaultValue : res;
+		}
+	);
 
 	async join(arr, del, attr) 
 	{
@@ -422,38 +426,42 @@ export default class Filters
 		return start + arr.reduce((a, b) => a + b, 0);
 	}
 
-	async sort(value,reverse,caseSensitive,attr)
-	{
-//		sort(value,reverse,case_sensitive,attribute);
+//XXX this weird syntax allows for named function arguments. Only seems to be supported for sort() and int(),
+//    as weel as custom macros
 
-console.log('filters.js sort()   IN array:',value,'attr:',attr);
+	sort = runtime.makeMacro(
+		['value', 'reverse', 'case_sensitive', 'attribute'], [],
+		function sortFilter(arr, reversed, caseSens, attr) {
+			// Copy it
+			let array = lib.map(arr, v => v);
+			let getAttribute = lib.getAttrGetter(attr);
 
-		// Copy it
-		const array = lib.map(value, v => v);
-		const getAttribute = lib.getAttrGetter(attr);
+			array.sort((a, b) => {
+				let x = attr ? getAttribute(a) : a;
+				let y = attr ? getAttribute(b) : b;
 
-		array.sort((a, b) => {
-			let x = attr ? getAttribute(a) : a;
-			let y = attr ? getAttribute(b) : b;
+				if (
+					env(this).opts.throwOnUndefined &&
+					attr && (x === undefined || y === undefined)
+				) 
+					throw new TypeError(`sort: attribute "${attr}" resolved to undefined`);
 
-			if (env(this).opts.throwOnUndefined && attr && (x === undefined || y === undefined)) 
-				throw new TypeError(`sort: attribute "${attr}" resolved to undefined`);
+				if (!caseSens && lib.isString(x) && lib.isString(y)) {
+					x = x.toLowerCase();
+					y = y.toLowerCase();
+				}
 
-			if (!caseSensitive && lib.isString(x) && lib.isString(y)) {
-				x = x.toLowerCase();
-				y = y.toLowerCase();
-			}
+				if (x < y) 
+					return reversed ? 1 : -1;
+				else if (x > y) 
+					return reversed ? -1 : 1;
+				else 
+					return 0;
+			});
 
-			if (x < y) 
-				return reverse ? 1 : -1;
-			else if (x > y) 
-				return reverse ? -1 : 1;
-			else 
-				return 0;
-		});
-
-		return array;
-	}
+			return array;
+		}
+	);
 
 	async 'string'(obj) 
 	{
@@ -584,9 +592,6 @@ function env(thisObj:Filters):Environment
 {
 	return (<Context><unknown>thisObj).env;
 }
-
-
-
 
 function normalize(value,defaultValue) 
 {

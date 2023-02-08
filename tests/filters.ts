@@ -1,29 +1,10 @@
-(function() {
-  'use strict';
+import expect from 'expect.js';
+import {render,equal} from './util';
+import * as lib from '../src/lib';
+import * as r from '../src/runtime';
+import assert from 'assert';
+import TemplateError from '../src/TemplateError';
 
-  var expect;
-  var util;
-  var lib;
-  var r;
-  var render;
-  var equal;
-  var finish;
-
-  if (typeof require !== 'undefined') {
-    expect = require('expect.js');
-    util = require('./util');
-    lib = require('../src/lib');
-    r = require('../src/runtime');
-  } else {
-    expect = window.expect;
-    util = window.util;
-    lib = nunjucks.lib;
-    r = nunjucks.runtime;
-  }
-
-  render = util.render;
-  equal = util.equal;
-  finish = util.finish;
 
   describe('filter', function() {
     it('abs', async() => {
@@ -517,34 +498,22 @@
       });
       it('should output the length of an array created with "new Array" with user-defined properties', async() => {
         var arr = new Array(0, 1); // eslint-disable-line no-array-constructor
-        arr.key = 'value';
+        (<any>arr).key = 'value';
         await equal('{{ arr | length }}', {
           arr: arr
         }, '2');
       });
       it('should output the length of a Map', async() => {
-        /* global Map */
-        var map;
-        if (typeof Map === 'undefined') {
-          this.skip();
-        } else {
-          map = new Map([['key1', 'value1'], ['key2', 'value2']]);
+          var map = new Map([['key1', 'value1'], ['key2', 'value2']]);
           map.set('key3', 'value3');
           await equal('{{ map | length }}', {
             map: map
           }, '3');
-        }
       });
       it('should output the length of a Set', async() => {
-        /* global Set */
-        var set;
-        if (typeof Set === 'undefined') {
-          this.skip();
-        } else {
-          set = new Set(['value1']);
-          set.add('value2');
-          await equal('{{ set | length }}', { set: set }, '2');
-        }
+        var set = new Set(['value1']);
+        set.add('value2');
+        await equal('{{ set | length }}', { set: set }, '2');
       });
     });
 
@@ -808,8 +777,7 @@
         'fredjohnjames'
       );
 
-      expect(function() {
-        render(
+        const promise = render(
           nestedAttributeSortTemplate,
           {
             items: [
@@ -822,7 +790,7 @@
             throwOnUndefined: true
           }
         );
-      }).to.throwError(/sort: attribute "meta\.age" resolved to undefined/);
+		await assert.rejects(promise,new TemplateError('sort: attribute "meta\.age" resolved to undefined','undefined',0,0));
     });
 
     it('string', async() => {
@@ -1022,4 +990,3 @@
       await equal('{{ nothing | wordcount }}', '');
     });
   });
-}());
