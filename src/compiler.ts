@@ -2,7 +2,7 @@ import parser from './parser';
 import { transform } from './transformer';
 import nodes from './nodes';
 import TemplateError from './TemplateError';
-import { Frame } from './runtime';
+import Frame from './Frame';
 import { Obj2 } from './object';
 
 // These are all the same for now, but shouldn't be passed straight
@@ -753,7 +753,7 @@ export class Compiler extends Obj2
 			`[${kwargNames.join(', ')}], `,
 			`async function (${realNames.join(', ')}) {`,
 			'var callerFrame = frame;',
-			'frame = ' + ((keepFrame) ? 'frame.push(true);' : 'new runtime.Frame();'),
+			'frame = ' + (keepFrame ? 'frame.push(true);' : 'new runtime.Frame();'),
 			'kwargs = kwargs || {};',
 			'if (Object.prototype.hasOwnProperty.call(kwargs, "caller")) {',
 			'frame.set("caller", kwargs.caller); }');
@@ -784,7 +784,7 @@ export class Compiler extends Obj2
 			this.compile(node.body, currFrame);
 		});
 
-		this._emitLine('frame = ' + ((keepFrame) ? 'frame.pop();' : 'callerFrame;'));
+		this._emitLine('frame = ' + (keepFrame ? 'frame.pop();' : 'callerFrame;'));
 		this._emitLine(`return new runtime.SafeString(${bufferId});`);
 		this._emitLine('});');
 		this._popBuffer();
@@ -825,11 +825,9 @@ export class Compiler extends Obj2
 		const parentName = this._templateName();
 		const eagerCompileArg = eagerCompile ? 'true' : 'false';
 		const ignoreMissingArg = ignoreMissing ? 'true' : 'false';
-		//this._emitLine('console.log("BEFORE getTemplate()  node.template:",node.template);');
 		this._emit('await env.getTemplate(');
 		this._compileExpression(node.template, frame);
 		this._emitLine(`, ${eagerCompileArg}, ${parentName}, ${ignoreMissingArg})`);
-		//this._emitLine('console.log("AFTER getTemplate()  node.template:",node.template);');
 		//    return parentTemplateId;
 	}
 

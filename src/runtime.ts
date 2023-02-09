@@ -2,98 +2,13 @@ import * as lib from './lib';
 import TemplateError from './TemplateError';
 export {SafeString,markSafe,suppressValue} from './SafeString';
 export {isArray,inOperator,keys} from './lib';
+export {Frame} from './Frame';
 
 
 var arrayFrom = Array.from;
 var supportsIterators = (
 	typeof Symbol === 'function' && Symbol.iterator && typeof arrayFrom === 'function'
 );
-
-
-// Frames keep track of scoping both at compile-time and run-time so
-// we know how to access variables. Block tags can introduce special
-// variables, for example.
-export class Frame 
-{
-	variables;
-	parent;
-	topLevel:boolean = false;
-	// if this is true, writes (set) should never propagate upwards past
-	// this frame to its parent (though reads may).
-	isolateWrites:boolean;
-
-
-	constructor(parent=undefined, isolateWrites:boolean=false) 
-	{
-		this.parent = parent;
-		this.variables = Object.create(null);
-		this.isolateWrites = isolateWrites;
-	}
-
-	set(name:string, val, resolveUp:boolean=false) 
-	{
-if (global.go) console.log('IIIII Frame.set()  name:',name,'val:',val);	
-		// Allow variables with dots by automatically creating the
-		// nested structure
-		var parts = name.split('.');
-		var obj = this.variables;
-		var frame = this;
-
-		if (resolveUp) {
-			if ((frame = this.resolve(parts[0], true))) {
-				frame.set(name,val,false);
-				return;
-			}
-		}
-
-		for (let i = 0; i < parts.length - 1; i++) {
-			const id = parts[i];
-
-			if (!obj[id]) 
-				obj[id] = {};
-			obj = obj[id];
-		}
-
-		obj[parts[parts.length - 1]] = val;
-	}
-
-	get(name:string) 
-	{
-		var val = this.variables[name];
-		if (val !== undefined) 
-			return val;
-		return null;
-	}
-
-	lookup(name:string) 
-	{
-		var p = this.parent;
-		var val = this.variables[name];
-		if (val !== undefined) 
-			return val;
-		return p && p.lookup(name);
-	}
-
-	resolve(name:string,forWrite:boolean) 
-	{
-		var p = (forWrite && this.isolateWrites) ? undefined : this.parent;
-		var val = this.variables[name];
-		if (val !== undefined) 
-			return this;
-		return p && p.resolve(name);
-	}
-
-	push(isolateWrites:boolean) 
-	{
-		return new Frame(this, isolateWrites);
-	}
-
-	pop() 
-	{
-		return this.parent;
-	}
-}
-
 
 
 export function makeMacro(argNames, kwargNames, /*async*/ func) {
@@ -128,6 +43,7 @@ export function makeMacro(argNames, kwargNames, /*async*/ func) {
 		} else 
 			args = macroArgs;
 
+if (global.go) console.log('IIII makeMacro()  this:',this);
 		return await func.apply(this, args);
 	};
 }

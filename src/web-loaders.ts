@@ -19,13 +19,6 @@ export class WebLoader extends Loader
 		// and compiled each time. (Remember, PRECOMPILE YOUR
 		// TEMPLATES in production!)
 		this.useCache = !!opts.useCache;
-
-		// We default `async` to false so that the simple synchronous
-		// API can be used when you aren't doing anything async in
-		// your templates (which is most of the time). This performs a
-		// sync ajax request, but that's ok because it should *only*
-		// happen in development. PRECOMPILE YOUR TEMPLATES.
-		this.async = !!opts.async;
 	}
 
 	createPath(from:string,to:string):string 

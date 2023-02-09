@@ -1,7 +1,7 @@
 import * as lib from './lib';
 import compiler from './compiler';
 import {Obj2} from './object';
-import {Frame} from './runtime';
+import Frame from './Frame';
 import * as globalRuntime from './runtime';
 import Environment from './environment';
 import Context from './context';
@@ -144,7 +144,7 @@ console.log('SSSSS  err:',err);
 			props = this.tmplProps;
 		else {
 			const source = compiler.compile(this.tmplStr,
-				this.env.asyncFilters,   //XXX might we need to pass in regular filters?
+				this.env.filters,   //XXX not sure we need... was asyncFilters
 				this.env.extensionsList,
 				this.path,
 				this.env.opts);

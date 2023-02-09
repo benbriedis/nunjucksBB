@@ -422,7 +422,7 @@ export default class Filters
 	}
 
 //XXX this weird syntax allows for named function arguments. Only seems to be supported for sort() and int(),
-//    as weel as custom macros
+//    as well as custom macros. I suppose the argument is that filters aren't macros. Bit inconsistent though
 
 	sort = runtime.makeMacro(
 		['value', 'reverse', 'case_sensitive', 'attribute'], [],
