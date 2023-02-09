@@ -149,7 +149,7 @@ console.log('SSSSS  err:',err);
 				this.path,
 				this.env.opts);
 
-//console.log('template._compile() this.path:',this.path,'source:',source)
+if (global.go) console.log('template._compile() this.path:',this.path,'source:',source)
 			const func = new Function(source); // eslint-disable-line no-new-func
 			props = await func();
 		}

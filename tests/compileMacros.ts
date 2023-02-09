@@ -1,6 +1,6 @@
 import 'mocha';
 import assert from 'assert';
-import {equal} from './util';
+import {equal,render} from './util';
 import Template from '../src/template';
 import Environment from '../src/environment';
 
@@ -150,7 +150,7 @@ export function testCompileMacros()
 	});
 
 	it('should not leak variables set in nested scope within macro out to calling scope', async () => {
-		await equal(
+		const result = await render(
 			'{% macro setFoo() %}' +
 				'{% for y in [1] %}{% set x = "foo" %}{{ x }}{% endfor %}' +
 			'{% endmacro %}' +
@@ -159,8 +159,8 @@ export function testCompileMacros()
 				'{{ setFoo() }}' +
 				'{{ x }}' +
 			'{% endmacro %}' +
-			'{{ display() }}',
-			'foobar');
+			'{{ display() }}',{});
+		assert(result == 'foobar');
 	});
 
 	it('should compile macros without leaking set to calling scope', async () => {
@@ -186,11 +186,13 @@ export function testCompileMacros()
 	});
 
 	it('should compile macros that cannot see variables in caller scope', async () => {
-		await equal(
+global.go=1;
+		const result = await render(
 			'{% macro one(var) %}{{ two() }}{% endmacro %}' +
 			'{% macro two() %}{{ var }}{% endmacro %}' +
-			'{{ one("foo") }}',
-			'');
+			'{{ one("foo") }}', {});
+console.log('DDDDD result:',result);  delete global.go;
+		assert(result == '');
 	});
 
 	it('should compile call blocks', async () => {

@@ -29,16 +29,28 @@ export default class Context extends Obj2
 
 	lookup(name) 
 	{
+if (global.go) console.log('IIII Context.lookup()  name:',name,'ctx:',this.ctx);
+
 		// This is one of the most called functions, so optimize for
 		// the typical case where the name isn't in the globals
 		if (name in this.env.globals && !(name in this.ctx))
+{		
+if (global.go) console.log('IIII Context.lookup()  IN GLOBALS');
 			return this.env.globals[name];
+}			
 		else 
-			return this.ctx[name];
+{		
+const xxx = this.ctx[name];
+if (global.go) console.log('IIII Context.lookup()  ctx:',this.ctx);
+if (global.go) console.log('IIII Context.lookup()  returning:',xxx);
+return xxx;
+//			return this.ctx[name];
+}			
 	}
 
 	setVariable(name, val) 
 	{
+if (global.go) console.log('IIIII setVariable()  name:',name,'val:',val);	
 		this.ctx[name] = val;
 	}
 

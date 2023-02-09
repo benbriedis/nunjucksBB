@@ -218,7 +218,6 @@ function mainCompilerTests1()
 		const promise = render(
 			'{% set var = "foo" %}' +
 			'{% for i in [1] %}{% set var = none %}{{ var }}{% endfor %}',{});
-console.log('DDDDD  result:',await promise);			
 		assert(await promise=='');
 	});
 

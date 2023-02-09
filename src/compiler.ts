@@ -801,12 +801,11 @@ export class Compiler extends Obj2
 		var name = node.name.value;
 		frame.set(name, funcId);
 
-		if (frame.parent) {
+		if (frame.parent) 
 			this._emitLine(`frame.set("${name}", ${funcId});`);
-		} else {
-			if (node.name.value.charAt(0) !== '_') {
+		else {
+			if (node.name.value.charAt(0) !== '_') 
 				this._emitLine(`context.addExport("${name}");`);
-			}
 			this._emitLine(`context.setVariable("${name}", ${funcId});`);
 		}
 	}

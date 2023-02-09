@@ -20,18 +20,19 @@ export class Frame
 	topLevel:boolean = false;
 	// if this is true, writes (set) should never propagate upwards past
 	// this frame to its parent (though reads may).
-	isolateWrites;
+	isolateWrites:boolean;
 
 
-	constructor(parent=undefined, isolateWrites=undefined) 
+	constructor(parent=undefined, isolateWrites:boolean=false) 
 	{
-		this.variables = Object.create(null);
 		this.parent = parent;
+		this.variables = Object.create(null);
 		this.isolateWrites = isolateWrites;
 	}
 
-	set(name, val, resolveUp) 
+	set(name:string, val, resolveUp:boolean=false) 
 	{
+if (global.go) console.log('IIIII Frame.set()  name:',name,'val:',val);	
 		// Allow variables with dots by automatically creating the
 		// nested structure
 		var parts = name.split('.');
@@ -40,8 +41,7 @@ export class Frame
 
 		if (resolveUp) {
 			if ((frame = this.resolve(parts[0], true))) {
-//				frame.set(name, val);
-				frame.set[name] = val;
+				frame.set(name,val,false);
 				return;
 			}
 		}
@@ -57,7 +57,7 @@ export class Frame
 		obj[parts[parts.length - 1]] = val;
 	}
 
-	get(name) 
+	get(name:string) 
 	{
 		var val = this.variables[name];
 		if (val !== undefined) 
@@ -65,7 +65,7 @@ export class Frame
 		return null;
 	}
 
-	lookup(name) 
+	lookup(name:string) 
 	{
 		var p = this.parent;
 		var val = this.variables[name];
@@ -74,7 +74,7 @@ export class Frame
 		return p && p.lookup(name);
 	}
 
-	resolve(name, forWrite) 
+	resolve(name:string,forWrite:boolean) 
 	{
 		var p = (forWrite && this.isolateWrites) ? undefined : this.parent;
 		var val = this.variables[name];
@@ -83,7 +83,7 @@ export class Frame
 		return p && p.resolve(name);
 	}
 
-	push(isolateWrites) 
+	push(isolateWrites:boolean) 
 	{
 		return new Frame(this, isolateWrites);
 	}
@@ -204,28 +204,19 @@ export async function callWrap(obj, name, context, args)
 
 export function contextOrFrameLookup(context, frame, name) 
 {
+if (global.go) console.log('IIIII contextOrFrameLookup  name:',name,'CALLING frame.lookup()');	
+if (global.go) console.log('IIIII contextOrFrameLookup  frame:',frame);	
 	var val = frame.lookup(name);
+if (global.go) console.log('IIIII contextOrFrameLookup  name:',name,'typeof val:',typeof val);	
+if (global.go) console.log('IIIII contextOrFrameLookup  name:',name,'val1:',val);	
 	return (val !== undefined) ? val : context.lookup(name);
 }
 
-/*
-export function handleError(error, template, line, column) 
-{
-console.log('runtime.js  handleError()  template:',template,'error:',error);
-	if (error.line) //XXX YUCK
-		return error;
-	else
-		return new TemplateError(error, template, line, column);
-}
-*/
-
 export function handleError(error,template,lineno,colno) 
 {
-	if (error.lineno) 
+	if (error.lineno)    //XXX huh?
 		throw error;
 	else 
-//		throw new TemplateError(error,template,lineno,colno);
-//		throw new TemplateError(error.toString(),template,lineno,colno);
 		throw new TemplateError(error.message ?? 'unspecified cause',template,lineno,colno);
 }
 
