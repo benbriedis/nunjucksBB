@@ -10,6 +10,13 @@ FUNCTIONALITY
   include file names
 > Remove explicit 'null' and 'undefined' in templates. Use 'none' instead.
 
+RE Loaders:
+1. Move existing FileLoader to eg WatchLoader / ServerWatchLoader /... and strip out chokidar from main FileLoader
+2. Rename WebLoader to eg WebWatchLoader
+3. Make a loader compulsary. eg specifiy PrecompiledLoader
+4. Just have 1 loader
+
+
 CODING
 > Remove weird (old?) object stuff in objects.js
 > Remore asyncFor, asyncAll, asyncIf

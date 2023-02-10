@@ -75,35 +75,6 @@ export default class Template extends Obj2
 		const frame = parentFrame ? parentFrame.push(true) : new Frame();
 		frame.topLevel = true;
 
-//console.log('AAA0 this.rootRenderFunc:',this.rootRenderFunc);		
-
-/*
-let out;
-try{
-		out = await this.rootRenderFunc(this.env, context, frame, globalRuntime);
-console.log('AAA out:',out);		
-}
-catch(err) {
-console.log('AAA err:',err);		
-throw err;
-}
-return out;
-*/
-
-//		const result = await this.rootRenderFunc(this.env,context,frame,globalRuntime);
-
-
-/*
-		let result;
-		try {
-		return await this.rootRenderFunc(this.env,context,frame,globalRuntime);
-		}
-		catch(err) {
-console.log('SSSSS  err:',err);		
-			throw err;
-		}
-*/		
-
 		return await this.rootRenderFunc(this.env,context,frame,globalRuntime);
 	}
 
@@ -123,11 +94,9 @@ console.log('SSSSS  err:',err);
 
 		// Run the rootRenderFunc to populate the context with exported vars
 		const context = new Context(ctx || {}, this.blocks, this.env);
-		return await this.rootRenderFunc(this.env, context, frame, globalRuntime); 
-//XXX return value?		
+		await this.rootRenderFunc(this.env, context, frame, globalRuntime); 
 
-//XXX return this 		
-//		context.getExported();
+		return context.getExported();
 	}
 
 	async compile() 
@@ -149,7 +118,8 @@ console.log('SSSSS  err:',err);
 				this.path,
 				this.env.opts);
 
-if (global.go) console.log('template._compile() this.path:',this.path,'source:',source)
+if (global.go) console.log('_compile() source:',source);				
+
 			const func = new Function(source); // eslint-disable-line no-new-func
 			props = await func();
 		}

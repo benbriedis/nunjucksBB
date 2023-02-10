@@ -6,7 +6,7 @@ export default class Context extends Obj2
 {
 	env;
 	ctx;
-	blocks;
+	blocks;     //XXX currently these are async functions
 	exported;
 
 	constructor(ctx, blocks, env) 
@@ -70,7 +70,13 @@ if (global.go) console.log('IIIII setVariable()  name:',name,'val:',val);
 	{
 		if (!this.blocks[name]) 
 			throw new Error('unknown block "' + name + '"');
-		return this.blocks[name][0];
+
+const xxx = this.blocks[name][0];
+if(global.go) console.log('IIII getBlock() name:',name,'block:',xxx);
+return xxx;
+
+
+//		return this.blocks[name][0];
 	}
 
 	async getSuper(env,name,block,frame,runtime) 

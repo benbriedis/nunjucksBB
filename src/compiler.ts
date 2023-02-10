@@ -25,7 +25,6 @@ export class Compiler extends Obj2
 	lastId = 0;
 	buffer = null;
 	bufferStack = [];
-	_scopeClosers = '';
 	inBlock = false;
 	throwOnUndefined:boolean;
 
@@ -77,7 +76,6 @@ export class Compiler extends Obj2
 	_emitFuncBegin(node, name) 
 	{
 		this.buffer = 'output';
-		this._scopeClosers = '';
 		this._emitLine(`async function ${name}(env,context,frame,runtime) {`);
 		this._emitLine(`var lineno = ${node.lineno};`);
 		this._emitLine(`var colno = ${node.colno};`);
@@ -97,28 +95,6 @@ export class Compiler extends Obj2
 		this.buffer = null;
 	}
 
-	_addScopeLevel() 
-	{
-		this._scopeClosers += '})';
-	}
-
-	_closeScopeLevels() 
-	{
-		this._emitLine(this._scopeClosers + ';');
-		this._scopeClosers = '';
-	}
-
-	_withScopedSyntax(func) 
-	{
-		var _scopeClosers = this._scopeClosers;
-		this._scopeClosers = '';
-
-		func.call(this);
-
-		this._closeScopeLevels();
-		this._scopeClosers = _scopeClosers;
-	}
-
 	_tmpid() 
 	{
 		this.lastId++;
@@ -132,7 +108,7 @@ export class Compiler extends Obj2
 
 	_compileChildren(node, frame) 
 	{
-		node.children.forEach((child) => this.compile(child, frame));
+		node.children.forEach(child => this.compile(child, frame));
 	}
 
 	_compileAggregate(node, frame, startChar=undefined, endChar=undefined) 
@@ -434,6 +410,8 @@ export class Compiler extends Obj2
 
 	compileLookupVal(node, frame) 
 	{
+//if (global.go) console.log('node:',node);
+
 		this._emit('runtime.memberLookup((');
 		this._compileExpression(node.target, frame);
 		this._emit('),');
@@ -660,9 +638,7 @@ export class Compiler extends Obj2
 			});
 
 			this._emitLoopBindings(node, arr, i, len);
-			this._withScopedSyntax(() => {
-				this.compile(node.body, frame);
-			});
+			this.compile(node.body, frame);
 			this._emitLine('}');
 
 			this._emitLine('} else {');
@@ -682,9 +658,7 @@ export class Compiler extends Obj2
 			this._emitLine(`frame.set("${val.value}", ${v});`);
 
 			this._emitLoopBindings(node, arr, i, len);
-			this._withScopedSyntax(() => {
-				this.compile(node.body, frame);
-			});
+			this.compile(node.body, frame);
 			this._emitLine('}');
 
 			this._emitLine('}');
@@ -700,9 +674,7 @@ export class Compiler extends Obj2
 
 			this._emitLoopBindings(node, arr, i, len);
 
-			this._withScopedSyntax(() => {
-				this.compile(node.body, frame);
-			});
+			this.compile(node.body, frame);
 
 			this._emitLine('}');
 		}
@@ -717,12 +689,12 @@ export class Compiler extends Obj2
 		this._emitLine('frame = frame.pop();');
 	}
 
-	_compileMacro(node, frame) 
+	_compileMacro(node, frame:Frame|null) 
 	{
 		var args = [];
 		var kwargs = null;
 		var funcId = 'macro_' + this._tmpid();
-		var keepFrame = (frame !== undefined);
+		var keepFrame = (frame != null);
 
 		// Type check the definition of the args
 		node.args.children.forEach((arg, i) => {
@@ -780,9 +752,7 @@ export class Compiler extends Obj2
 
 		const bufferId = this._pushBuffer();
 
-		this._withScopedSyntax(() => {
-			this.compile(node.body, currFrame);
-		});
+		this.compile(node.body, currFrame);
 
 		this._emitLine('frame = ' + (keepFrame ? 'frame.pop();' : 'callerFrame;'));
 		this._emitLine(`return new runtime.SafeString(${bufferId});`);
@@ -794,8 +764,7 @@ export class Compiler extends Obj2
 
 	compileMacro(node, frame) 
 	{
-//var funcId = this._compileMacro(node);
-		var funcId = this._compileMacro(node,frame);
+		var funcId = this._compileMacro(node,null);
 
 		// Expose the macro to the templates
 		var name = node.name.value;
@@ -835,12 +804,9 @@ export class Compiler extends Obj2
 	{
 		const target = node.target.value;
 		const id = this._tmpid();
-		this._emit(`${id} = `);
+		this._emit(`${id} = await (`);
 		this._compileGetTemplate(node, frame, false, false);
-		this._emit(`;`);
-		this._addScopeLevel();
-
-		this._emitLine('await ' + id + '.getExported()');
+		this._emit(`).getExported();`);
 
 		frame.set(target, id);
 
@@ -853,12 +819,9 @@ export class Compiler extends Obj2
 	compileFromImport(node, frame) 
 	{
 		const importedId = this._tmpid();
-		this._emit(`${importedId} = `);
+		this._emit(`${importedId} = await (`);
 		this._compileGetTemplate(node, frame, false, false);
-		this._emit(`;`);
-		this._addScopeLevel();
-
-		this._emitLine('await ' + importedId + '.getExported();');
+		this._emit(`).getExported();`);
 
 		node.names.children.forEach(nameNode => {
 			var name;
@@ -917,6 +880,11 @@ export class Compiler extends Obj2
 		//if(!this.isChild)    XXX This was in the 2013 code instead of the inBlock test
 		this._emitLine(this.buffer + ' += await context.getBlock("' +
 			node.name.value + '")(env, context, frame, runtime);');
+
+
+//		this._emitLine('var TEMP = await context.getBlock("'+node.name.value + '")(env, context, frame, runtime);');
+//		this._emitLine('console.log("BLOCK:",TEMP);');
+//		this._emitLine(this.buffer + ' += TEMP;');
 	}
 
 	compileSuper(node, frame) 
@@ -941,8 +909,6 @@ export class Compiler extends Obj2
 		this._emitLine(`for(var ${k} in parentTemplate.blocks) {`);
 		this._emitLine(`context.addBlock(${k}, parentTemplate.blocks[${k}]);`);
 		this._emitLine('}');
-
-		this._addScopeLevel();
 	}
 
 	//XXX QQQ BB: why do we want eagerCompile?  
@@ -972,9 +938,7 @@ export class Compiler extends Obj2
 		this.buffer = 'output';
 		this._emitLine('(function() {');
 		this._emitLine('var output = "";');
-		this._withScopedSyntax(() => {
-			this.compile(node.body, frame);
-		});
+		this.compile(node.body, frame);
 		this._emitLine('return output;');
 		this._emitLine('})()');
 		// and of course, revert back to the old buffer id
@@ -1015,12 +979,10 @@ export class Compiler extends Obj2
 		this._emitFuncBegin(node, 'root');
 		this._emitLine('var parentTemplate = null;');
 		this._compileChildren(node, frame);
-		this._emitLine('if(parentTemplate) {');
+		this._emitLine('if(parentTemplate)');
 		this._emitLine('return await parentTemplate.rootRenderFunc(env, context, frame, runtime);');
-		this._emitLine('} else {');
-		//    this._emitLine(`cb(null, ${this.buffer});`);
+		this._emitLine('else');
 		this._emitLine(`return ${this.buffer};`);
-		this._emitLine('}');
 		this._emitFuncEnd(true);
 
 		this.inBlock = true;
@@ -1056,6 +1018,8 @@ export class Compiler extends Obj2
 
 	compile(node,frame=undefined) 
 	{
+if(global.go && node.typename=='Macro') console.log('Compiler.compile() typename:',node.typename,'frame:',frame);
+
 		var _compile = this['compile' + node.typename];
 		if (_compile) 
 			_compile.call(this, node, frame);

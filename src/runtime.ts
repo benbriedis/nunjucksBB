@@ -99,11 +99,16 @@ export function ensureDefined(val, lineno, colno)
 
 export function memberLookup(obj, val) 
 {
+if (global.go) console.log('memberLookup()  obj:',obj,'val:',val);
 	if (obj === undefined || obj === null) 
 		return undefined;
 
+if (global.go) console.log('memberLookup()--2  obj[val]:',obj[val]);
+
 	if (typeof obj[val] === 'function') 
 		return (...args) => obj[val].apply(obj, args);
+
+if (global.go) console.log('memberLookup()--3');
 
 	return obj[val];
 }
@@ -114,6 +119,8 @@ export async function callWrap(obj, name, context, args)
 		throw new Error('Unable to call `' + name + '`, which is undefined or falsey');
 	else if (typeof obj !== 'function') 
 		throw new Error('Unable to call `' + name + '`, which is not a function');
+
+if(global.go) console.log('IIII callWrap() name:',name,'args:',args);
 
 	return await obj.apply(context, args);
 }
