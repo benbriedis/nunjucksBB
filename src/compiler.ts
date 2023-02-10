@@ -804,9 +804,13 @@ export class Compiler extends Obj2
 	{
 		const target = node.target.value;
 		const id = this._tmpid();
+
 		this._emit(`${id} = await (`);
 		this._compileGetTemplate(node, frame, false, false);
-		this._emit(`).getExported();`);
+		this._emit(`).getExported(` +
+//      		(node.withContext ? `context.getVariables(),frame,${id}` : '') +
+      		(node.withContext ? `context.getVariables(),frame` : '') +
+		');');
 
 		frame.set(target, id);
 
@@ -821,7 +825,10 @@ export class Compiler extends Obj2
 		const importedId = this._tmpid();
 		this._emit(`${importedId} = await (`);
 		this._compileGetTemplate(node, frame, false, false);
-		this._emit(`).getExported();`);
+		this._emit(`).getExported(`+
+//      		(node.withContext ? `context.getVariables(),frame,${importedId}` : '') +
+      		(node.withContext ? `context.getVariables(),frame` : '') +
+		');');
 
 		node.names.children.forEach(nameNode => {
 			var name;
@@ -919,7 +926,7 @@ export class Compiler extends Obj2
 		//XXX QQQ BB: why does this have a var and most of the others not?
 		const templateId = this._tmpid();
 		this._emit(`var ${templateId} = `);
-		this._compileGetTemplate(node, frame, true, false);
+		this._compileGetTemplate(node, frame, true, node.ignoreMissing);
 		this._emit(`;`);
 		this._emitLine(this.buffer +
 			` += await ${templateId}.render(context.getVariables(), frame.push());`);
@@ -995,7 +1002,8 @@ export class Compiler extends Obj2
 			const name = block.name.value;
 
 			if (blockNames.indexOf(name) !== -1) 
-				throw new Error(`Block "${name}" defined more than once.`);
+//				throw new Error(`Block "${name}" defined more than once.`);
+				this.fail(`Block "${name}" defined more than once.`,node.lineno, node.colno);
 			blockNames.push(name);
 
 			this._emitFuncBegin(block, `b_${name}`);

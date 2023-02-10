@@ -424,17 +424,12 @@ function mainCompilerTests2()
 	});
 
 	it('should error if same block is defined multiple times', async () => {
-		try {
-			await render(
+		const promise = render(
 				'{% extends "simple-base.njk" %}' +
 				'{% block test %}{% endblock %}' +
-				'{% block test %}{% endblock %}'
-			);
-			expect(true).to.not.be.ok();
-		} catch (err) {
-			expect(err).to.be.a(TemplateError);
-			expect(err).to.be('Error" Block "test" defined more than once.');
-		}
+				'{% block test %}{% endblock %}',
+			{});
+		await assert.rejects(promise,new TemplateError('Block "test" defined more than once.',null,1,1));
 	});
 
 	it('should render nested blocks in child template', async () => {

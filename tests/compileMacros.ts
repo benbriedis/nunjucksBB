@@ -239,8 +239,6 @@ export function testCompileMacros()
 			'{% from "import.njk" import foo as baz, bar %}' +
 			'{{ bar }} {{ baz() }}',
 			'baz Here\'s a macro');
-//global.go = 1;	
-//try{
 
 		// TODO: Should the for loop create a new frame for each
 		// iteration? As it is, `num` is set on all iterations after
@@ -253,23 +251,17 @@ export function testCompileMacros()
 			'{% endfor %}' +
 			'final: {{ num }}',
 			'start: end: bazstart: bazend: bazfinal: ');
-//}
-//catch(err)
-//{
-//console.log('DDDD err:',err);
-//}
-
-delete global.go;	
 	});
 
 	it('should import templates with context', async () => {
+//global.go = 1;	
 		await equal(
 			'{% set bar = "BAR" %}' +
 			'{% import "import-context.njk" as imp with context %}' +
 			'{{ imp.foo() }}',
 			'Here\'s BAR');
+//delete global.go;	
 
-/*	
 		await equal(
 			'{% set bar = "BAR" %}' +
 			'{% from "import-context.njk" import foo with context %}' +
@@ -299,7 +291,6 @@ delete global.go;
 			'{% import "import-context-set.njk" as imp with context %}' +
 			'{{ imp.bar }}{{ buzz }}',
 			'FOO');
-*/			
 	});
 
 	it('should import templates without context', async () => {
