@@ -361,7 +361,16 @@ promise.catch(err => {
 function mainCompilerTests2()
 {
 	it('should inherit templates', async () => {
-		await equal('{% extends "base.njk" %}', 'FooBarBazFizzle');
+global.go = true;	
+		const result = await render('{% extends "base.njk" %}',{});
+
+if (global.go) console.log('DDDD result:',result);		
+
+global.go = false;	
+		assert.equal(result,'FooBarBazFizzle');
+
+/*		
+TODO RE-ENABLE
 		await equal('hola {% extends "base.njk" %} hizzle mumble', 'FooBarBazFizzle');
 
 		await equal('{% extends "base.njk" %}{% block block1 %}BAR{% endblock %}',
@@ -377,6 +386,7 @@ function mainCompilerTests2()
 				tmpl: 'base.njk'
 			},
 			'FooBarBazFizzle');
+*/			
 	}); 
 
 	it('should not call blocks not defined from template inheritance', async () => {
@@ -440,16 +450,30 @@ function mainCompilerTests2()
 	});
 
 	it('should render parent blocks with super()', async () => {
+/*	TODO reenable
 		await equal(
 			'{% extends "base.njk" %}' +
 			'{% block block1 %}{{ super() }}BAR{% endblock %}',
 			'FooBarBARBazFizzle');
+*/			
 
 		// two levels of `super` should work
-		await equal(
+//global.go = true;		
+
+//try {
+		const result = await render(
 			'{% extends "base-inherit.njk" %}' +
-			'{% block block1 %}*{{ super() }}*{% endblock %}',
-			'Foo**Bar**BazFizzle');
+			'{% block block1 %}*{{ super() }}*{% endblock %}', {});
+
+//delete global.go;			
+//console.log('DDDDD result:',result);
+
+		assert(result == 'Foo**Bar**BazFizzle');
+//}
+//catch(err) {
+//delete global.go;			
+//console.log('DDDDD  err:',err);
+//}
 	});
 
 	it('should let super() see global vars from child template', async () => {

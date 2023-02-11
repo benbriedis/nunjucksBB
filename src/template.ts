@@ -20,6 +20,8 @@ export default class Template extends Obj2
 	{
 		super();
 
+if (global.go) console.log('Template() constructor()  path:',path);	  
+
 		this.env = env || new Environment();
 
 		if (lib.isObject(src)) {
@@ -44,6 +46,7 @@ export default class Template extends Obj2
 
 	public async init(eagerCompile:boolean)
 	{
+if (global.go) console.log('Template() init()  this.path:',this.path);	  
 		if (eagerCompile) 
 //			try {
 				await this._compile();
@@ -71,7 +74,9 @@ export default class Template extends Obj2
 //			throw lib._prettifyError(this.path, this.env.opts.dev, e);
 //		}
 
+if (global.go) console.log('template.ts  render()  calling Context()');
 		const context = new Context(ctx || {}, this.blocks, this.env);
+if (global.go) console.log('template.ts  END render()');
 		const frame = parentFrame ? parentFrame.push(true) : new Frame();
 		frame.topLevel = true;
 
@@ -93,7 +98,9 @@ export default class Template extends Obj2
 		frame.topLevel = true;
 
 		// Run the rootRenderFunc to populate the context with exported vars
+if (global.go) console.log('template.ts  getExported()  calling Context()');
 		const context = new Context(ctx || {}, this.blocks, this.env);
+if (global.go) console.log('template.ts  END getExported()');
 		await this.rootRenderFunc(this.env, context, frame, globalRuntime); 
 
 		return context.getExported();
@@ -107,11 +114,13 @@ export default class Template extends Obj2
 
 	private async _compile() 
 	{
+if (global.go) console.log('Template._compile()  TOP');	
 		var props;
 
 		if (this.tmplProps) 
 			props = this.tmplProps;
 		else {
+if (global.go) console.log('_compile()  CALLING compiler.compile()  this.path:',this.path);	
 			const source = compiler.compile(this.tmplStr,
 				this.env.filters,   //XXX not sure we need... was asyncFilters
 				this.env.extensionsList,

@@ -22,9 +22,11 @@ export default class Context extends Obj2
 		this.blocks = {};
 		this.exported = [];
 
+if (global.go) console.log('context.ts  Constructor  adding blocks');
 		lib.keys(blocks).forEach(name => {
 			this.addBlock(name, blocks[name]);
 		});
+if (global.go) console.log('context.ts  END Constructor');
 	}
 
 	lookup(name) 
@@ -61,6 +63,8 @@ if (global.go) console.log('IIIII setVariable()  name:',name,'val:',val);
 
 	addBlock(name, block) 
 	{
+if (global.go) console.log('context.ts  addBlock()  name:',name,'block:',block);
+
 		this.blocks[name] = this.blocks[name] || [];
 		this.blocks[name].push(block);
 		return this;
@@ -81,14 +85,19 @@ return xxx;
 
 	async getSuper(env,name,block,frame,runtime) 
 	{
+if (global.go) console.log('context.ts  getSuper()  name:',name);
+if (global.go) console.log('context.ts  getSuper()  this.blocks:',this.blocks);
+
 		var idx = lib.indexOf(this.blocks[name] || [], block);
 		var blk = this.blocks[name][idx + 1];
 		var context = this;
 
+if (global.go) console.log('context.ts  getSuper()  idx:',idx,'blk:',blk);
+
 		if (idx === -1 || !blk) 
 			throw new Error('no super block available for "' + name + '"');
 
-		return await blk(env,context,frame,runtime);
+		return await blk(env,this,frame,runtime);
 	}
 
 	addExport(name) 

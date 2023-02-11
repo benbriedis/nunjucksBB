@@ -15,7 +15,8 @@ export class Frame
 	isolateWrites:boolean;
 
 
-	constructor(parent=undefined, isolateWrites:boolean=false) 
+//	constructor(parent=undefined, isolateWrites:boolean=false) 
+	constructor(parent=undefined, isolateWrites:boolean=undefined) 
 	{
 		this.parent = parent;
 		this.variables = Object.create(null);
@@ -24,7 +25,6 @@ export class Frame
 
 	set(name:string, val, resolveUp:boolean=false) 
 	{
-if (global.go) console.log('IIIII Frame.set()  name:',name,'val:',val);	
 		// Allow variables with dots by automatically creating the
 		// nested structure
 		var parts = name.split('.');
@@ -61,9 +61,6 @@ if (global.go) console.log('IIIII Frame.set()  name:',name,'val:',val);
 	{
 		var p = this.parent;
 		var val = this.variables[name];
-
-if (global.go) console.log('IIII Frame.lookup()  name:',name,'val:',val);
-if (global.go) console.log('IIII Frame.lookup()  variables:',this.variables);
 
 		if (val !== undefined) 
 			return val;

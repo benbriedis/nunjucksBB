@@ -55,7 +55,7 @@
     "build:server": "tsc",
     "build": "npm run build:browser && npm run build:server",
     "codecov": "codecov",
-    "mocha": "mocha -R spec server/tests",
+    "mocha": "tsc ; mocha -R spec server/tests",
     "lint": "eslint nunjucks scripts tests",
     "prepare": "npm run build",
     "test:instrument": "cross-env NODE_ENV=test scripts/bundle.js",

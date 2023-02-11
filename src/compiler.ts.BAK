@@ -25,8 +25,11 @@ export class Compiler extends Obj2
 	lastId = 0;
 	buffer = null;
 	bufferStack = [];
-	inBlock = false;
 	throwOnUndefined:boolean;
+
+//XXX probably use one or the other
+//	inBlock = false;
+    isChild = false;
 
 	constructor(templateName:string,throwOnUndefined:boolean) 
 	{
@@ -857,28 +860,21 @@ if (global.go) this._emitLine(`console.log('CALLED root()  template: ${this._tem
 		});
 	}
 
+// If we are executing outside a block (creating a top-level
+// block), we really don't want to execute its code because it
+// will execute twice: once when the child template runs and
+// again when the parent template runs. Note that blocks
+// within blocks will *always* execute immediately *and*
+// wherever else they are invoked (like used in a parent
+// template). This may have behavioral differences from jinja
+// because blocks can have side effects, but it seems like a
+// waste of performance to always execute huge top-level
+// blocks twice
+
 	compileBlock(node) 
 	{
-		var id = this._tmpid();
-
-		// If we are executing outside a block (creating a top-level
-		// block), we really don't want to execute its code because it
-		// will execute twice: once when the child template runs and
-		// again when the parent template runs. Note that blocks
-		// within blocks will *always* execute immediately *and*
-		// wherever else they are invoked (like used in a parent
-		// template). This may have behavioral differences from jinja
-		// because blocks can have side effects, but it seems like a
-		// waste of performance to always execute huge top-level
-		// blocks twice
-
-
-		if (this.inBlock) 
-			this._emit(`${this.buffer} += await context.getBlock("${node.name.value}")(env,context,frame,runtime);`);
-		else {
-			this._emitLine('if (!parentTemplate)');
-			this._emitLine(`${this.buffer} += await context.getBlock("${node.name.value}")(env,context,frame,runtime)`);
-		}
+        if(!this.isChild) 
+            this._emitLine(this.buffer+' += await context.getBlock("'+node.name.value +'")(env,context,frame,runtime);');
 	}
 
 	compileSuper(node, frame) 
@@ -891,20 +887,25 @@ if (global.go) this._emitLine(`console.log('CALLED root()  template: ${this._tem
 
 	compileExtends(node,frame) 
 	{
+		if (this.isChild) 
+			this.fail('compileExtends: cannot extend multiple times',node.template.lineno,node.template.colno);
+
 		var k = this._tmpid();
 
 		// extends is a dynamic tag and can occur within a block like
 		// `if`, so if this happens we need to capture the parent
 		// template in the top-level scope
 		this._emit(`parentTemplate = `);
-		this._compileGetTemplate(node, frame, true, false);
+		this._compileGetTemplate(node.template,frame,true,false);
+//this._compileGetTemplate(node,frame,true,false);
 		this._emit(`;`);
 
 if (global.go) this._emitLine(`console.log('compileExtends() parentTemplate:',parentTemplate.path); `);
 
-		this._emitLine(`for(var ${k} in parentTemplate.blocks) {`);
+		this._emitLine(`for(var ${k} in parentTemplate.blocks)`);
 		this._emitLine(`context.addBlock(${k}, parentTemplate.blocks[${k}]);`);
-		this._emitLine('}');
+
+		this.isChild = true;
 	}
 
 	//XXX QQQ BB: why do we want eagerCompile?  
@@ -965,6 +966,53 @@ if (global.go) this._emitLine(`console.log('compileExtends() parentTemplate:',pa
 		});
 	}
 
+//XXX is the root running twice?
+    compileRoot(node, frame) 
+	{
+        if(frame) 
+            this.fail("compileRoot: root node can't have frame",node.lineno,node.colno);
+
+        frame = new Frame();
+
+        this._emitFuncBegin(node,'root');
+        this._compileChildren(node, frame);
+        if(this.isChild) 
+            this._emitLine('return await parentTemplate.rootRenderFunc(env, context, frame, runtime);');
+        this._emitFuncEnd(this.isChild);
+
+        // When compiling the blocks, they should all act as top-level code
+        this.isChild = false;
+
+        var blocks = node.findAll(nodes.Block);
+        for(var i=0; i<blocks.length; i++) {
+            var block = blocks[i];
+            var name = block.name.value;
+
+            this._emitFuncBegin(node,'b_' + name);
+            this._emitLine('var l_super = runtime.markSafe(' +
+                          'context.getSuper(env, ' +
+                          '"' + name + '", ' +
+                          'b_' + name + ', ' +
+                          'frame, ' +
+                          'runtime));');
+
+            var tmpFrame = new Frame();
+            tmpFrame.set('super', 'l_super');
+            this.compile(block.body, tmpFrame);
+            this._emitFuncEnd();
+        }
+
+        this._emitLine('return {');
+        for(var i=0; i<blocks.length; i++) {
+            var block = blocks[i];
+            var name:any = 'b_' + block.name.value;
+            this._emitLine(name + ': ' + name + ',');
+        }
+        this._emitLine('root: root\n};');
+    }
+
+
+/*
 	compileRoot(node, frame) 
 	{
 		if (frame) 
@@ -972,15 +1020,23 @@ if (global.go) this._emitLine(`console.log('compileExtends() parentTemplate:',pa
 
 		frame = new Frame();
 
+//XXX might be clearer to call compileExtends directly when it exists
+
 		this._emitFuncBegin(node, 'root');
 		this._emitLine('var parentTemplate = null;');
-		this._compileChildren(node, frame);
+//		this._compileChildren(node, frame);
 
+//XXX could we determine this at compile time (some/all of the time)?
 		this._emitLine('if(parentTemplate)');
 		this._emitLine('return await parentTemplate.rootRenderFunc(env, context, frame, runtime);');
-		this._emitLine('else');
+		this._emitLine('else {');
+		this._compileChildren(node, frame);
 		this._emitLine(`return ${this.buffer};`);
+		this._emitLine('}');
+
 		this._emitFuncEnd(true);
+
+//QQQQ
 
 		this.inBlock = true;
 
@@ -1012,6 +1068,7 @@ if (global.go) this._emitLine(`console.log('compileExtends() parentTemplate:',pa
 
 		this._emitLine('root: root\n};');
 	}
+*/	
 
 	compile(node,frame=undefined) 
 	{
