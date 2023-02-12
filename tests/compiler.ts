@@ -751,7 +751,7 @@ function mainCompilerTests2()
 				parser.advanceAfterBlockEnd();
 
 				content = parser.parseUntilBlocks('endtest');
-				tag = new nodes.CallExtension(this, 'run', null, [content]);
+				tag = new nodes.CallExtension(0,0,this, 'run', null, [content]);
 				parser.advanceAfterBlockEnd();
 
 				return tag;
@@ -780,8 +780,7 @@ function mainCompilerTests2()
 				var tok = parser.nextToken();
 				var args = parser.parseSignature(null, true);
 				parser.advanceAfterBlockEnd(tok.value);
-
-				return new nodes.CallExtension(this, 'run', args, null);
+				return new nodes.CallExtension(0,0,this, 'run', args, null);
 			};
 
 			this.run = function(context, arg1) {
@@ -821,7 +820,7 @@ function mainCompilerTests2()
 
 				parser.advanceAfterBlockEnd();
 
-				return new nodes.CallExtension(this, 'run', null, [body, intermediate]);
+				return new nodes.CallExtension(0,0,this,'run',null,[body, intermediate]);
 			};
 
 			this.run = function(context, body, intermediate) {
@@ -872,7 +871,7 @@ function mainCompilerTests2()
 				body = parser.parseUntilBlocks('endtest');
 				parser.advanceAfterBlockEnd();
 
-				return new nodes.CallExtension(this, 'run', args, [body]);
+				return new nodes.CallExtension(0,0,this,'run',args,[body]);
 			};
 
 			this.run = function(context, prefix, kwargs, body) {
@@ -1007,7 +1006,7 @@ function mainCompilerTests2()
 				var tok = parser.nextToken();
 				var args = parser.parseSignature(null, true);
 				parser.advanceAfterBlockEnd(tok.value);
-				return new nodes.CallExtension(this, 'run', args, null);
+				return new nodes.CallExtension(0,0,this,'run',args,null);
 			};
 
 			this.run = function() {

@@ -119,7 +119,7 @@ export default class Template extends Obj2
 				this.path,
 				this.env.opts);
 
-//if (global.go) console.log('_compile() source:',source);				
+if (global.go) console.log('_compile() source:',source);	
 
 			const func = new Function(source); // eslint-disable-line no-new-func
 			props = await func();

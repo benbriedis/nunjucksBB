@@ -208,18 +208,19 @@ export class Compiler extends Obj2
 
 				if (arg) {
 					//var id = this.tmpid();
-					const id = this._pushBuffer();
 
 					this._emit('function() {');
+					const id = this._pushBuffer();
+
 					//this.pushBufferId(id);
-					this._popBuffer();
+					//this._popBuffer();
 					this.compile(arg, frame);
 					//this.popBufferId();
 					this._popBuffer();
-					this._emitLine('return ' + id + ';\n' + '}');
-				} else {
+					this._emitLine(`return ${id};`);
+					this._emitLine(`}`);
+				} else 
 					this._emit('null');
-				}
 			});
 
 		this._emit(')');
@@ -418,7 +419,7 @@ export class Compiler extends Obj2
 
 	_getNodeName(node) 
 	{
-if (global.go) console.log('_getNodeName()  node:',node);
+//if (global.go) console.log('_getNodeName()  node:',node);
 
 		if (node instanceof nodes.Symbol)
 			return (<any>node).value;
@@ -890,7 +891,7 @@ if (global.go) console.log('_getNodeName()  node:',node);
 			this._emit(`${this.buffer} += await context.getBlock("${node.name.value}")(env,context,frame,runtime);`);
 		else {
 			this._emitLine('if (!parentTemplate)');
-			this._emitLine(`${this.buffer} += await context.getBlock("${node.name.value}")(env,context,frame,runtime)`);
+			this._emitLine(`${this.buffer} += await context.getBlock("${node.name.value}")(env,context,frame,runtime);`);
 		}
 	}
 
@@ -943,7 +944,7 @@ if (global.go) console.log('_getNodeName()  node:',node);
 		// so the set block writes to the capture output instead of the buffer
 		var buffer = this.buffer;
 		this.buffer = 'output';
-		this._emitLine('(function() {');
+		this._emitLine('await (async function() {');
 		this._emitLine('var output = "";');
 		this.compile(node.body, frame);
 		this._emitLine('return output;');
