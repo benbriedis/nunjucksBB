@@ -77,7 +77,6 @@ export class Compiler extends Obj2
 	{
 		this.buffer = 'output';
 		this._emitLine(`async function ${name}(env,context,frame,runtime) {`);
-if (global.go) this._emitLine(`console.log('CALLED root()  template: ${this._templateName()}');`);
 		this._emitLine(`var lineno = ${node.lineno};`);
 		this._emitLine(`var colno = ${node.colno};`);
 		this._emitLine(`var ${this.buffer} = "";`);
@@ -247,11 +246,10 @@ if (global.go) this._emitLine(`console.log('CALLED root()  template: ${this._tem
 			val = val.replace(/\t/g, '\\t');
 			val = val.replace(/\u2028/g, '\\u2028');
 			this._emit(`"${val}"`);
-		} else if (node.value === null) {
+		} else if (node.value === null) 
 			this._emit('null');
-		} else {
+		else 
 			this._emit(node.value.toString());
-		}
 	}
 
 	compileSymbol(node, frame) 
@@ -420,6 +418,20 @@ if (global.go) this._emitLine(`console.log('CALLED root()  template: ${this._tem
 
 	_getNodeName(node) 
 	{
+if (global.go) console.log('_getNodeName()  node:',node);
+
+		if (node instanceof nodes.Symbol)
+			return (<any>node).value;
+		if (node instanceof nodes.FunCall)
+			return 'the return value of (' + this._getNodeName((<any>node).name) + ')';
+		if (node instanceof nodes.LookupVal)
+			return this._getNodeName((<any>node).target)+'["'+this._getNodeName((<any>node).val)+'"]';
+		if (node instanceof nodes.Literal)
+			return (<any>node).value.toString();
+
+		return '--expression--';
+
+/*
 		switch (node.typename) {
 			case 'Symbol':
 				return node.value;
@@ -433,6 +445,7 @@ if (global.go) this._emitLine(`console.log('CALLED root()  template: ${this._tem
 			default:
 				return '--expression--';
 		}
+*/		
 	}
 
 	compileFunCall(node, frame) 
@@ -441,18 +454,18 @@ if (global.go) this._emitLine(`console.log('CALLED root()  template: ${this._tem
 		// variables within an expression. An expression in javascript
 		// like (x, y, z) returns the last value, and x and y can be
 		// anything
-		this._emit('(lineno = ' + node.lineno +
-			', colno = ' + node.colno + ', ');
+		this._emit('(lineno = '+node.lineno+', colno = '+node.colno+', ');
 
 		this._emit('await runtime.callWrap(');
 		// Compile it as normal.
-		this._compileExpression(node.name, frame);
+//node.name is/can be LookupVal		
+		this._compileExpression(node.name,frame);
 
 		// Output the name of what we're calling so we can get friendly errors
 		// if the lookup fails.
 		this._emit(', "' + this._getNodeName(node.name).replace(/"/g, '\\"') + '",context,');
 
-		this._compileAggregate(node.args, frame, '[', '])');
+		this._compileAggregate(node.args,frame,'[', '])');
 
 		this._emit(')');
 	}
@@ -900,8 +913,6 @@ if (global.go) this._emitLine(`console.log('CALLED root()  template: ${this._tem
 		this._compileGetTemplate(node, frame, true, false);
 		this._emit(`;`);
 
-if (global.go) this._emitLine(`console.log('compileExtends() parentTemplate:',parentTemplate.path); `);
-
 		this._emitLine(`for(var ${k} in parentTemplate.blocks) {`);
 		this._emitLine(`context.addBlock(${k}, parentTemplate.blocks[${k}]);`);
 		this._emitLine('}');
@@ -921,7 +932,7 @@ if (global.go) this._emitLine(`console.log('compileExtends() parentTemplate:',pa
 			` += await ${templateId}.render(context.getVariables(), frame.push());`);
 	}
 
-	compileTemplateData(node, frame) 
+	compileTemplateData(node,frame) 
 	{
 		this.compileLiteral(node);
 	}

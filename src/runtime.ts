@@ -43,7 +43,6 @@ export function makeMacro(argNames, kwargNames, /*async*/ func) {
 		} else 
 			args = macroArgs;
 
-if (global.go) console.log('IIII makeMacro()  this:',this);
 		return await func.apply(this, args);
 	};
 }
@@ -99,16 +98,11 @@ export function ensureDefined(val, lineno, colno)
 
 export function memberLookup(obj, val) 
 {
-if (global.go) console.log('memberLookup()  obj:',obj,'val:',val);
 	if (obj === undefined || obj === null) 
 		return undefined;
 
-if (global.go) console.log('memberLookup()--2  obj[val]:',obj[val]);
-
 	if (typeof obj[val] === 'function') 
 		return (...args) => obj[val].apply(obj, args);
-
-if (global.go) console.log('memberLookup()--3');
 
 	return obj[val];
 }
@@ -120,18 +114,12 @@ export async function callWrap(obj, name, context, args)
 	else if (typeof obj !== 'function') 
 		throw new Error('Unable to call `' + name + '`, which is not a function');
 
-if(global.go) console.log('IIII callWrap() name:',name,'args:',args);
-
 	return await obj.apply(context, args);
 }
 
 export function contextOrFrameLookup(context, frame, name) 
 {
-if (global.go) console.log('IIIII contextOrFrameLookup  name:',name,'CALLING frame.lookup()');	
-if (global.go) console.log('IIIII contextOrFrameLookup  frame:',frame);	
 	var val = frame.lookup(name);
-if (global.go) console.log('IIIII contextOrFrameLookup  name:',name,'typeof val:',typeof val);	
-if (global.go) console.log('IIIII contextOrFrameLookup  name:',name,'val1:',val);	
 	return (val !== undefined) ? val : context.lookup(name);
 }
 

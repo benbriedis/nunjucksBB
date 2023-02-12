@@ -20,8 +20,6 @@ export default class Template extends Obj2
 	{
 		super();
 
-if (global.go) console.log('Template() constructor()  path:',path);	  
-
 		this.env = env || new Environment();
 
 		if (lib.isObject(src)) {
@@ -46,7 +44,6 @@ if (global.go) console.log('Template() constructor()  path:',path);
 
 	public async init(eagerCompile:boolean)
 	{
-if (global.go) console.log('Template() init()  this.path:',this.path);	  
 		if (eagerCompile) 
 //			try {
 				await this._compile();
@@ -74,9 +71,7 @@ if (global.go) console.log('Template() init()  this.path:',this.path);
 //			throw lib._prettifyError(this.path, this.env.opts.dev, e);
 //		}
 
-if (global.go) console.log('template.ts  render()  calling Context()');
 		const context = new Context(ctx || {}, this.blocks, this.env);
-if (global.go) console.log('template.ts  END render()');
 		const frame = parentFrame ? parentFrame.push(true) : new Frame();
 		frame.topLevel = true;
 
@@ -98,9 +93,7 @@ if (global.go) console.log('template.ts  END render()');
 		frame.topLevel = true;
 
 		// Run the rootRenderFunc to populate the context with exported vars
-if (global.go) console.log('template.ts  getExported()  calling Context()');
 		const context = new Context(ctx || {}, this.blocks, this.env);
-if (global.go) console.log('template.ts  END getExported()');
 		await this.rootRenderFunc(this.env, context, frame, globalRuntime); 
 
 		return context.getExported();
@@ -114,20 +107,19 @@ if (global.go) console.log('template.ts  END getExported()');
 
 	private async _compile() 
 	{
-if (global.go) console.log('Template._compile()  TOP');	
 		var props;
 
 		if (this.tmplProps) 
 			props = this.tmplProps;
 		else {
-if (global.go) console.log('_compile()  CALLING compiler.compile()  this.path:',this.path);	
+//if (global.go) console.log('_compile()  CALLING compiler.compile()  this.path:',this.path,'tmplStr:',this.tmplStr,'.');	
 			const source = compiler.compile(this.tmplStr,
 				this.env.filters,   //XXX not sure we need... was asyncFilters
 				this.env.extensionsList,
 				this.path,
 				this.env.opts);
 
-if (global.go) console.log('_compile() source:',source);				
+//if (global.go) console.log('_compile() source:',source);				
 
 			const func = new Function(source); // eslint-disable-line no-new-func
 			props = await func();

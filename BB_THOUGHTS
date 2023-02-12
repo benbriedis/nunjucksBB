@@ -29,6 +29,10 @@ CODING
 > Building a 'src' directory in the root is not nice. Maybe create a 'dist' or something if this required.
   Move 'nunjucks' subdirectory contents up.
   Probably a Babel thing... may be able just to use Typescript
+> nodes.ts and compiler.js are using an unhealthy number of dynamic calls
+
+> Maybe I do need to remove the final trailing \n from template files. Basically impossible to remove otherwise. But where?
+    Probably FileLoader makes most sense... 
 
 DOCUMENTATION
 > think 'none' is undocumented

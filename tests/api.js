@@ -20,7 +20,7 @@
       var env = new Environment(new Loader(templatesPath));
 
       var child = await env.getTemplate('base-inherit.njk');
-      expect(await child.render()).to.be('Foo*Bar*BazFizzle');
+      expect(await child.render()).to.be('Foo*Bar*BazFizzle\n');
     });
 
     it('should handle correctly relative paths', async () => {
@@ -35,8 +35,8 @@
       child1 = await env.getTemplate('relative/test1.njk');
       child2 = await env.getTemplate('relative/test2.njk');
 
-      expect(await child1.render()).to.be('FooTest1BazFizzle');
-      expect(await child2.render()).to.be('FooTest2BazFizzle');
+      expect(await child1.render()).to.be('FooTest1BazFizzle\n');
+      expect(await child2.render()).to.be('FooTest2BazFizzle\n');
     });
 
     it('should handle correctly cache for relative paths', async () => {
@@ -61,7 +61,7 @@
       env = new Environment(new Loader(templatesPath));
       expect(await env.renderString('{% extends "./relative/test1.njk" %}{% block block1 %}Test3{% endblock %}', {}, {
         path: path.resolve(templatesPath, 'string.njk')
-      })).to.be('FooTest3BazFizzle');
+      })).to.be('FooTest3BazFizzle\n');
     });
 
     it('should emit "load" event on Environment instance', async () => {

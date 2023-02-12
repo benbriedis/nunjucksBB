@@ -361,32 +361,29 @@ promise.catch(err => {
 function mainCompilerTests2()
 {
 	it('should inherit templates', async () => {
-global.go = true;	
+//global.go = true;	
 		const result = await render('{% extends "base.njk" %}',{});
 
-if (global.go) console.log('DDDD result:',result);		
+//if (global.go) console.log('DDDD result:',result);		
 
-global.go = false;	
-		assert.equal(result,'FooBarBazFizzle');
+//global.go = false;	
+		assert.equal(result,'FooBarBazFizzle\n');
 
-/*		
-TODO RE-ENABLE
-		await equal('hola {% extends "base.njk" %} hizzle mumble', 'FooBarBazFizzle');
+		await equal('hola {% extends "base.njk" %} hizzle mumble', 'FooBarBazFizzle\n');
 
 		await equal('{% extends "base.njk" %}{% block block1 %}BAR{% endblock %}',
-			'FooBARBazFizzle');
+			'FooBARBazFizzle\n');
 
 		await equal(
 			'{% extends "base.njk" %}' +
 			'{% block block1 %}BAR{% endblock %}' +
 			'{% block block2 %}BAZ{% endblock %}',
-			'FooBARBAZFizzle');
+			'FooBARBAZFizzle\n');
 
 		await equal('hola {% extends tmpl %} hizzle mumble', {
 				tmpl: 'base.njk'
 			},
-			'FooBarBazFizzle');
-*/			
+			'FooBarBazFizzle\n');
 	}); 
 
 	it('should not call blocks not defined from template inheritance', async () => {
@@ -412,7 +409,7 @@ TODO RE-ENABLE
 		await equal(
 			'{% if true %}{% extends "base.njk" %}{% endif %}' +
 			'{% block block1 %}BAR{% endblock %}',
-			'FooBARBazFizzle');
+			'FooBARBazFizzle\n');
 
 		await equal(
 			'{% if true %}' +
@@ -421,7 +418,7 @@ TODO RE-ENABLE
 			'{% extends "base2.njk" %}' +
 			'{% endif %}' +
 			'{% block block1 %}HELLO{% endblock %}',
-			'FooHELLOBazFizzle');
+			'FooHELLOBazFizzle\n');
 
 		await equal(
 			'{% if false %}' +
@@ -446,34 +443,21 @@ TODO RE-ENABLE
 		await equal(
 			'{% extends "base.njk" %}' +
 			'{% block block1 %}{% block nested %}BAR{% endblock %}{% endblock %}',
-			'FooBARBazFizzle');
+			'FooBARBazFizzle\n');
 	});
 
 	it('should render parent blocks with super()', async () => {
-/*	TODO reenable
 		await equal(
 			'{% extends "base.njk" %}' +
 			'{% block block1 %}{{ super() }}BAR{% endblock %}',
-			'FooBarBARBazFizzle');
-*/			
+			'FooBarBARBazFizzle\n');
 
 		// two levels of `super` should work
-//global.go = true;		
-
-//try {
 		const result = await render(
 			'{% extends "base-inherit.njk" %}' +
 			'{% block block1 %}*{{ super() }}*{% endblock %}', {});
 
-//delete global.go;			
-//console.log('DDDDD result:',result);
-
-		assert(result == 'Foo**Bar**BazFizzle');
-//}
-//catch(err) {
-//delete global.go;			
-//console.log('DDDDD  err:',err);
-//}
+		assert(result == 'Foo**Bar**BazFizzle\n');
 	});
 
 	it('should let super() see global vars from child template', async () => {
@@ -1086,9 +1070,11 @@ TODO RE-ENABLE
 	});
 
 	it('should throw an error when including a file that imports macro that calls an undefined macro', async () => {
+//global.go = 1;	
 		const promise = render('{% include "import-macro-call-undefined-macro.njk" %}',{list:[1, 2, 3]});
 		await assert.rejects(promise,new TemplateError('Unable to call `t["defined_macro"]`, which is undefined or falsey','undefined',0,0));
 	});
+//global.go = 0;	
 
 
 	it('should control whitespaces correctly', async () => {
@@ -1212,7 +1198,7 @@ TODO RE-ENABLE
 		await equal('hola {% extends tmpl %} fizzle mumble', {
 				tmpl: tmpl
 			},
-			'FooBarBazWhizzle');
+			'FooBarBazWhizzle\n');
 
 		await equal(
 			'{% extends tmpl %}' +
@@ -1220,7 +1206,7 @@ TODO RE-ENABLE
 			'{% block block2 %}BAZ{% endblock %}', {
 				tmpl: tmpl
 			},
-			'FooBARBAZWhizzle');
+			'FooBARBAZWhizzle\n');
 	});
 
 	it('should include template objects', async () => {

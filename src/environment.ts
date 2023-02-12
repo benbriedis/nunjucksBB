@@ -200,8 +200,6 @@ export default class Environment extends EmitterObj2
 	{
 		var tmpl = null;
 
-if (global.go) console.log('env.getTemplate()  name:',name,'eager:',eagerCompile,'parentName:',parentName,'ignoreMissing:',ignoreMissing);
-
 		// this fixes autoescape for templates referenced in symbols
 //XXX should be done in caller
 		if (name && name.raw) 
@@ -233,16 +231,9 @@ if (global.go) console.log('env.getTemplate()  name:',name,'eager:',eagerCompile
 			const resolvedName = this.resolveTemplate(loader, parentName, name);
 			const info = await loader.getSource(resolvedName);
 
-if (global.go) console.log('Environment.getTemplate() name:',name,'resolvedName:',resolvedName,'info:',info);			
-
 			if (info != null) {
 				const template = new Template(info.src, this, info.path);
 				await template.init(eagerCompile);
-if (global.go) {
-const copy = Object.assign({},template);
-delete copy.env;
-console.log('Environment.getTemplate() name:',name,'GOT TEMPLATE:',copy);		
-}
 				if (!info.noCache) 
 					loader.cache[<string>name] = template;
 				return template;

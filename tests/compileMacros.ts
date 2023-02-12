@@ -94,19 +94,15 @@ export function testCompileMacros()
 	});
 
 	it('should compile macro calls inside blocks', async () => {
-//global.go=1;
 		const result = await render(
 			'{% extends "base.njk" %}' +
 			'{% macro foo(x, y=2, z=5) %}{{ x }}{{ y }}{{ z }}' +
 			'{% endmacro %}' +
 			'{% block block1 %}' +
 			'{{ foo(1) }}' +
-//			'  ** NEW BLOCK 1 **' +
 			'{% endblock %}',{});
 
-//console.log('DDDDD result:',result);  delete global.go;
-
-		assert(result == 'Foo125BazFizzle');
+		assert(result == 'Foo125BazFizzle\n');
 	});
 
 	it('should compile macros defined in one block and called in another', async () => {
