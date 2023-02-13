@@ -2,7 +2,6 @@ import expect from 'expect.js';
 import Environment from '../src/environment';
 import { WebLoader } from '../src/web-loaders';
 import { FileSystemLoader } from '../src/node-loaders';
-import { NodeResolveLoader } from '../src/node-loaders';
 
 const templatesPath = 'tests/templates';
 
@@ -89,45 +88,6 @@ describe('loader', function() {
 				});
 
 				loader.getSource('simple-base.njk');
-			});
-		});
-	}
-
-	if (typeof NodeResolveLoader !== 'undefined') {
-		describe('NodeResolveLoader', function() {
-			it('should have default opts', async () => {
-				var loader = new NodeResolveLoader({});
-				expect(loader).to.be.a(NodeResolveLoader);
-				expect(loader.noCache).to.be(false);
-			});
-
-			it('should emit a "load" event', async () => {
-				var loader = new NodeResolveLoader({});
-				loader.on('load', function(name, source) {
-					expect(name).to.equal('dummy-pkg/simple-template.html');
-				});
-
-				loader.getSource('dummy-pkg/simple-template.html');
-			});
-
-			it('should render templates', async () => {
-				var env = new Environment(new NodeResolveLoader({}));
-				var tmpl = await env.getTemplate('dummy-pkg/simple-template.html');
-				expect(await tmpl.render({
-					foo: 'foo'
-				})).to.be('foo');
-			});
-
-			it('should not allow directory traversal', async () => {
-				var loader = new NodeResolveLoader({});
-				var dummyPkgPath = require.resolve('dummy-pkg/simple-template.html'); //XXX await needed?
-				expect(await loader.getSource(dummyPkgPath)).to.be(null);
-			});
-
-			it('should return null if no match', async () => {
-				var loader = new NodeResolveLoader({});
-				var tmplName = 'dummy-pkg/does-not-exist.html';
-				expect(await loader.getSource(tmplName)).to.be(null);
 			});
 		});
 	}

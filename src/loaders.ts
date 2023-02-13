@@ -2,13 +2,12 @@
 // building for the browser
 //export default './node-loaders';
 
-import { FileSystemLoader,NodeResolveLoader,PrecompiledLoader } from './node-loaders';
+import { FileSystemLoader,PrecompiledLoader } from './node-loaders';
 import {WebLoader} from './web-loaders';
 
 export const Loaders =  {
 	FileSystemLoader:FileSystemLoader,
 	PrecompiledLoader:PrecompiledLoader,
-	NodeResolveLoader:NodeResolveLoader,
 	WebLoader:WebLoader
 };
 

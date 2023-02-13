@@ -26,7 +26,7 @@ export async function equal(str,ctx=undefined,opts=undefined,str2=undefined,env=
 	expect(res).to.be(str2);
 }
 
-export async function jinjaEqual(str,ctx,str2,env) 
+export async function jinjaEqual(str,ctx,str2,env=undefined) 
 {
 	var jinjaUninstalls = [nunjucks.installJinjaCompat()];
 	if (nunjucksFull !== nunjucks) 
@@ -45,12 +45,6 @@ export function normEOL(str)
 	if (!str) 
 		return str;
 	return str.replace(/\r\n|\r/g, '\n');
-}
-
-function randomTemplateName() 
-{
-	var rand = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-	return rand + '.njk';
 }
 
 // eslint-disable-next-line consistent-return

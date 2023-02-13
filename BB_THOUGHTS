@@ -54,9 +54,13 @@ WORK DONE
   outside the purview of unit testing.
 > Removed eslint for the moment. Not finding it useful and don't like the code formatting settings. Better to concentrate
   on moving to strict Typescript. Would be nice to auto-apply a code formatter on commit, if anything reasonable exists.
+> Removed NodeResolveLoader and watch from FileSystemLoader
+  WHY? Easier to port and easier for me to maintain. I dont use these these things.
+  NodeResolveLoader could be a plugin and its probably cleaner to put file watch into a separate loader.
 
 
 TODO 
 > update doco with work done
+> Rename 'FileSystemLoader' to 'FileLoader'
 
 

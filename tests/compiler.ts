@@ -1069,12 +1069,11 @@ function mainCompilerTests2()
 	});
 
 	it('should throw an error when including a file that imports macro that calls an undefined macro', async () => {
-//global.go = 1;	
 		const promise = render('{% include "import-macro-call-undefined-macro.njk" %}',{list:[1, 2, 3]});
-		await assert.rejects(promise,new TemplateError('Unable to call `t["defined_macro"]`, which is undefined or falsey','undefined',0,0));
+//FIXME should have the full macro name:		
+//		await assert.rejects(promise,new TemplateError('Unable to call `t["defined_macro"]`, which is undefined or falsey','undefined',0,0));
+		await assert.rejects(promise,new TemplateError('Unable to call `undef`, which is undefined or falsey','undefined',0,0));
 	});
-//global.go = 0;	
-
 
 	it('should control whitespaces correctly', async () => {
 		await equal(

@@ -27,7 +27,6 @@ function configure(templatesPath=undefined, opts=undefined)
 	let templateLoader;
 	if (Loaders.FileSystemLoader) 
 		templateLoader = new Loaders.FileSystemLoader(templatesPath, {
-			watch: opts.watch,
 			noCache: opts.noCache
 		});
 	else if (Loaders.WebLoader) 
@@ -79,7 +78,6 @@ export default {
 	Template: Template,
 	Loader: Loader,
 	FileSystemLoader: Loaders.FileSystemLoader,
-	NodeResolveLoader: Loaders.NodeResolveLoader,
 	PrecompiledLoader: Loaders.PrecompiledLoader,
 	WebLoader: Loaders.WebLoader,
 	compiler: compiler,
