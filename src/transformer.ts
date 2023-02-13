@@ -141,27 +141,9 @@ function liftSuper(ast)
 	});
 }
 
-function convertStatements(ast) 
-{
-	return depthWalk(ast, (node) => {
-		if (!(node instanceof nodes.If) && !(node instanceof nodes.For)) 
-			return undefined;
-
-		walk(node, (child) => {
-			if (child instanceof nodes.FilterAsync ||
-				child instanceof nodes.CallExtensionAsync) {
-				// Stop iterating by returning the node
-				return child;
-			}
-			return undefined;
-		});
-		return undefined;
-	});
-}
-
 function cps(ast) 
 {
-	return convertStatements(liftSuper(liftFilters(ast)));
+	return liftSuper(liftFilters(ast));
 }
 
 export function transform(ast) 
