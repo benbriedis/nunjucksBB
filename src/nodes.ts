@@ -174,6 +174,9 @@ class CallExtension extends Node
 	//constructor(lineno, colno, ...args) 
 		super(lineno,colno,ext, prop, args, contentArgs) 
 //		this.parent();
+
+console.log('CallExtension  ext:',ext,'lineno:',lineno);
+
 		this.extName = ext.__name || ext;
 		this.prop = prop;
 		this.args = args || new NodeList();

@@ -1,22 +1,11 @@
 (function() {
   'use strict';
 
-  var expect,
-    lib,
-    nodes,
-    parser;
+    var expect = require('expect.js');
+    var lib = require('../src/lib');
+    var nodes = require('../src/nodes').default;
+    var parser = require('../src/parser').default;
 
-  if (typeof require !== 'undefined') {
-    expect = require('expect.js');
-    lib = require('../src/lib');
-    nodes = require('../src/nodes').default;
-    parser = require('../src/parser').default;
-  } else {
-    expect = window.expect;
-    lib = nunjucks.lib;
-    nodes = nunjucks.nodes;
-    parser = nunjucks.parser;
-  }
 
   function _isAST(node1, node2) {
     // Compare ASTs
@@ -870,7 +859,7 @@
         this.parse = function(parser, nodes) {
           parser.peekToken();
           parser.advanceAfterBlockEnd();
-          return new nodes.CallExtension(this, 'foo');
+          return new nodes.CallExtension(0,0,this, 'foo');
         };
       }
 
@@ -884,7 +873,7 @@
           parser.advanceAfterBlockEnd();
 
           var content = parser.parseUntilBlocks('endtestblocktag');
-          var tag = new nodes.CallExtension(this, 'bar', null, [1, content]);
+          var tag = new nodes.CallExtension(0,0,this, 'bar', null, [1, content]);
           parser.advanceAfterBlockEnd();
 
           return tag;
@@ -906,7 +895,7 @@
           args = parser.parseSignature(true);
           parser.advanceAfterBlockEnd(begun.value);
 
-          return new nodes.CallExtension(this, 'biz', args);
+          return new nodes.CallExtension(0,0,this, 'biz', args);
         };
       }
 

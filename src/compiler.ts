@@ -227,11 +227,6 @@ export class Compiler extends Obj2
 		this._emit(`, ${autoescape} && env.opts.autoescape);\n`);
 	}
 
-	compileCallExtensionAsync(node,frame) 
-	{
-		this.compileCallExtension(node,frame);
-	}
-
 	compileNodeList(node,frame) 
 	{
 		this._compileChildren(node, frame);
@@ -1051,10 +1046,10 @@ function compile(src, asyncFilters, extensions, name, opts:any = {})
 
 	const processedSrc = preprocessors.reduce((s, processor) => processor(s), src);
 
-	c.compile(transform(
-		parser.parse(processedSrc, extensions, opts),
-		asyncFilters
-	));
+//XXX it would be nice to know what transform is meant to do
+	c.compile(transform(parser.parse(processedSrc, extensions, opts),[]));
+//	c.compile(parser.parse(processedSrc, extensions, opts));
+
 	return c.getCode();
 };
 
