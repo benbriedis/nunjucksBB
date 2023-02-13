@@ -1,5 +1,4 @@
 import nodes from './nodes';
-import * as lib from './lib';
 
 var sym = 0;
 
@@ -77,19 +76,6 @@ function _liftFilters(node, prop=undefined)
 		let symbol;
 		if (descNode instanceof nodes.Block) 
 			return descNode;
-		else if (descNode instanceof nodes.CallExtensionAsync) {
-			symbol = new nodes.Symbol(descNode.lineno,
-				descNode.colno,
-				gensym());
-
-			children.push(new nodes.FilterAsync(descNode.lineno,
-				descNode.colno,
-//				descNode.name,		//TODO tighten up the types
-				descNode['name'],
-//				descNode.args,
-				descNode['args'],
-				symbol));
-		}
 		return symbol;
 	});
 
