@@ -4,13 +4,24 @@ import nunjucks from '../src/index';
 
 //export default class RunPrecompiled    XXX would be useful if I had a 2nd one I could run on the server
 //export default class BrowserTester
+
+
+process.on('uncaughtException', err => {
+	console.log('Uncaught exception:',err);
+	console.log('STACK:',err?.stack);
+	process.exit(1);
+});
+
+
 class BrowserTester
 {
 	static async run():Promise<void>
 	{
+
 console.log('In BrowserTester.run() - 2');
 
-		const compiledName = 'compiledTop.njk.js';
+//		const compiledName = 'compiledTop.njk.js';
+		const compiledName = 'compiled2.njk.js';
 
 //FIXME WebLoader refuses to run on the server 
 //      Also the templates refuse to run on the server. Makes testing difficult (especially automatic testing I think)
@@ -37,14 +48,21 @@ console.log('In BrowserTester.run() - 3');
 			b:2
 		};
 
+console.log('In BrowserTester.run() - 3A');
 //XXX can/should I combine these two?
 		const template = await env.getTemplate(templateName,true);   //XXX true?
 
 console.log('In BrowserTester.run() - 4  template:',template);
 
+try {
 		const content = await template.render(data);
-
 		console.log('content:',content);
+}
+catch(err) {
+console.log('GOT ERROR:',err);
+}
+
+		console.log('DONE');
 	}
 }
 

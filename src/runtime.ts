@@ -125,7 +125,7 @@ export function contextOrFrameLookup(context, frame, name)
 
 export function handleError(error,template,lineno,colno) 
 {
-	if (error.lineno)    //XXX huh?
+	if (error.lineno)    //XXX huh?  maybe try 'instanceof TemplateError'. Still dont like it though
 		throw error;
 	else 
 		throw new TemplateError(error.message ?? 'unspecified cause',template,lineno,colno);

@@ -12,6 +12,8 @@ export default class TemplateError
 		this.template = template;
 		this.line = line;
 		this.column = column;
+
+//if (global.go) this.stack = (new Error()).stack;
 	}
 
 	static fromError(err:Error,template,line,column)

@@ -36,7 +36,8 @@ function configure(templatesPath=undefined, opts=undefined)
 			async: opts.web && opts.web.async
 		});
 
-	return new Environment(templateLoader, opts);
+	e = new Environment(templateLoader, opts);
+	return e;
 }
 
 function reset() 

@@ -28,20 +28,12 @@ export class WebLoader extends Loader
 
 	async getSource(name): Promise<LoaderSource> 
 	{
-		var useCache = this.useCache;
-		var result;
-		try {
-			const src = await this.fetch(this.baseURL + '/' + name);
+		const src = await this.fetch(this.baseURL + '/' + name);
+		if (src==null)
+			return null;
 
-			result = { src: src, path: name, noCache: !useCache };
-			this.emit('load', name, result);
-		}
-		catch(err) {
-			if (err.status === 404) 
-				result = null;
-			else 
-				throw err.content;
-		}
+		const result = { src: src, path: name, noCache: !this.useCache };
+		this.emit('load', name, result);
 		return result;
 	}
 
@@ -58,14 +50,12 @@ export class WebLoader extends Loader
 			ajax.onreadystatechange = () => {
 				if (ajax.readyState === 4 && loading) {
 					loading = false;
-					if (ajax.status === 0 || ajax.status === 200) {
-						resolve(ajax.responseText);
-					} else {
-						reject({
-							status: ajax.status,
-							content: ajax.responseText
-						});
-					}
+					if (ajax.status === 0 || ajax.status === 200) 
+						return resolve(ajax.responseText);
+					if (ajax.status === 404) 
+						return resolve(null);
+
+					reject(new Error(`${ajax.responseText} (ajax returned code ${ajax.status})`));
 				}
 			};
 

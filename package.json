@@ -15,10 +15,6 @@
     "@types/node": "^18.11.18",
     "connect": "^3.6.5",
     "core-js": "^2.5.3",
-    "cross-env": "^5.1.3",
-    "eslint": "^4.13.0",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.8.0",
     "expect.js": "*",
     "fs-extra": "^5.0.0",
     "get-port": "^3.2.0",
@@ -54,13 +50,8 @@
     "build:browser": "npx webpack build --config ./webpack.dev.js",
     "build:server": "tsc",
     "build": "npm run build:browser && npm run build:server",
-    "codecov": "codecov",
-    "mocha": "tsc ; mocha -R spec server/tests",
-    "lint": "eslint nunjucks scripts tests",
     "prepare": "npm run build",
-    "test:instrument": "cross-env NODE_ENV=test scripts/bundle.js",
-    "test:runner": "cross-env NODE_ENV=test NODE_PATH=tests/test-node-pkgs scripts/testrunner.js",
-    "test": "npm run lint && npm run test:instrument && npm run test:runner"
+    "test": "tsc ; nyc mocha -R spec server/tests"
   },
   "bin": {
     "nunjucks-precompile": "./bin/precompile"

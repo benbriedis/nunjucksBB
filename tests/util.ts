@@ -92,6 +92,8 @@ export async function render(str:string,ctx={},opts=undefined,env=undefined):Pro
 
 	const t = new Template(str,e,null);
 
+if (global.go) console.log('test/util.js  t:',t);	
+
 	return await t.render(ctx);
 }
 

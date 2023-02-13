@@ -48,9 +48,15 @@ WORK DONE
   It also has a concept of 'nullish' whereby null==undefined (note though that null!==undefined), which helps a bit
   It is probably best to simplify things in Nunjucks by mapping both 'null' and 'undefined' to 'none' in Nunjucks. 
   Note that custom filters and globals could potentially return 'null's or 'undefined's and these both need to be handled.
-
+> Removed tests/cli.js
+  WHY? I prefer to run unit tests within the Javascript code, and leave command line calls etc out of it. These tests
+  are fussy and problematic to maintain, and often require running on multiple platforms. I feel these types of tests lie 
+  outside the purview of unit testing.
+> Removed eslint for the moment. Not finding it useful and don't like the code formatting settings. Better to concentrate
+  on moving to strict Typescript. Would be nice to auto-apply a code formatter on commit, if anything reasonable exists.
 
 
 TODO 
 > update doco with work done
+
 
