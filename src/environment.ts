@@ -1,4 +1,3 @@
-import waterfall from 'a-sync-waterfall';
 import * as lib from './lib';
 import type Loader from './loader';
 import * as Loaders from './loaders';
@@ -264,11 +263,6 @@ export default class Environment extends EmitterObj
 
 		const tmpl = new Template(src, this, opts.path);
 		return await tmpl.render(ctx);
-	}
-
-	waterfall(tasks, callback, forceAsync) 
-	{
-		return waterfall(tasks, callback, forceAsync);
 	}
 }
 

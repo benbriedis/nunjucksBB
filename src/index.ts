@@ -7,7 +7,7 @@ import Environment from './environment';
 
 export {default as Environment} from './environment';
 export {default as Template} from './template';
-export {default as Loader} from './loader';
+export {default as Loader,LoaderSource} from './loader';
 export {default as compiler} from './compiler';
 export {default as parser} from './parser';
 export {default as lexer} from './lexer';
@@ -55,7 +55,7 @@ export function reset()
 	e = undefined;
 }
 
-export async function compile(src, env, path, eagerCompile) 
+export async function compile(src,env,path,eagerCompile) 
 {
 	if (!e) 
 		configure();
@@ -64,18 +64,17 @@ export async function compile(src, env, path, eagerCompile)
 	return template;
 }
 
-export async function render(name, ctx):Promise<string>
+export async function render(name,ctx):Promise<string>
 {
 	if (!e) 
 		configure();
 	return await e.render(name, ctx);
 }
 
-export async function renderString(src, ctx, cb) 
+export async function renderString(src,ctx) 
 {
 	if (!e) 
 		configure();
-	return await e.renderString(src, ctx, cb);
+	return await e.renderString(src,ctx);
 }
-
 
