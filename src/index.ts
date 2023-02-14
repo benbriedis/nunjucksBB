@@ -1,7 +1,6 @@
 'use strict';
 
 import * as lib from './lib';
-import Environment from './environment';
 import Template from './template';
 import Loader from './loader';
 import {Loaders} from './loaders';
@@ -12,6 +11,9 @@ import lexer from './lexer';
 import * as runtime from './runtime';
 import nodes from './nodes';
 import installJinjaCompat from './jinja-compat';
+import Environment from './environment';
+
+export {default as Environment} from './environment';
 
 // A single instance of an environment, since this is so commonly used
 let e;
@@ -68,12 +70,7 @@ function renderString(src, ctx, cb)
 }
 
 
-
-
-//XXX BB for the moment Ive had to add lots of exports to things that dont need to be exported
-//       separately to keep TS happy, in nodes, compiler, parser, lexer and runtime
-//       MAYBE MOVE OVER TO USING <any> as for nodes below
-export default {
+const nunjucks = {
 	Environment: Environment,
 	Template: Template,
 	Loader: Loader,
@@ -95,4 +92,6 @@ export default {
 	precompile: precompile,
 	precompileString: precompileString 
 };
+
+export default nunjucks;
 

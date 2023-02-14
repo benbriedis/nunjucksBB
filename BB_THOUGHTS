@@ -64,6 +64,7 @@ CODING
 
 
 TODO 
+> CLI might be broken.
 > Implement a 'slim' version, together with type bindings.
 > update doco with work done
 > Just specify a single loader, and make it compulsary. Don't have a default loader. 

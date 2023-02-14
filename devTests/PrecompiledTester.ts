@@ -1,4 +1,4 @@
-import nunjucks from '../src/index';
+import nunjucks,{Environment} from '../src/index';
 
 /* This script can run on the server */
 
@@ -6,7 +6,10 @@ class PrecompiledTester
 {
 	static async run():Promise<void>
 	{
-		const contents = '{% include "missing.njk" ignore missing %}';
+//		let env2: nunjucks.Environment;
+		let env2: Environment;
+
+		const contents = 'HERE {{ middle }} THERE';
 
 		const precompiled = nunjucks.precompileString(contents,{name:'top.njk'});
 
@@ -27,7 +30,7 @@ class PrecompiledTester
 		});
 
 		const template = await env.getTemplate('top.njk'); 
-		const result = await template.render({});
+		const result = await template.render({middle:'and'});
 		console.log('result:',result);
 	}
 }
