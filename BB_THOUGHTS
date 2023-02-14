@@ -1,7 +1,8 @@
 
 WORK DONE
 > Added async/await all over the place, including within the compiled code. 
-  Should backwards compatibility be required then Babel is a possibility.
+  Should backwards compatibility be required then Babel is 
+  a possibility.
 > Removed asyncFor, asyncAll, asyncIf, async filters, etc
 > Converted a fair bit of stuff over to Typescript.
 > Removed Express app. 
@@ -26,12 +27,14 @@ WORK DONE
 
 
 DESIRED FUNCTIONALITY
+> Fold in some or all of the Jinja compatible stuff or else delete it. 
+  Nunjucks is a bit short on the string and array manipulation stuff and slices etc would be useful.
+  At times I find myself using the undocumented JS String methods to make up for missing Nunjucks functionality. 
+  These undocumented things should be hidden, and any useful stuff either built in or put into filters.
+  Also trawl Jinja and Twig for useful filters and function that are missing from Nunjucks.
+  DONT think that Nunjucks should slavishly copy Jinja though. Should be 'Javascript first'.
 > 'null' and 'undefined'(?) are available in templates, but I think undocumented. Remove them and use 'none' instead 
    (which would be implemented as "nullish").
-> Either fold in the Jinja compatible stuff or delete it. I think it would be useful.  At times I find myself using
-  the undocumented JS String methods to make up for missing Nunjucks functionality. 
-  These undocumented things should be hidden, and any useful stuff put into filters.
-  Also trawl Jinja and Twig for useful filters and function that are missing from Nunjucks.
 > Would like a compile option that requires html tags to be closed within NJK control structures. 
   This would remove an advantage that Vue etc has over Nunjucks.
   Could be applied to XML etc too if used with Nunjucks.

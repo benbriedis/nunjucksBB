@@ -59,6 +59,9 @@ export class FileSystemLoader extends Loader
 			path: fullpath,
 			noCache: this.noCache
 		};
+
+//XXX consider trimming any final \n here, or having a loader option to do so. Linux almost always adds a \n at the end.
+
 		this.emit('load', name, source);
 
 		return source;
