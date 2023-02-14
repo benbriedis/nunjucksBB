@@ -13,7 +13,7 @@ export default class TemplateError
 		this.line = line;
 		this.column = column;
 
-//if (global.go) this.stack = (new Error()).stack;
+if (global.go) (<any>this).stack = (new Error()).stack;
 	}
 
 	static fromError(err:Error,template,line,column)

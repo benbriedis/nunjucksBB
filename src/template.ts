@@ -114,7 +114,6 @@ export default class Template extends Obj2
 		else {
 //if (global.go) console.log('_compile()  CALLING compiler.compile()  this.path:',this.path,'tmplStr:',this.tmplStr,'.');	
 			const source = compiler.compile(this.tmplStr,
-				this.env.filters,   //XXX not sure we need... was asyncFilters
 				this.env.extensionsList,
 				this.path,
 				this.env.opts);

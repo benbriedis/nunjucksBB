@@ -103,14 +103,13 @@ function _precompile(str, name, env)
 {
 	env = env || new Environment([]);
 
-	const asyncFilters = env.asyncFilters;
 	const extensions = env.extensionsList;
 	let template;
 
 	name = name.replace(/\\/g, '/');
 
 //	try {
-		template = compiler.compile(str,asyncFilters,extensions,name,env.opts);
+		template = compiler.compile(str,extensions,name,env.opts);
 //	} 
 //	catch (err) {
 //		throw _prettifyError(name, false, err);

@@ -8,9 +8,7 @@ import Filters from './filters';
 import {EmitterObj2} from './object';
 import Template from './template';
 
-/**
- * A no-op template, for use with {% include ignore missing %}
- */
+/* A no-op template, for use with {% include ignore missing %} */
 const noopTmplSrc = {
 	type: 'code',
 	obj: {
@@ -213,7 +211,7 @@ export default class Environment extends EmitterObj2
 		if (lib.isFunction(eagerCompile)) 
 			eagerCompile = false;
 
-//XXX YUCK:
+//XXX YUCK: names are not templates
 		if (name instanceof Template)  
 			return name;
 
@@ -242,7 +240,8 @@ export default class Environment extends EmitterObj2
 
 		if (ignoreMissing) {
 			const template = new Template(noopTmplSrc, this, '');
-			return await template.init(eagerCompile);
+			await template.init(eagerCompile);
+			return template;
 		}
 
 		throw new Error('template not found: ' + name);

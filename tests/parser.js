@@ -848,7 +848,9 @@
       }).to.throwException(/names starting with an underscore cannot be imported/);
     });
 
+
     it('should parse custom tags', function() {
+//TODO should convert to classes
       function TestTagExtension() {
         /* eslint-disable no-shadow */
         this.tags = ['testtag'];
@@ -859,7 +861,7 @@
         this.parse = function(parser, nodes) {
           parser.peekToken();
           parser.advanceAfterBlockEnd();
-          return new nodes.CallExtension(0,0,this, 'foo');
+          return new nodes.CallExtension(this, 'foo');
         };
       }
 
@@ -873,7 +875,7 @@
           parser.advanceAfterBlockEnd();
 
           var content = parser.parseUntilBlocks('endtestblocktag');
-          var tag = new nodes.CallExtension(0,0,this, 'bar', null, [1, content]);
+          var tag = new nodes.CallExtension(this, 'bar', null, [1, content]);
           parser.advanceAfterBlockEnd();
 
           return tag;
@@ -895,7 +897,7 @@
           args = parser.parseSignature(true);
           parser.advanceAfterBlockEnd(begun.value);
 
-          return new nodes.CallExtension(0,0,this, 'biz', args);
+          return new nodes.CallExtension(this, 'biz', args);
         };
       }
 

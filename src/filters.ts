@@ -132,7 +132,7 @@ export default class Filters
 
 	async e(str)
 	{
-		return this['escape'](str);
+		return env(this).filters['escape'](str);
 	}
 
 	async safe(str) 
@@ -266,7 +266,6 @@ export default class Filters
 	{
 		const context = this;
 		const test = env(this).getTest(testName);
-//QQQQ
 		return lib.toArray(arr).filter(function examineTestResult(item) {
 			return test.call(context, item, secondArg) === false;
 		});
@@ -281,7 +280,6 @@ export default class Filters
 	{
 		const context = this;
 		const test = env(this).getTest(testName);
-//QQQQ		
 
 		return lib.toArray(arr).filter(function examineTestResult(item) {
 			return test.call(context, item, secondArg) === true;

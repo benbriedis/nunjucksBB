@@ -4,7 +4,7 @@ import nunjucks from '../src/index.js';
 import Environment from '../src/environment.js';
 import Template from '../src/template.js';
 
-//TODO remove nunjucksFull
+//TODO remove nunjucksFull?
 const nunjucksFull = nunjucks;
 
 
@@ -22,8 +22,14 @@ export async function equal(str,ctx=undefined,opts=undefined,str2=undefined,env=
 		opts = {};
 	}
 	opts = opts || {};
+//try{
 	var res = await render(str,ctx,opts,env);
 	expect(res).to.be(str2);
+//}
+//catch(err) {
+//console.log('util equal()  GOT ERROR:',err);
+//delete global.go;
+//}
 }
 
 export async function jinjaEqual(str,ctx,str2,env=undefined) 

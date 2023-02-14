@@ -924,8 +924,7 @@ export class Compiler extends Obj2
 		this._emit(`var ${templateId} = `);
 		this._compileGetTemplate(node, frame, true, node.ignoreMissing);
 		this._emit(`;`);
-		this._emitLine(this.buffer +
-			` += await ${templateId}.render(context.getVariables(), frame.push());`);
+		this._emitLine(this.buffer+` += await ${templateId}.render(context.getVariables(),frame.push());`);
 	}
 
 	compileTemplateData(node,frame) 
@@ -1037,7 +1036,7 @@ export class Compiler extends Obj2
 	}
 }
 
-function compile(src, asyncFilters, extensions, name, opts:any = {}) 
+function compile(src, extensions, name, opts:any = {}) 
 {
 	const c = new Compiler(name, opts.throwOnUndefined);
 
@@ -1047,7 +1046,7 @@ function compile(src, asyncFilters, extensions, name, opts:any = {})
 	const processedSrc = preprocessors.reduce((s, processor) => processor(s), src);
 
 //XXX it would be nice to know what transform is meant to do
-	c.compile(transform(parser.parse(processedSrc, extensions, opts),[]));
+	c.compile(transform(parser.parse(processedSrc, extensions, opts)));
 //	c.compile(parser.parse(processedSrc, extensions, opts));
 
 	return c.getCode();

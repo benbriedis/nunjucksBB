@@ -16,6 +16,7 @@ export class Node extends Obj2
 	lineno:number;
 	colno:number;
 	get fields() { return []; }  //XXX I'd rather fields were not dynamically added
+//	set fields(newFields) { this.fields = newFields; } 
 
 	constructor(lineno:number, colno:number, ...args) 
 	{
@@ -112,6 +113,7 @@ class FromImport extends Node
 
 class FunCall extends Node {get typename() {return 'FunCall';}  get fields() { return ['name', 'args']; } };
 class Filter extends FunCall {get typename() {return 'Filter';} };
+class FilterAsync extends Filter {get typename() {return 'FilterAsync';}  get fields() { return ['name', 'args', 'symbol']; } };
 class KeywordArgs extends Dict {get typename() {return 'KeywordArgs';} };
 class Block extends Node {get typename() {return 'Block';}  get fields() { return ['name', 'body']; } };
 class Super extends Node {get typename() {return 'Super';}  get fields() { return ['blockName', 'symbol']; } };
@@ -173,9 +175,6 @@ class CallExtension extends Node
 	//constructor(lineno, colno, ...args) 
 		super(lineno,colno,ext, prop, args, contentArgs) 
 //		this.parent();
-
-console.log('CallExtension  ext:',ext,'lineno:',lineno);
-
 		this.extName = ext.__name || ext;
 		this.prop = prop;
 		this.args = args || new NodeList();
@@ -270,6 +269,7 @@ export default {
 	FromImport: FromImport,
 	FunCall: FunCall,
 	Filter: Filter,
+	FilterAsync: FilterAsync,
 	KeywordArgs: KeywordArgs,
 	Block: Block,
 	Super: Super,

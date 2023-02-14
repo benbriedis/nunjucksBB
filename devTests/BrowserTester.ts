@@ -6,13 +6,6 @@ import nunjucks from '../src/index';
 //export default class BrowserTester
 
 
-process.on('uncaughtException', err => {
-	console.log('Uncaught exception:',err);
-	console.log('STACK:',err?.stack);
-	process.exit(1);
-});
-
-
 class BrowserTester
 {
 	static async run():Promise<void>
@@ -20,8 +13,7 @@ class BrowserTester
 
 console.log('In BrowserTester.run() - 2');
 
-//		const compiledName = 'compiledTop.njk.js';
-		const compiledName = 'compiled2.njk.js';
+		const compiledName = 'compiledTop.njk.js';
 
 //FIXME WebLoader refuses to run on the server 
 //      Also the templates refuse to run on the server. Makes testing difficult (especially automatic testing I think)
@@ -35,7 +27,7 @@ console.log('In BrowserTester.run() - 2');
 //XXX is using something window.nunjucksPrecompiled to access
 
 console.log('In BrowserTester.run() - 3');
-		const env = new nunjucks.Environment(new nunjucks.WebLoader('/xxxx'),{
+		const env = new nunjucks.Environment(new nunjucks.WebLoader('/home/ben/programming/nunjucksBB/devTests'),{
 			trimBlocks:true,
 			lstripBlocks:true
 			//throwOnUndefined:true
