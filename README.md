@@ -11,6 +11,11 @@ templating engine for javascript. It is heavily inspired by
 [jinja2](http://jinja.pocoo.org/). View the docs
 [here](https://mozilla.github.io/nunjucks/).
 
+## WARNING
+
+This is not the main Nunjuck repository. It is a private fork which incorporates
+await/async, amongst other things.
+
 ## Installation
 
 `npm install nunjucks`

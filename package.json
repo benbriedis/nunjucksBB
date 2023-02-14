@@ -59,7 +59,8 @@
   "types": "server/src/index.d.ts",
   "files": [
     "bin/**",
-    "browser/**"
+    "browser/**",
+    "server/**"
   ],
   "repository": {
     "type": "git",
