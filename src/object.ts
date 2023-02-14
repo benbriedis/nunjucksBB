@@ -43,29 +43,7 @@ function extendClass(cls, name, props) {
   return subclass;
 }
 
-export class Obj {
-  constructor(...args) {
-    // Unfortunately necessary for backwards compatibility
-    this.init(...args);
-  }
-
-  init(...args) {}
-
-  get typename() {
-    return this.constructor.name;
-  }
-
-  static extend(name, props=undefined):any
-  {
-    if (typeof name === 'object') {
-      props = name;
-      name = 'anonymous';
-    }
-    return extendClass(this, name, props);
-  }
-}
-
-export abstract class Obj2 
+export abstract class Obj 
 {
 //XXX remove 'get'? Make abstract?
 	get typename() 
@@ -85,20 +63,10 @@ export abstract class Obj2
 }
 
 
-//XXX BB cf using Typescript mixins instead for emitting and regular classes or
-//       generics for extending
-//XXX Are these things used in the compiled versions?
+//XXX BB cf using Typescript mixins instead for emitting and regular classes or generics for extending
 //XXX note EventEmitter is a Node.js thing
 
 export class EmitterObj extends EventEmitter {
-  constructor(...args) {
-    super();
-    // Unfortunately necessary for backwards compatibility
-    this.init(...args);
-  }
-
-  init(...args) {}
-
   get typename() {
     return this.constructor.name;
   }
@@ -112,19 +80,5 @@ export class EmitterObj extends EventEmitter {
   }
 }
 
-export class EmitterObj2 extends EventEmitter {
-  get typename() {
-    return this.constructor.name;
-  }
-
-  static extend(name, props):any {
-    if (typeof name === 'object') {
-      props = name;
-      name = 'anonymous';
-    }
-    return extendClass(this, name, props);
-  }
-}
-
-export default { Obj,Obj2, EmitterObj, EmitterObj2 };
+export default { Obj: Obj, EmitterObj: EmitterObj };
 

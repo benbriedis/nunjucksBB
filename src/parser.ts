@@ -2,11 +2,11 @@
 
 import lexer from './lexer';
 import nodes from './nodes';
-import {Obj2} from './object';
+import {Obj} from './object';
 import * as lib from './lib';
 import TemplateError from './TemplateError';
 
-export class Parser extends Obj2
+export class Parser extends Obj
 {
     tokens;
     peeked;

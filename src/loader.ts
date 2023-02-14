@@ -1,7 +1,7 @@
 'use strict';
 
 import path from 'path';
-import {EmitterObj2} from './object';
+import {EmitterObj} from './object';
 
 export interface LoaderSource {
     src: string;
@@ -12,7 +12,7 @@ export interface LoaderSource {
 //export type TemplateCallback<T> = (err: lib.TemplateError | null, res: T | null) => void;
 export type Callback<E, T> = (err: E | null, res: T | null) => void;
 
-export abstract class Loader extends EmitterObj2 
+export abstract class Loader extends EmitterObj 
 {
     async getSource(name:string) : Promise<LoaderSource> { return <any>null; }
 

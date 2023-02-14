@@ -1,6 +1,6 @@
 'use strict';
 
-import {Obj2} from './object';
+import {Obj} from './object';
 
 function traverseAndCheck(obj, type, results) 
 {
@@ -11,7 +11,7 @@ function traverseAndCheck(obj, type, results)
 		obj.findAll(type, results);
 }
 
-export class Node extends Obj2
+export class Node extends Obj
 {
 	lineno:number;
 	colno:number;

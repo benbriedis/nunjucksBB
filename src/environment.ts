@@ -5,7 +5,7 @@ import {Loaders} from './loaders';
 import tests from './tests';
 import Globals from './globals';
 import Filters from './filters';
-import {EmitterObj2} from './object';
+import {EmitterObj} from './object';
 import Template from './template';
 
 /* A no-op template, for use with {% include ignore missing %} */
@@ -18,7 +18,7 @@ const noopTmplSrc = {
 
 
 //XXX use an emit mixin
-export default class Environment extends EmitterObj2 
+export default class Environment extends EmitterObj 
 {
 	globals;
 //	filters: AsyncFunc[] = <any>null;

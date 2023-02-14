@@ -3,7 +3,7 @@ import { transform } from './transformer';
 import nodes from './nodes';
 import TemplateError from './TemplateError';
 import Frame from './Frame';
-import { Obj2 } from './object';
+import { Obj } from './object';
 
 // These are all the same for now, but shouldn't be passed straight
 // through
@@ -18,7 +18,7 @@ const compareOps = {
 	'>=': '>='
 };
 
-export class Compiler extends Obj2 
+export class Compiler extends Obj 
 {
 	templateName:string;
 	codebuf = [];

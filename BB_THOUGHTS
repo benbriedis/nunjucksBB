@@ -1,49 +1,15 @@
-FUNCTIONALITY
-> Remove or separate Express integration into separate project
-> Remove or separate chokidar watch into separate project
-> Would like option to insist on closed html (or whatever) tags within NJK tags
-> Remove Jinja compatible mode (but see what it has to offere first)
-> Ensure null and undefined are always interchangeable
-> Hide JS object function calls, but first include any useful ones as filters, functions, etc
-> Trawl Jinja and Twig for useful filters and functions
-> MAYBE an option to disable 'include'. But NB I do like being able to dynamically construct
-  include file names
-> Remove explicit 'null' and 'undefined' in templates. Use 'none' instead.
-
-RE Loaders:
-1. Move existing FileLoader to eg WatchLoader / ServerWatchLoader /... and strip out chokidar from main FileLoader
-2. Rename WebLoader to eg WebWatchLoader
-3. Make a loader compulsary. eg specifiy PrecompiledLoader
-4. Just have 1 loader
-
-
-CODING
-> Remove weird (old?) object stuff in objects.js
-> Remore asyncFor, asyncAll, asyncIf
-> WebLoader - allow dynamic fetch to be disabled. Should be able to run on server for testing purposes.
-> Thinks the precompile API might be broken
-> Convert everything to Typescript. Enable strict mode, including noImplicityAny and strictNullChecks
-> Errors and stack traces should be better
-> Dont like those Eslint settings. Use a code beautifer on Github commit instead?
-> Is there any server code that code be omitted from the browser bundles?
-> Building a 'src' directory in the root is not nice. Maybe create a 'dist' or something if this required.
-  Move 'nunjucks' subdirectory contents up.
-  Probably a Babel thing... may be able just to use Typescript
-> nodes.ts and compiler.js are using an unhealthy number of dynamic calls
-
-> Maybe I do need to remove the final trailing \n from template files. Basically impossible to remove otherwise. But where?
-    Probably FileLoader makes most sense... 
-
-DOCUMENTATION
-> think 'none' is undocumented
-> Remove 'value' from 'default(value, default, [boolean])', its very confusing
 
 WORK DONE
+> Added async/await all over the place, including within the compiled code. 
+  Should backwards compatibility be required then Babel is a possibility.
+> Removed asyncFor, asyncAll, asyncIf, async filters, etc
+> Converted a fair bit of stuff over to Typescript.
 > Removed Express app. 
-  WHY? Its easy to use Nunjucks in Express without it, and this is just more fussy detail that needs to be maintained.
+  WHY? Non-essential, and I didn't want to port it. Not sure how useful it is - I use Express and I don't use this
+  functionality. I doubt it would be powerful enough for my use case. Could be put in a separate repo.
 > Removed optional second argument in 'default()' filter.
   WHY? Historical backward-compatibity thing. Confusing and time to move on.
-> Modified 'default()' so that it treats 'null' as the same as 'undefined.'
+> Modified 'default()' so that it treats 'null' the same as 'undefined.'
   WHY? Javascript has an awkward distinction between 'null' and 'undefined'. 
   It also has a concept of 'nullish' whereby null==undefined (note though that null!==undefined), which helps a bit
   It is probably best to simplify things in Nunjucks by mapping both 'null' and 'undefined' to 'none' in Nunjucks. 
@@ -59,8 +25,46 @@ WORK DONE
   NodeResolveLoader could be a plugin and its probably cleaner to put file watch into a separate loader.
 
 
+DESIRED FUNCTIONALITY
+> 'null' and 'undefined'(?) are available in templates, but I think undocumented. Remove them and use 'none' instead 
+   (which would be implemented as "nullish").
+> Either fold in the Jinja compatible stuff or delete it. I think it would be useful.  At times I find myself using
+  the undocumented JS String methods to make up for missing Nunjucks functionality. 
+  These undocumented things should be hidden, and any useful stuff put into filters.
+  Also trawl Jinja and Twig for useful filters and function that are missing from Nunjucks.
+> Would like a compile option that requires html tags to be closed within NJK control structures. 
+  This would remove an advantage that Vue etc has over Nunjucks.
+  Could be applied to XML etc too if used with Nunjucks.
+  Could be done with a call to a plugin and the plugin calls an external language parser.
+
+
+DOCUMENTATION IDEAS
+> Documentation should mention the possibility of using MorphDOM etc to provide for reactive programming.
+  Might attract more users.
+> Documentation could mention a 'Javascript first' philosophy. A problem with twig.js and others are they are always
+  subservient to other compiler implementations written in other languages. Nunjucks can be run on the server and browser 
+  using the same library.
+> Another advantage is that it keeps its code is distinct from the HTML, unlike some other templating languages.
+> Also does require an understanding of Javascript. Easy for non-JS frontend developers to use.
+> Think 'none' is undocumented
+> Remove 'value' from 'default(value, default, [boolean])', its very confusing
+
+
+CODING
+> Remove weird (old?) object stuff in objects.js
+> Convert everything to Typescript. Enable strict mode, including noImplicityAny and strictNullChecks
+> Use a code beautifer on Github commit for formatting? Not sure JS-land has anything good enough though.
+> nodes.ts and compiler.js are using an unhealthy number of dynamic calls
+
+> Maybe I do need to remove the final trailing \n from template files. Basically impossible to remove otherwise. But where?
+    Probably FileLoader makes most sense... 
+
+
 TODO 
 > update doco with work done
-> Rename 'FileSystemLoader' to 'FileLoader'
-
+> Just specify a single loader, and make it compulsary. Don't have a default loader. 
+  I think this would be clearer that the current setup. 
+> Rename 'FileSystemLoader' to 'FileLoader'. Have a separate FileWatchLoader.
+  Rename WebLoader to eg WebWatchLoader
+  
 

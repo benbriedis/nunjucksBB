@@ -1,12 +1,12 @@
 import * as lib from './lib';
 import compiler from './compiler';
-import {Obj2} from './object';
+import {Obj} from './object';
 import Frame from './Frame';
 import * as globalRuntime from './runtime';
 import Environment from './environment';
 import Context from './context';
 
-export default class Template extends Obj2
+export default class Template extends Obj
 {
 	env:Environment;
 	path;

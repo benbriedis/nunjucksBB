@@ -1,8 +1,8 @@
 import * as lib from './lib';
-import {Obj2} from './object';
+import {Obj} from './object';
 import Environment from './environment';
 
-export default class Context extends Obj2
+export default class Context extends Obj
 {
 	env;
 	ctx;
