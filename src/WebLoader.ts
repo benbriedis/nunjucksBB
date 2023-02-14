@@ -1,9 +1,6 @@
-'use strict';
-
 import Loader, {LoaderSource} from './loader';
-export {PrecompiledLoader} from './precompiled-loader';
 
-export class WebLoader extends Loader 
+export default class WebLoader extends Loader 
 {
 	baseURL;
 	useCache;

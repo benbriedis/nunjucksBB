@@ -1,24 +1,33 @@
-'use strict';
 
-import * as lib from './lib';
 import Template from './template';
-import Loader from './loader';
-import {Loaders} from './loaders';
-import {precompile,precompileString} from './precompile';
-import compiler from './compiler';
-import parser from './parser';
-import lexer from './lexer';
-import * as runtime from './runtime';
-import nodes from './nodes';
-import installJinjaCompat from './jinja-compat';
+import * as Loaders from './loaders';
+import * as lib from './lib';
 import Environment from './environment';
 
+
 export {default as Environment} from './environment';
+export {default as Template} from './template';
+export {default as Loader} from './loader';
+export {default as compiler} from './compiler';
+export {default as parser} from './parser';
+export {default as lexer} from './lexer';
+export {default as nodes} from './nodes';
+export {precompile,precompileString} from './precompile';
+export {default as installJinjaCompat} from './jinja-compat';
+export * as lib from './lib';
+export * as runtime from './runtime';
+export {default as FileSystemLoader} from './FileSystemLoader';
+export {default as PrecompiledLoader} from './PrecompiledLoader';
+export {default as WebLoader} from './WebLoader';
+
+
+//TODO move everything that isn't an export out of index.ts
+
 
 // A single instance of an environment, since this is so commonly used
 let e;
 
-function configure(templatesPath=undefined, opts=undefined) 
+export function configure(templatesPath=undefined, opts=undefined) 
 {
 	opts = opts || {};
 	if (lib.isObject(templatesPath)) {
@@ -41,12 +50,12 @@ function configure(templatesPath=undefined, opts=undefined)
 	return e;
 }
 
-function reset() 
+export function reset() 
 {
 	e = undefined;
 }
 
-async function compile(src, env, path, eagerCompile) 
+export async function compile(src, env, path, eagerCompile) 
 {
 	if (!e) 
 		configure();
@@ -55,43 +64,18 @@ async function compile(src, env, path, eagerCompile)
 	return template;
 }
 
-async function render(name, ctx):Promise<string>
+export async function render(name, ctx):Promise<string>
 {
 	if (!e) 
 		configure();
 	return await e.render(name, ctx);
 }
 
-function renderString(src, ctx, cb) 
+export async function renderString(src, ctx, cb) 
 {
 	if (!e) 
 		configure();
-	return e.renderString(src, ctx, cb);
+	return await e.renderString(src, ctx, cb);
 }
 
-
-const nunjucks = {
-	Environment: Environment,
-	Template: Template,
-	Loader: Loader,
-	FileSystemLoader: Loaders.FileSystemLoader,
-	PrecompiledLoader: Loaders.PrecompiledLoader,
-	WebLoader: Loaders.WebLoader,
-	compiler: compiler,
-	parser: parser,
-	lexer: lexer,
-	runtime: runtime,
-	lib: lib,
-	nodes: <any>nodes,
-	installJinjaCompat: installJinjaCompat,
-	configure: configure,
-	reset: reset,
-	compile:compile,
-	render:render,
-	renderString:renderString,
-	precompile: precompile,
-	precompileString: precompileString 
-};
-
-export default nunjucks;
 

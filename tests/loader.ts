@@ -1,7 +1,7 @@
 import expect from 'expect.js';
 import Environment from '../src/environment';
-import { WebLoader } from '../src/web-loaders';
-import { FileSystemLoader } from '../src/node-loaders';
+import WebLoader from '../src/WebLoader';
+import FileSystemLoader from '../src/FileSystemLoader';
 
 const templatesPath = 'tests/templates';
 

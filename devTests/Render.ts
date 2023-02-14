@@ -8,8 +8,7 @@
 		 https://www.pluralsight.com/guides/install-npm-packages-from-gitgithub
 */
 
-//import nunjucks from 'nunjucksBB';
-import nunjucks from '../src/index.js';
+import * as nunjucks from '../src/index.js';
 
 class Render
 {

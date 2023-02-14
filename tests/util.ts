@@ -1,6 +1,6 @@
 import expect from 'expect.js';
 
-import nunjucks from '../src/index.js';
+import * as nunjucks from '../src/index.js';
 import Environment from '../src/environment.js';
 import Template from '../src/template.js';
 

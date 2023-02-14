@@ -1,4 +1,4 @@
-import nunjucks from '../src/index';
+import * as nunjucks from '../src/index';
 //import nunjucks from 'nunjucks';
 //import NunjucksExtensions from 'Browser/NunjucksEnv';
 

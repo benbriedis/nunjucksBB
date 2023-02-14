@@ -4,7 +4,7 @@ import expect from 'expect.js';
 import TemplateError from '../src/TemplateError';
 import Template from '../src/template';
 import Environment from '../src/environment';
-import {FileSystemLoader as Loader} from '../src/node-loaders';
+import Loader from '../src/FileSystemLoader';
 import {render,equal} from './util';
 import {runLoopTests} from './compileLoops';
 import {testCompileMacros} from './compileMacros';

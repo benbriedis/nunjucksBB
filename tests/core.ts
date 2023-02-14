@@ -1,4 +1,4 @@
-import nunjucks from '../src/index';
+import * as nunjucks from '../src/index';
 import fs from 'fs-extra';
 import path from 'path';
 import os from 'os';

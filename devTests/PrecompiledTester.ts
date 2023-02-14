@@ -1,4 +1,5 @@
-import nunjucks,{Environment} from '../src/index';
+import * as nunjucks from '../src/index';
+import {Environment} from '../src/index';
 
 /* This script can run on the server */
 

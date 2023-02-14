@@ -1,7 +1,7 @@
 import waterfall from 'a-sync-waterfall';
 import * as lib from './lib';
 import type Loader from './loader';
-import {Loaders} from './loaders';
+import * as Loaders from './loaders';
 import tests from './tests';
 import Globals from './globals';
 import Filters from './filters';

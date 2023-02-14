@@ -3,7 +3,7 @@ import assert from 'assert';
 import {equal,render} from './util';
 import Template from '../src/template';
 import Environment from '../src/environment';
-import {FileSystemLoader as Loader} from '../src/node-loaders';
+import Loader from '../src/FileSystemLoader';
 
 export function testCompileMacros()
 {

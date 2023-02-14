@@ -1,6 +1,6 @@
 import Loader from './loader';
 
-export class PrecompiledLoader extends Loader 
+export default class PrecompiledLoader extends Loader 
 {
 	precompiled;
 

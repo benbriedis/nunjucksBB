@@ -1,9 +1,8 @@
 import fs,{access} from 'fs/promises';
 import path from 'path';
 import Loader, {LoaderSource} from './loader';
-export {PrecompiledLoader} from './precompiled-loader';
 
-export class FileSystemLoader extends Loader 
+export default class FileSystemLoader extends Loader 
 {
 	pathsToNames;
 	noCache;

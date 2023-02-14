@@ -60,7 +60,7 @@ CODING
 > nodes.ts and compiler.js are using an unhealthy number of dynamic calls
 
 > Maybe I do need to remove the final trailing \n from template files. Basically impossible to remove otherwise. But where?
-    Probably FileLoader makes most sense... 
+    Probably FileSystemLoader makes most sense... 
 
 
 TODO 
@@ -69,7 +69,7 @@ TODO
 > update doco with work done
 > Just specify a single loader, and make it compulsary. Don't have a default loader. 
   I think this would be clearer that the current setup. 
-> Rename 'FileSystemLoader' to 'FileLoader'. Have a separate FileWatchLoader.
+> Have a separate FileWatchLoader.
   Rename WebLoader to eg WebWatchLoader
   
 
