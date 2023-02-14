@@ -64,6 +64,7 @@ CODING
 
 
 TODO 
+> Implement a 'slim' version, together with type bindings.
 > update doco with work done
 > Just specify a single loader, and make it compulsary. Don't have a default loader. 
   I think this would be clearer that the current setup. 
