@@ -55,7 +55,8 @@
   "bin": {
     "nunjucks-precompile": "./bin/precompile"
   },
-  "main": "server/nunjucks/index.js",
+  "main": "server/src/index.js",
+  "types": "server/src/index.d.ts",
   "files": [
     "bin/**",
     "browser/**"
