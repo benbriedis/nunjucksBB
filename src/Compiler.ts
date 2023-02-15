@@ -1,9 +1,8 @@
-import parser from './parser';
+import parser from './Parser';
 import { transform } from './transformer';
 import nodes from './nodes';
 import TemplateError from './TemplateError';
 import Frame from './Frame';
-import { Obj } from './object';
 
 // These are all the same for now, but shouldn't be passed straight
 // through
@@ -18,7 +17,7 @@ const compareOps = {
 	'>=': '>='
 };
 
-export class Compiler extends Obj 
+export class Compiler
 {
 	templateName:string;
 	codebuf = [];
@@ -30,7 +29,6 @@ export class Compiler extends Obj
 
 	constructor(templateName:string,throwOnUndefined:boolean) 
 	{
-		super();
 		this.templateName = templateName;
 		this.throwOnUndefined = throwOnUndefined;
 	}
@@ -168,7 +166,7 @@ export class Compiler extends Obj
 	assertType(node, ...types) 
 	{
 		if (!types.some(t => node instanceof t)) 
-			this.fail(`assertType: invalid type: ${node.typename}`,node.lineno,node.colno);
+			this.fail(`assertType: invalid type: ${node.typename()}`,node.lineno,node.colno);
 	}
 
 	compileCallExtension(node,frame) 
@@ -426,22 +424,6 @@ export class Compiler extends Obj
 			return (<any>node).value.toString();
 
 		return '--expression--';
-
-/*
-		switch (node.typename) {
-			case 'Symbol':
-				return node.value;
-			case 'FunCall':
-				return 'the return value of (' + this._getNodeName(node.name) + ')';
-			case 'LookupVal':
-				return this._getNodeName(node.target) + '["' +
-					this._getNodeName(node.val) + '"]';
-			case 'Literal':
-				return node.value.toString();
-			default:
-				return '--expression--';
-		}
-*/		
 	}
 
 	compileFunCall(node, frame) 
@@ -1021,12 +1003,12 @@ export class Compiler extends Obj
 
 	compile(node,frame=undefined) 
 	{
-		var _compile = this['compile' + node.typename];
+		var _compile = this['compile' + node.typename()];
 		if (_compile) 
 			_compile.call(this, node, frame);
 		else {
 			console.log('ERROR compiler.js compile()  node:', node);
-			this.fail(`compile: Cannot compile node: ${node.typename}`,node.lineno, node.colno);
+			this.fail(`compile: Cannot compile node: ${node.typename()}`,node.lineno, node.colno);
 		}
 	}
 

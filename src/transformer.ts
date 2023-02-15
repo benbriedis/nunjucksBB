@@ -40,21 +40,21 @@ function walk(ast, func, depthFirst=undefined)
 //		const children = mapCOW(ast['children'], (node) => walk(node, func, depthFirst));
 
 		if (children !== ast.children) 
-			ast = new nodes[ast.typename](ast.lineno, ast.colno, children);
+			ast = new nodes[ast.typename()](ast.lineno, ast.colno, children);
 
 	} else if (ast instanceof nodes.CallExtension) {
 		const args = walk(ast.args, func, depthFirst);
 		const contentArgs = mapCOW(ast.contentArgs, (node) => walk(node, func, depthFirst));
 
 		if (args !== ast.args || contentArgs !== ast.contentArgs) 
-			ast = new nodes[ast.typename](ast.extName, ast.prop, args, contentArgs);
+			ast = new nodes[ast.typename()](ast.extName, ast.prop, args, contentArgs);
 	} 
 	else {
 		const props = ast.fields.map((field) => ast[field]);
 		const propsT = mapCOW(props, (prop) => walk(prop, func, depthFirst));
 
 		if (propsT !== props) {
-			ast = new nodes[ast.typename](ast.lineno, ast.colno);
+			ast = new nodes[ast.typename()](ast.lineno, ast.colno);
 			propsT.forEach((prop, i) => {
 				ast[ast.fields[i]] = prop;
 			});

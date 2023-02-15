@@ -1,12 +1,11 @@
 import * as lib from './lib';
-import compiler from './compiler';
-import {Obj} from './object';
+import compiler from './Compiler';
 import Frame from './Frame';
 import * as globalRuntime from './runtime';
 import Environment from './Environment';
 import Context from './Context';
 
-export default class Template extends Obj
+export default class Template
 {
 	env:Environment;
 	path;
@@ -18,8 +17,6 @@ export default class Template extends Obj
 
 	constructor(src,env:Environment,path) 
 	{
-		super();
-
 		this.env = env || new Environment();
 
 		if (lib.isObject(src)) {

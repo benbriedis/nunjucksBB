@@ -1,10 +1,9 @@
 import lexer from './lexer';
 import nodes from './nodes';
-import { Obj } from './object';
 import * as lib from './lib';
 import TemplateError from './TemplateError';
 
-export class Parser extends Obj 
+export class Parser
 {
 	tokens;
 	peeked;
@@ -14,7 +13,6 @@ export class Parser extends Obj
 
 	constructor(tokens) 
 	{
-		super();
 		this.tokens = tokens;
 		this.peeked = null;
 		this.breakOnBlocks = null;

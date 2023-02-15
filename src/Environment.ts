@@ -102,11 +102,11 @@ export default class Environment extends EmitterObj
 				loader.on('update', function(name, fullname) {
 					loader.cache[name] = null;
 //FIXME use a mixin to support emit?
-					me.emit('update', name, fullname, loader);
+//					me.emit('update', name, fullname, loader);
 				});
 //XXX BB possibly just used for Chokidar
 				loader.on('load', function(name, source) {
-					me.emit('load', name, source, loader);
+//					me.emit('load', name, source, loader);
 				});
 			}
 		});

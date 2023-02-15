@@ -4,7 +4,7 @@
     var expect = require('expect.js');
     var lib = require('../src/lib');
     var nodes = require('../src/nodes').default;
-    var parser = require('../src/parser').default;
+    var parser = require('../src/Parser').default;
 
 
   function _isAST(node1, node2) {
@@ -12,14 +12,14 @@
     // TODO: Clean this up (seriously, really)
     /* eslint-disable vars-on-top */
 
-    expect(node1.typename).to.be(node2.typename);
+    expect(node1.typename()).to.be(node2.typename());
 
     if (node2 instanceof nodes.NodeList) {
       var lit = ': num-children: ';
-      var sig2 = (node2.typename + lit + node2.children.length);
+      var sig2 = (node2.typename() + lit + node2.children.length);
 
       expect(node1.children).to.be.ok();
-      var sig1 = (node1.typename + lit + node1.children.length);
+      var sig1 = (node1.typename() + lit + node1.children.length);
 
       expect(sig1).to.be(sig2);
 
@@ -283,19 +283,19 @@
     it('should parse blocks', function() {
       var n = parser.parse('want some {% if hungry %}pizza{% else %}' +
         'water{% endif %}?');
-      expect(n.children[1].typename).to.be('If');
+      expect(n.children[1].typename()).to.be('If');
 
       n = parser.parse('{% block foo %}stuff{% endblock %}');
-      expect(n.children[0].typename).to.be('Block');
+      expect(n.children[0].typename()).to.be('Block');
 
       n = parser.parse('{% block foo %}stuff{% endblock foo %}');
-      expect(n.children[0].typename).to.be('Block');
+      expect(n.children[0].typename()).to.be('Block');
 
       n = parser.parse('{% extends "test.njk" %}stuff');
-      expect(n.children[0].typename).to.be('Extends');
+      expect(n.children[0].typename()).to.be('Extends');
 
       n = parser.parse('{% include "test.njk" %}');
-      expect(n.children[0].typename).to.be('Include');
+      expect(n.children[0].typename()).to.be('Include');
     });
 
     it('should accept attributes and methods of static arrays, objects and primitives', function() {
@@ -322,13 +322,13 @@
 
     it('should parse include tags', function() {
       var n = parser.parse('{% include "test.njk" %}');
-      expect(n.children[0].typename).to.be('Include');
+      expect(n.children[0].typename()).to.be('Include');
 
       n = parser.parse('{% include "test.html"|replace("html","j2") %}');
-      expect(n.children[0].typename).to.be('Include');
+      expect(n.children[0].typename()).to.be('Include');
 
       n = parser.parse('{% include ""|default("test.njk") %}');
-      expect(n.children[0].typename).to.be('Include');
+      expect(n.children[0].typename()).to.be('Include');
     });
 
     it('should parse for loops', function() {

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { _prettifyError } from './lib';
-import compiler from './compiler';
+import compiler from './Compiler';
 import Environment from './Environment';
 import precompileGlobal from './precompile-global';
 

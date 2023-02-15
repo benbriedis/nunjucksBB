@@ -1,26 +1,12 @@
-'use strict';
 
-import {Obj} from './object';
-
-function traverseAndCheck(obj, type, results) 
-{
-	if (obj instanceof type) 
-		results.push(obj);
-
-	if (obj instanceof Node) 
-		obj.findAll(type, results);
-}
-
-export class Node extends Obj
+export abstract class Node 
 {
 	lineno:number;
 	colno:number;
 	get fields() { return []; }  //XXX I'd rather fields were not dynamically added
-//	set fields(newFields) { this.fields = newFields; } 
 
 	constructor(lineno:number, colno:number, ...args) 
 	{
-		super();
 		this.lineno = lineno;
 		this.colno = colno;
 
@@ -36,6 +22,8 @@ export class Node extends Obj
 			this[field] = val;
 		});
 	}
+
+	abstract typename():string;
 
 	findAll(type, results) 
 	{
@@ -61,14 +49,14 @@ export class Node extends Obj
 // Abstract nodes
 export class Value extends Node 
 {
-	get typename() { return 'Value'; }
+	typename() { return 'Value'; }
 	get fields() { return ['value']; }
 }
 
 // Concrete nodes
 export class NodeList extends Node 
 {
-	get typename() { return 'NodeList'; }
+	typename() { return 'NodeList'; }
 	get fields() { return ['children']; }
 
 	constructor(lineno=undefined, colno=undefined, nodes=undefined) 
@@ -85,25 +73,25 @@ export class NodeList extends Node
 	children():any {}
 }
 
-class Root extends NodeList {get typename() {return 'Root';}};
-class Literal extends Value {get typename() {return 'Literal';} };
+class Root extends NodeList {typename() {return 'Root';}};
+class Literal extends Value {typename() {return 'Literal';} };
 
-class Symbol extends Value {get typename() {return 'Symbol';} };
-class Group extends NodeList {get typename() {return 'Group';} };
-class ArrayNode extends NodeList {get typename() {return 'Array';} };     		//FIXME? may get in trouble for using this name...
-class Pair extends Node {get typename() {return 'Pair';}  get fields() { return ['key', 'value']; } };
-class Dict extends NodeList {get typename() {return 'Dict';} };
-class LookupVal extends Node {get typename() {return 'LookupVal';}  get fields() { return ['target', 'val']; } };
-class If extends Node {get typename() {return 'If';}  get fields() { return ['cond', 'body', 'else_']; } };
-class InlineIf extends Node {get typename() {return 'InlineIf';}  get fields() { return ['cond', 'body', 'else_']; } };
-class For extends Node {get typename() {return 'For';}  get fields() { return ['arr', 'name', 'body', 'else_']; } };
-class Macro extends Node {get typename() {return 'Macro';}  get fields() { return ['name', 'args', 'body']; } };
-class Caller extends Macro {get typename() {return 'Caller';} };
-class Import extends Node {get typename() {return 'Import';}  get fields() { return ['template', 'target', 'withContext']; } };
+class Symbol extends Value {typename() {return 'Symbol';} };
+class Group extends NodeList {typename() {return 'Group';} };
+class ArrayNode extends NodeList {typename() {return 'Array';} };     		//FIXME? may get in trouble for using this name...
+class Pair extends Node {typename() {return 'Pair';}  get fields() { return ['key', 'value']; } };
+class Dict extends NodeList {typename() {return 'Dict';} };
+class LookupVal extends Node {typename() {return 'LookupVal';}  get fields() { return ['target', 'val']; } };
+class If extends Node {typename() {return 'If';}  get fields() { return ['cond', 'body', 'else_']; } };
+class InlineIf extends Node {typename() {return 'InlineIf';}  get fields() { return ['cond', 'body', 'else_']; } };
+class For extends Node {typename() {return 'For';}  get fields() { return ['arr', 'name', 'body', 'else_']; } };
+class Macro extends Node {typename() {return 'Macro';}  get fields() { return ['name', 'args', 'body']; } };
+class Caller extends Macro {typename() {return 'Caller';} };
+class Import extends Node {typename() {return 'Import';}  get fields() { return ['template', 'target', 'withContext']; } };
 
 class FromImport extends Node 
 {
-	get typename() { return 'FromImport'; }
+	typename() { return 'FromImport'; }
 	get fields() { return ['template', 'names', 'withContext']; }
 
 	constructor(lineno, colno, template, names, withContext) {
@@ -111,40 +99,40 @@ class FromImport extends Node
 	}
 }
 
-class FunCall extends Node {get typename() {return 'FunCall';}  get fields() { return ['name', 'args']; } };
-class Filter extends FunCall {get typename() {return 'Filter';} };
-class FilterAsync extends Filter {get typename() {return 'FilterAsync';}  get fields() { return ['name', 'args', 'symbol']; } };
-class KeywordArgs extends Dict {get typename() {return 'KeywordArgs';} };
-class Block extends Node {get typename() {return 'Block';}  get fields() { return ['name', 'body']; } };
-class Super extends Node {get typename() {return 'Super';}  get fields() { return ['blockName', 'symbol']; } };
-class TemplateRef extends Node {get typename() {return 'TemplateRef';}  get fields() { return ['template']; } };
-class Extends extends TemplateRef {get typename() {return 'Extends';} };
-class Include extends Node {get typename() {return 'Include';}  get fields() { return ['template', 'ignoreMissing']; } };
-class Set extends Node {get typename() {return 'Set';}  get fields() { return ['targets', 'value']; } };
-class Switch extends Node {get typename() {return 'Switch';}  get fields() { return ['expr', 'cases', 'default']; } };
-class Case extends Node {get typename() {return 'Case';}  get fields() { return ['cond', 'body']; } };
-class Output extends NodeList {get typename() {return 'Output';} };
-class Capture extends Node {get typename() {return 'Capture';}  get fields() { return ['body']; } };
-class TemplateData extends Literal {get typename() {return 'TemplateData';} };
-class UnaryOp extends Node {get typename() {return 'UnaryOp';}  get fields() { return ['target']; } };
-class BinOp extends Node {get typename() {return 'BinOp';}  get fields() { return ['left', 'right']; } };
-class In extends BinOp {get typename() {return 'In';} };
-class Is extends BinOp {get typename() {return 'Is';} };
-class Or extends BinOp {get typename() {return 'Or';} };
-class And extends BinOp {get typename() {return 'And';} };
-class Not extends UnaryOp {get typename() {return 'Not';} };
-class Add extends BinOp {get typename() {return 'Add';} };
-class Concat extends BinOp {get typename() {return 'Concat';} };
-class Sub extends BinOp {get typename() {return 'Sub';} };
-class Mul extends BinOp {get typename() {return 'Mul';} };
-class Div extends BinOp {get typename() {return 'Div';} };
-class FloorDiv extends BinOp {get typename() {return 'FloorDiv';} };
-class Mod extends BinOp {get typename() {return 'Mod';} };
-class Pow extends BinOp {get typename() {return 'Pow';} };
-class Neg extends UnaryOp {get typename() {return 'Neg';} };
-class Pos extends UnaryOp {get typename() {return 'Pos';} };
-class Compare extends Node {get typename() {return 'Compare';}  get fields() { return ['expr', 'ops']; } };
-class CompareOperand extends Node {get typename() {return 'CompareOperand';}  get fields() { return ['expr', 'type']; } };
+class FunCall extends Node {typename() {return 'FunCall';}  get fields() { return ['name', 'args']; } };
+class Filter extends FunCall {typename() {return 'Filter';} };
+class FilterAsync extends Filter {typename() {return 'FilterAsync';}  get fields() { return ['name', 'args', 'symbol']; } };
+class KeywordArgs extends Dict {typename() {return 'KeywordArgs';} };
+class Block extends Node {typename() {return 'Block';}  get fields() { return ['name', 'body']; } };
+class Super extends Node {typename() {return 'Super';}  get fields() { return ['blockName', 'symbol']; } };
+class TemplateRef extends Node {typename() {return 'TemplateRef';}  get fields() { return ['template']; } };
+class Extends extends TemplateRef {typename() {return 'Extends';} };
+class Include extends Node {typename() {return 'Include';}  get fields() { return ['template', 'ignoreMissing']; } };
+class Set extends Node {typename() {return 'Set';}  get fields() { return ['targets', 'value']; } };
+class Switch extends Node {typename() {return 'Switch';}  get fields() { return ['expr', 'cases', 'default']; } };
+class Case extends Node {typename() {return 'Case';}  get fields() { return ['cond', 'body']; } };
+class Output extends NodeList {typename() {return 'Output';} };
+class Capture extends Node {typename() {return 'Capture';}  get fields() { return ['body']; } };
+class TemplateData extends Literal {typename() {return 'TemplateData';} };
+class UnaryOp extends Node {typename() {return 'UnaryOp';}  get fields() { return ['target']; } };
+class BinOp extends Node {typename() {return 'BinOp';}  get fields() { return ['left', 'right']; } };
+class In extends BinOp {typename() {return 'In';} };
+class Is extends BinOp {typename() {return 'Is';} };
+class Or extends BinOp {typename() {return 'Or';} };
+class And extends BinOp {typename() {return 'And';} };
+class Not extends UnaryOp {typename() {return 'Not';} };
+class Add extends BinOp {typename() {return 'Add';} };
+class Concat extends BinOp {typename() {return 'Concat';} };
+class Sub extends BinOp {typename() {return 'Sub';} };
+class Mul extends BinOp {typename() {return 'Mul';} };
+class Div extends BinOp {typename() {return 'Div';} };
+class FloorDiv extends BinOp {typename() {return 'FloorDiv';} };
+class Mod extends BinOp {typename() {return 'Mod';} };
+class Pow extends BinOp {typename() {return 'Pow';} };
+class Neg extends UnaryOp {typename() {return 'Neg';} };
+class Pos extends UnaryOp {typename() {return 'Pos';} };
+class Compare extends Node {typename() {return 'Compare';}  get fields() { return ['expr', 'ops']; } };
+class CompareOperand extends Node {typename() {return 'CompareOperand';}  get fields() { return ['expr', 'type']; } };
 
 /*
 export const CallExtension = Node.extend('CallExtension', {
@@ -183,7 +171,7 @@ class CallExtension extends Node
 	}
 
 	get fields() { return ['extName', 'prop', 'args', 'contentArgs']; }
-	get typename() {return 'CallExtension';} 
+	typename() {return 'CallExtension';} 
 }
 
 
@@ -206,7 +194,7 @@ function printNodes(node, indent)
 {
 	indent = indent || 0;
 
-	print(node.typename + ': ', indent);
+	print(node.typename() + ': ', indent);
 
 	if (node instanceof NodeList) {
 		print('\n');
@@ -245,6 +233,16 @@ function printNodes(node, indent)
 		});
 	}
 }
+
+function traverseAndCheck(obj, type, results) 
+{
+	if (obj instanceof type) 
+		results.push(obj);
+
+	if (obj instanceof Node) 
+		obj.findAll(type, results);
+}
+
 
 export default {
 	Node: Node,
