@@ -14,12 +14,14 @@ export default class Precompile
 		});
 //		NunjucksExtensions.extend(this.env);
 
-		const templateName = 'devTests/top.njk';
-		const data = {
-			a:1,
-			b:2
-		};
+		await this.compileOne('devTests/brokenTop.njk',env);
+		await this.compileOne('devTests/brokenImport1.njk',env);
+		await this.compileOne('devTests/brokenImport2.njk',env);
+		await this.compileOne('devTests/brokenInclude.njk',env);
+	}
 
+	static async compileOne(templateName,env)
+	{
 		const handle = await open(templateName,'r');
 		const contents = await handle.readFile({encoding:'UTF-8' as BufferEncoding});
 //XXX does 'precompile()' not work?

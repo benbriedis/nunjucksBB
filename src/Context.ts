@@ -1,23 +1,23 @@
 import * as lib from './lib';
-import {Obj} from './object';
-import Environment from './environment';
+import Environment from './Environment';
+import Frame from './Frame';
 
-export default class Context extends Obj
+export default class Context
 {
-	env;
-	ctx;
+	env:Environment;
+	ctx:Context;
 	blocks;     //XXX currently these are async functions
 	exported;
 
-	constructor(ctx, blocks, env) 
+	constructor(ctx:Context, blocks, env:Environment) 
 	{
-		super();
+//		super();
 
 		// Has to be tied to an environment so we can tap into its globals.
 		this.env = env || new Environment();
 
 		// Make a duplicate of ctx
-		this.ctx = lib.extend({}, ctx);
+		this.ctx = Object.assign({},ctx);
 
 		this.blocks = {};
 		this.exported = [];
@@ -27,7 +27,7 @@ export default class Context extends Obj
 		});
 	}
 
-	lookup(name) 
+	lookup(name:string) 
 	{
 		// This is one of the most called functions, so optimize for
 		// the typical case where the name isn't in the globals
@@ -37,7 +37,7 @@ export default class Context extends Obj
 			return this.ctx[name];
 	}
 
-	setVariable(name, val) 
+	setVariable(name:string, val) 
 	{
 		this.ctx[name] = val;
 	}
@@ -47,14 +47,14 @@ export default class Context extends Obj
 		return this.ctx;
 	}
 
-	addBlock(name, block) 
+	addBlock(name:string, block) 
 	{
 		this.blocks[name] = this.blocks[name] || [];
 		this.blocks[name].push(block);
 		return this;
 	}
 
-	getBlock(name) 
+	getBlock(name:string) 
 	{
 		if (!this.blocks[name]) 
 			throw new Error('unknown block "' + name + '"');
@@ -62,7 +62,7 @@ export default class Context extends Obj
 		return this.blocks[name][0];
 	}
 
-	async getSuper(env,name,block,frame,runtime) 
+	async getSuper(env:Environment,name:string,block,frame:Frame,runtime) 
 	{
 		var idx = lib.indexOf(this.blocks[name] || [], block);
 		var blk = this.blocks[name][idx + 1];
@@ -74,7 +74,7 @@ export default class Context extends Obj
 		return await blk(env,this,frame,runtime);
 	}
 
-	addExport(name) 
+	addExport(name:string) 
 	{
 		this.exported.push(name);
 	}
@@ -82,7 +82,7 @@ export default class Context extends Obj
 	getExported() 
 	{
 		var exported = {};
-		this.exported.forEach((name) => {
+		this.exported.forEach(name => {
 			exported[name] = this.ctx[name];
 		});
 		return exported;

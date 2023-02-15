@@ -592,13 +592,7 @@ describe('filter', function() {
 	});
 
 	it('rejectattr', async () => {
-		var foods = [{
-			tasty: true
-		}, {
-			tasty: false
-		}, {
-			tasty: true
-		}];
+		var foods = [{tasty: true},{tasty: false},{tasty:true}];
 		await equal('{{ foods | rejectattr("tasty") | length }}', {
 			foods: foods
 		}, '1');

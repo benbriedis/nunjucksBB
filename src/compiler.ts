@@ -405,7 +405,7 @@ export class Compiler extends Obj
 
 	compileLookupVal(node, frame) 
 	{
-		this._emit('runtime.memberLookup((');
+		this._emit('await runtime.memberLookup((');
 		this._compileExpression(node.target, frame);
 		this._emit('),');
 		this._compileExpression(node.val, frame);

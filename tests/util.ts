@@ -1,8 +1,8 @@
 import expect from 'expect.js';
 
 import * as nunjucks from '../src/index.js';
-import Environment from '../src/environment.js';
-import Template from '../src/template.js';
+import Environment from '../src/Environment.js';
+import Template from '../src/Template.js';
 
 //TODO remove nunjucksFull?
 const nunjucksFull = nunjucks;

@@ -1,6 +1,6 @@
 import expect from 'expect.js';
 import * as util from './util';
-import Environment from '../src/environment';
+import Environment from '../src/Environment';
 import Loader from '../src/FileSystemLoader';
 import path from 'path';
 

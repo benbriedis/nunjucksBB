@@ -71,5 +71,5 @@ TODO
   I think this would be clearer that the current setup. 
 > Have a separate FileWatchLoader.
   Rename WebLoader to eg WebWatchLoader
-  
+> Copy over my JS dump with folding
 

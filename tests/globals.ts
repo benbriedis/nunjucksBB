@@ -1,6 +1,6 @@
 import expect from 'expect.js';
 import {equal,render} from './util';
-import Environment from '../src/environment';
+import Environment from '../src/Environment';
 import assert from 'assert';
 import TemplateError from '../src/TemplateError';
 

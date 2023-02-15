@@ -15,37 +15,21 @@ class Render
 
 	static async run():Promise<void>
 	{
-		const templateName = 'devTests/top.njk';
+//		const templateName = 'devTests/top.njk';
+		const templateName = 'devTests/brokenTop.njk';
 		const data = {
 			a:1,
 			b:2
 		};
 
-//TRY WITHOUT A Custom loader initially
-	//const loader = new CustomAsyncNunjucksLoader(this,aliases);
 	//const myNunjucksEnv = new nunjucks.Environment(loader,{trimBlocks:true,lstripBlocks:true});
 	//NunjucksExtensions.extend(this.myNunjucksEnv);
 
-//XXX 
-//	var env = new nunjucks.Environment(new nunjucks.FileSystemLoader(templateName));
 
-//	const result = await nunjucks.render(templateName,data);
-	const result = await nunjucks.render(templateName,data);
+//global.go = true;
+		const result = await nunjucks.render(templateName,data);
 
-	console.log('result:',result);	
-
-
-
-//XXX might be better just to call 'render' as getting a template may not solve that much of a purpose...
-//    esp if incudes are within loop and have to mutiply retrieve and render...
-
-	//const template = await nunjucksEnv.getTemplate(templateName,true);   //XXX whats true?
-
-	//const result = await template.render(data);
-
-
-	//load in a few files asynchronously and render
-
+		console.log('result:',result);	
 	}
 }
 

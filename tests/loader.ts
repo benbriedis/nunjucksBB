@@ -1,5 +1,5 @@
 import expect from 'expect.js';
-import Environment from '../src/environment';
+import Environment from '../src/Environment';
 import WebLoader from '../src/WebLoader';
 import FileSystemLoader from '../src/FileSystemLoader';
 

@@ -1,0 +1,7 @@
+{%- import 'devTests/brokenImport1.njk' as inc -%}
+
+IN BROKEN TOP
+
+{% include 'devTests/brokenInclude.njk' %}
+
+{{ inc.brokenMacro1() }}

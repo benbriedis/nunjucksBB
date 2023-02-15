@@ -2,8 +2,8 @@ import * as lib from './lib';
 import * as runtime from './runtime';
 import TemplateError from './TemplateError';
 import SafeString,{copySafeness,markSafe} from './SafeString';
-import type Context from './context';
-import Environment from './environment';
+import type Context from './Context';
+import Environment from './Environment';
 
 
 // For the jinja regexp, see

@@ -1,8 +1,8 @@
 import 'mocha';
 import assert from 'assert';
 import {equal,render} from './util';
-import Template from '../src/template';
-import Environment from '../src/environment';
+import Template from '../src/Template';
+import Environment from '../src/Environment';
 import Loader from '../src/FileSystemLoader';
 
 export function testCompileMacros()
@@ -250,13 +250,11 @@ export function testCompileMacros()
 	});
 
 	it('should import templates with context', async () => {
-//global.go = 1;	
 		await equal(
 			'{% set bar = "BAR" %}' +
 			'{% import "import-context.njk" as imp with context %}' +
 			'{{ imp.foo() }}',
 			'Here\'s BAR');
-//delete global.go;	
 
 		await equal(
 			'{% set bar = "BAR" %}' +

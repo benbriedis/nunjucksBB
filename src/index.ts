@@ -1,12 +1,12 @@
 
-import Template from './template';
+import Template from './Template';
 import * as Loaders from './loaders';
 import * as lib from './lib';
-import Environment from './environment';
+import Environment from './Environment';
 
 
-export {default as Environment} from './environment';
-export {default as Template} from './template';
+export {default as Environment} from './Environment';
+export {default as Template} from './Template';
 export {default as Loader,LoaderSource} from './loader';
 export {default as compiler} from './compiler';
 export {default as parser} from './parser';

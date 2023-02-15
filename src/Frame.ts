@@ -5,10 +5,10 @@ export {isArray,inOperator,keys} from './lib';
 // Frames keep track of scoping both at compile-time and run-time so
 // we know how to access variables. Block tags can introduce special
 // variables, for example.
-export class Frame 
+export default class Frame 
 {
 	variables;
-	parent;
+	parent:Frame;
 	topLevel:boolean = false;
 	// if this is true, writes (set) should never propagate upwards past
 	// this frame to its parent (though reads may).
@@ -16,7 +16,7 @@ export class Frame
 
 
 //	constructor(parent=undefined, isolateWrites:boolean=false) 
-	constructor(parent=undefined, isolateWrites:boolean=undefined) 
+	constructor(parent:Frame=undefined, isolateWrites:boolean=undefined) 
 	{
 		this.parent = parent;
 		this.variables = Object.create(null);
@@ -25,18 +25,19 @@ export class Frame
 
 	set(name:string, val, resolveUp:boolean=false) 
 	{
+//console.log('Frame.set()  name:',name,'val:',val);
+
 		// Allow variables with dots by automatically creating the
 		// nested structure
 		var parts = name.split('.');
 		var obj = this.variables;
-		var frame = this;
+		var frame:Frame = this;
 
-		if (resolveUp) {
+		if (resolveUp) 
 			if ((frame = this.resolve(parts[0], true))) {
 				frame.set(name,val,false);
 				return;
 			}
-		}
 
 		for (let i = 0; i < parts.length - 1; i++) {
 			const id = parts[i];
@@ -52,15 +53,18 @@ export class Frame
 	get(name:string) 
 	{
 		var val = this.variables[name];
+//console.log('Frame.get()  name:',name,'val:',val);
 		if (val !== undefined) 
 			return val;
 		return null;
 	}
 
-	lookup(name:string) 
+	lookup(name:string):Frame 
 	{
 		var p = this.parent;
 		var val = this.variables[name];
+
+//console.log('Frame.lookup()  name:',name,'val:',val);
 
 		if (val !== undefined) 
 			return val;
@@ -71,24 +75,23 @@ export class Frame
 		return p && p.lookup(name);
 	}
 
-	resolve(name:string,forWrite:boolean) 
+	resolve(name:string,forWrite:boolean):Frame 
 	{
 		var p = (forWrite && this.isolateWrites) ? undefined : this.parent;
 		var val = this.variables[name];
 		if (val !== undefined) 
 			return this;
-		return p && p.resolve(name);
+		return p && p.resolve(name,undefined);
 	}
 
-	push(isolateWrites:boolean) 
+	push(isolateWrites:boolean):Frame 
 	{
 		return new Frame(this, isolateWrites);
 	}
 
-	pop() 
+	pop():Frame 
 	{
 		return this.parent;
 	}
 }
 
-export default Frame;

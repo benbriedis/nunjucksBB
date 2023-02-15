@@ -2,7 +2,7 @@ import * as lib from './lib';
 import TemplateError from './TemplateError';
 export {SafeString,markSafe,suppressValue} from './SafeString';
 export {isArray,inOperator,keys} from './lib';
-export {Frame} from './Frame';
+export {default as Frame} from './Frame';
 
 
 var arrayFrom = Array.from;
@@ -98,11 +98,13 @@ export function ensureDefined(val, lineno, colno)
 
 export function memberLookup(obj, val) 
 {
+//console.log('memberLookup val:',val,'obj:',obj);
+
 	if (obj === undefined || obj === null) 
 		return undefined;
 
 	if (typeof obj[val] === 'function') 
-		return (...args) => obj[val].apply(obj, args);
+		return async (...args) => await obj[val].apply(obj, args);
 
 	return obj[val];
 }

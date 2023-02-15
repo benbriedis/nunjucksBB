@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { _prettifyError } from './lib';
 import compiler from './compiler';
-import Environment from './environment';
+import Environment from './Environment';
 import precompileGlobal from './precompile-global';
 
 function match(filename,patterns) 

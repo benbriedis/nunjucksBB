@@ -3,8 +3,8 @@ import compiler from './compiler';
 import {Obj} from './object';
 import Frame from './Frame';
 import * as globalRuntime from './runtime';
-import Environment from './environment';
-import Context from './context';
+import Environment from './Environment';
+import Context from './Context';
 
 export default class Template extends Obj
 {

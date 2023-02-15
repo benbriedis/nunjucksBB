@@ -1,6 +1,5 @@
 import * as nunjucks from '../src/index';
 import {Environment} from '../src/index';
-import {readFile} from 'fs/promises';
 
 /* This script can run on the server */
 
@@ -11,7 +10,9 @@ class TwoStageTester
 //		let env2: nunjucks.Environment;
 		let env2: Environment;
 
-		const precompiled = await readFile('./devTests/broken2.njk.js',{encoding:'UTF8' as BufferEncoding});
+		const contents = 'HERE {{ middle }} THERE';
+
+		const precompiled = nunjucks.precompileString(contents,{name:'top.njk'});
 
 		global.window = <any>{};
 		const func = new Function(precompiled);
@@ -29,8 +30,8 @@ class TwoStageTester
 			//throwOnUndefined:true
 		});
 
-		const template = await env.getTemplate('devTests/brokenTop.njk'); 
-		const result = await template.render({blah:1});
+		const template = await env.getTemplate('top.njk'); 
+		const result = await template.render({middle:'and'});
 		console.log('result:',result);
 	}
 }

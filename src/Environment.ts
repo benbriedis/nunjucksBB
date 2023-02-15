@@ -3,9 +3,9 @@ import type Loader from './loader';
 import * as Loaders from './loaders';
 import tests from './tests';
 import Globals from './globals';
-import Filters from './filters';
+import Filters from './Filters';
 import {EmitterObj} from './object';
-import Template from './template';
+import Template from './Template';
 
 /* A no-op template, for use with {% include ignore missing %} */
 const noopTmplSrc = {
@@ -221,18 +221,19 @@ export default class Environment extends EmitterObj
 
 		for (let i = 0; i < this.loaders.length; i++) {
 			const loader = this.loaders[i];
-			tmpl = loader.cache[this.resolveTemplate(loader, parentName, name)];
+			const resolvedName = this.resolveTemplate(loader, parentName, name);
+
+			tmpl = loader.cache[resolvedName];
 			if (tmpl!=null) 
 				return tmpl;
 
-			const resolvedName = this.resolveTemplate(loader, parentName, name);
 			const info = await loader.getSource(resolvedName);
 
 			if (info != null) {
 				const template = new Template(info.src, this, info.path);
 				await template.init(eagerCompile);
 				if (!info.noCache) 
-					loader.cache[<string>name] = template;
+					loader.cache[resolvedName] = template;
 				return template;
 			}
 		}
