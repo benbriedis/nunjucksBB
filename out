@@ -1,0 +1,547 @@
+
+> nunjucksBB@3.2.3 test
+> tsc ; nyc mocha -R spec server/tests
+
+
+
+  api
+    ✓ should always force compilation of parent template
+    ✓ should handle correctly relative paths
+    ✓ should handle correctly cache for relative paths
+    ✓ should handle correctly relative paths in renderString
+    ✓ should emit "load" event on Environment instance
+
+  compiler
+    ✓ should compile templates
+    ✓ should escape newlines
+    ✓ should escape Unicode line seperators
+    ✓ should compile references
+    ✓ should compile references - object without prototype
+    ✓ should fail silently on undefined values
+    ✓ should not treat falsy values the same as undefined
+    ✓ should display none as empty string
+    ✓ none should be falsy
+    ✓ none should use default
+    ✓ null should use default
+    ✓ undefined should use default
+    ✓ true should not use default
+    ✓ false should not use default
+    ✓ should compile function calls
+    ✓ should compile function calls with correct scope
+    ✓ should compile switch statements
+    ✓ should compile if blocks
+    ✓ should compile the ternary operator
+    ✓ should compile inline conditionals
+    ✓ should allow overriding var with none inside nested scope
+    ✓ should compile basic arithmetic operators
+    ✓ should compile the exponentiation (**) operator
+    ✓ should compile the integer division (//) operator
+    ✓ should compile the modulus operator
+    ✓ should compile numeric negation operator
+    ✓ should compile comparison operators
+    ✓ should compile python-style ternary operators
+    ✓ should compile the "in" operator for Arrays
+    ✓ should compile the "in" operator for objects
+    ✓ should compile the "in" operator for strings
+    ✓ should throw an error when using the "in" operator on unexpected types
+    ✓ should throw exceptions when missing import
+    ✓ should include error line in raised TemplateError
+    ✓ should include error line when exception raised in user function
+    ✓ template attempts to include non-existent template
+    ✓ should compile string concatenations with tilde
+    ✓ should compile macros
+    ✓ should compile macros with optional args
+    ✓ should compile macros with args that can be passed to filters
+    ✓ should compile macros with positional args
+    ✓ should compile macros with arg defaults
+    ✓ should compile macros with keyword args
+    ✓ should compile macros with only keyword args
+    ✓ should compile macros with keyword args overriding defaults
+    ✓ should compile macros with out-of-order keyword args
+    ✓ should compile macros
+    ✓ should compile macros with multiple overridden arg defaults
+    ✓ should compile macro calls inside blocks
+    ✓ should compile macros defined in one block and called in another
+    ✓ should compile macros that include other templates
+    ✓ should compile macros that set vars
+    ✓ should not leak variables set in macro to calling scope
+    ✓ should not leak variables set in nested scope within macro out to calling scope
+    ✓ should compile macros without leaking set to calling scope
+    ✓ should compile macros that cannot see variables in caller scope
+    ✓ should compile call blocks
+    ✓ should compile call blocks with args
+    ✓ should compile call blocks using imported macros
+    ✓ should import templates
+    ✓ should import templates with context
+    ✓ should import templates without context
+    ✓ should default to importing without context
+    ✓ should inherit templates
+    ✓ should not call blocks not defined from template inheritance
+    ✓ should conditionally inherit templates
+    ✓ should error if same block is defined multiple times
+    ✓ should render nested blocks in child template
+    ✓ should render parent blocks with super()
+    ✓ should let super() see global vars from child template
+    ✓ should not let super() see vars from child block
+    ✓ should let child templates access parent global scope
+    ✓ should not let super() modify calling scope
+    ✓ should not let child templates set vars in parent scope
+    ✓ should render blocks in their own scope
+    ✓ should include templates
+    ✓ should include 130 templates without call stack size exceed
+    ✓ should include templates with context
+    ✓ should include templates that can see including scope, but not write to it
+    ✓ should include templates dynamically
+    ✓ should include templates dynamically based on a set var
+    ✓ should include templates dynamically based on an object attr
+    ✓ should throw an error when including a file that does not exist
+    ✓ should fail silently on missing templates if requested
+    ✓ should have access to "loop" inside an include
+    ✓ should maintain nested scopes
+    ✓ should allow blocks in for loops
+    ✓ should make includes inherit scope
+    ✓ should compile a set block
+    ✓ should compile set with frame references
+    ✓ should compile set assignments of the same variable
+    ✓ should compile block-set
+    ✓ should compile block-set wrapping an inherited block
+    ✓ should throw errors
+    ✓ should allow custom tag compilation
+    ✓ should allow custom tag compilation without content
+    ✓ should allow complicated custom tag compilation
+    ✓ should allow custom tag with args compilation
+    ✓ should autoescape by default
+    ✓ should autoescape if autoescape is on
+    ✓ should not autoescape safe strings
+    ✓ should not autoescape macros
+    ✓ should not autoescape super()
+    ✓ should not autoescape when extension set false
+    ✓ should pass context as this to filters
+    ✓ should render regexs
+    ✓ should throw an error when {% call %} is passed an object that is not a function
+    ✓ should throw an error when including a file that calls an undefined macro
+    ✓ should throw an error when including a file that calls an undefined macro even inside {% if %} tag
+    ✓ should throw an error when including a file that imports macro that calls an undefined macro
+    ✓ should control whitespaces correctly
+    ✓ should control expression whitespaces correctly
+    ✓ should get right value when macro parameter conflict with global macro name
+    ✓ should get right value when macro include macro
+    ✓ should allow access to outer scope in call blocks
+    ✓ should not leak scope from call blocks to parent
+    ✓ should import template objects
+    1) should inherit template objects
+    ✓ should include template objects
+    ✓ should throw an error when invalid expression whitespaces are used
+    the for tag
+      ✓ should loop over simple arrays
+      ✓ should loop normally with an {% else %} tag and non-empty array
+      ✓ should execute the {% else %} block when looping over an empty array
+      ✓ should support destructured looping
+      ✓ should do loop over key-values of a literal in-template Object
+      ✓ should support loop.index
+      ✓ should support loop.index0
+      ✓ should support loop.revindex
+      ✓ should support loop.revindex0
+      ✓ should support loop.first
+      ✓ should support loop.last
+      ✓ should support loop.length
+      ✓ should fail silently when looping over an undefined variable
+      ✓ should fail silently when looping over an undefined property
+      ✓ should fail silently when looping over a null variable
+      ✓ should loop over two-dimensional arrays
+      ✓ should loop over four-dimensional arrays
+      ✓ should support loop.index with two-dimensional loops
+      ✓ should support loop.revindex with two-dimensional loops
+      ✓ should support key-value looping over an Object variable
+      ✓ should support loop.index when looping over an Object's key-value pairs
+      ✓ should support loop.revindex when looping over an Object's key-value pairs
+      ✓ should support loop.length when looping over an Object's key-value pairs
+      ✓ should support include tags in the body of the loop
+      ✓ should work with {% set %} and {% include %} tags
+      ✓ should work with Set builtin
+      ✓ should work with Map builtin
+    the filter tag
+      ✓ should apply the title filter to the body
+      ✓ should apply the replace filter to the body
+      ✓ should work with variables in the body
+      ✓ should work with blocks in the body
+
+  nunjucks.configure
+    ✓ should cache templates by default
+    ✓ should not cache templates with {noCache: true}
+
+  filter
+    ✓ abs
+    ✓ batch
+    ✓ capitalize
+    ✓ center
+    ✓ default
+    ✓ dump
+    ✓ escape
+    ✓ escape skip safe
+    ✓ should not double escape strings
+    ✓ should not double escape with autoescape on
+    ✓ should work with non-string values
+    ✓ should not escape safe strings with autoescape on
+    ✓ should keep strings escaped after they have been escaped
+    ✓ dictsort
+    ✓ first
+    ✓ float
+    ✓ forceescape
+    ✓ int
+    ✓ int (default value)
+    ✓ float (default value)
+    ✓ groupby
+    ✓ indent
+    ✓ join
+    ✓ last
+    ✓ list
+    ✓ lower
+    ✓ nl2br
+    ✓ random (57ms)
+    ✓ reject
+    ✓ rejectattr
+    ✓ select
+    ✓ selectattr
+    ✓ replace
+    ✓ reverse
+    ✓ round
+    ✓ slice
+    ✓ sum
+    ✓ sort
+    ✓ string
+    ✓ striptags
+    ✓ title
+    ✓ trim
+    ✓ truncate
+    ✓ upper
+    ✓ urlencode
+    ✓ urlencode - object without prototype
+    ✓ urlize
+    ✓ wordcount
+    the length filter
+      ✓ should return length of a list literal
+      ✓ should output 0 for a missing context variable
+      ✓ should output string length for string variables
+      ✓ should output string length for a SafeString variable
+      ✓ should output the correct length of a string created with new String()
+      ✓ should output 0 for a literal "undefined"
+      ✓ should output 0 for a literal "null"
+      ✓ should output 0 for an Object with no properties
+      ✓ should output 1 for an Object with 1 property
+      ✓ should output the number of properties for a plain Object, not the value of its length property
+      ✓ should output the length of an array
+      ✓ should output the full length of a sparse array
+      ✓ should output the length of an array created with "new Array"
+      ✓ should output the length of an array created with "new Array" with user-defined properties
+      ✓ should output the length of a Map
+      ✓ should output the length of a Set
+
+  global
+    ✓ should have range
+    ✓ should have cycler
+    ✓ should have joiner
+    ✓ should allow addition of globals
+    ✓ should allow chaining of globals
+    ✓ should allow getting of globals
+    ✓ should allow getting boolean globals
+    ✓ should fail on getting non-existent global
+    ✓ should pass context as this to global functions
+    ✓ should be exclusive to each environment
+    ✓ should return errors from globals
+
+  jinja-compat
+    2) should support array slices with start and stop
+    3) should support array slices using expressions
+    4) should support array slices with start
+    5) should support array slices with negative start
+    6) should support array slices with stop
+    7) should support array slices with negative stop
+    8) should support array slices with step
+    9) should support array slices with negative step
+    10) should support array slices with start and negative step
+    11) should support array slices with negative start and negative step
+    12) should support array slices with stop and negative step
+    13) should support array slices with start and step
+    14) should support array slices with start, stop, and step
+
+  lexer
+    ✓ should parse template data
+    ✓ should keep track of whitespace
+    ✓ should trim blocks
+    ✓ should trim windows-style CRLF line endings after blocks
+    ✓ should not trim CR after blocks
+    ✓ should lstrip and trim blocks
+    ✓ should lstrip and not collapse whitespace between blocks
+    ✓ should parse variable start and end
+    ✓ should treat the non-breaking space as valid whitespace
+    ✓ should parse block start and end
+    ✓ should parse basic types
+    ✓ should parse function calls
+    ✓ should parse groups
+    ✓ should parse arrays
+    ✓ should parse dicts
+    ✓ should parse blocks without whitespace
+    ✓ should parse filters
+    ✓ should parse operators
+    ✓ should parse comments
+    ✓ should allow changing the variable start and end
+    ✓ should allow changing the block start and end
+    ✓ should allow changing the variable start and end
+    ✓ should allow changing the comment start and end
+    ✓ should have individual lexer tag settings for each environment
+    ✓ should parse regular expressions
+    ✓ should keep track of token positions
+
+  loader
+    ✓ should allow a simple loader to be created
+    ✓ should catch loader error
+    WebLoader
+      ✓ should have default opts for WebLoader
+      ✓ should emit a "load" event
+    FileSystemLoader
+      ✓ should have default opts
+      ✓ should emit a "load" event
+
+  parser
+    ✓ should parse basic types
+    ✓ should parse aggregate types
+    ✓ should parse variables
+    ✓ should parse operators
+    ✓ should parse tilde
+    ✓ should parse operators with correct precedence
+    ✓ should parse blocks
+    ✓ should accept attributes and methods of static arrays, objects and primitives
+    ✓ should parse include tags
+    ✓ should parse for loops
+    ✓ should parse for loops with else
+    ✓ should parse filters
+    ✓ should parse macro definitions
+    ✓ should parse call blocks
+    ✓ should parse call blocks with args
+    ✓ should parse raw
+    ✓ should parse raw with broken variables
+    ✓ should parse raw with broken blocks
+    ✓ should parse raw with pure text
+    ✓ should parse raw with raw blocks
+    ✓ should parse raw with comment blocks
+    ✓ should parse multiple raw blocks
+    ✓ should parse multiline multiple raw blocks
+    ✓ should parse verbatim
+    ✓ should parse verbatim with broken variables
+    ✓ should parse verbatim with broken blocks
+    ✓ should parse verbatim with pure text
+    ✓ should parse verbatim with verbatim blocks
+    ✓ should parse verbatim with comment blocks
+    ✓ should parse multiple verbatim blocks
+    ✓ should parse multiline multiple verbatim blocks
+    ✓ should parse switch statements
+    ✓ should parse keyword and non-keyword arguments
+    ✓ should parse imports
+    ✓ should parse whitespace control (43ms)
+    ✓ should throw errors
+    15) should parse custom tags
+
+  precompile
+    ✓ should return a string
+    templates
+      ✓ should return *NIX path seperators
+      ✓ should return *NIX path seperators, when name is passed as option
+
+  runtime
+    ✓ should report the failed function calls to symbols
+    ✓ should report the failed function calls to lookups
+    ✓ should report the failed function calls to calls
+    ✓ should report full function name in error
+    ✓ should report the failed function calls w/multiple args
+    ✓ should allow for undefined macro arguments in the last position
+    ✓ should allow for objects without a prototype macro arguments in the last position
+    ✓ should not read variables property from Object.prototype
+
+  tests
+    ✓ callable should detect callability
+    ✓ defined should detect definedness
+    ✓ should support "is defined" in {% if %} expressions
+    ✓ should support "is not defined" in {% if %} expressions
+    ✓ undefined should detect undefinedness
+    ✓ none/null should detect strictly null values
+    ✓ divisibleby should detect divisibility
+    ✓ escaped should test whether or not something is escaped
+    ✓ even should detect whether or not a number is even
+    ✓ odd should detect whether or not a number is odd
+    ✓ mapping should detect Maps or hashes
+    ✓ falsy should detect whether or not a value is falsy
+    ✓ truthy should detect whether or not a value is truthy
+    ✓ greaterthan than should detect whether or not a value is less than another
+    ✓ ge should detect whether or not a value is greater than or equal to another
+    ✓ lessthan than should detect whether or not a value is less than another
+    ✓ le should detect whether or not a value is less than or equal to another
+    ✓ ne should detect whether or not a value is not equal to another
+    ✓ iterable should detect that a generator is iterable
+    ✓ iterable should detect that an Array is not non-iterable
+    ✓ iterable should detect that a Map is iterable
+    ✓ iterable should detect that a Set is not non-iterable
+    ✓ number should detect whether a value is numeric
+    ✓ string should detect whether a value is a string
+    ✓ equalto should detect value equality
+    ✓ sameas should alias to equalto
+    ✓ lower should detect whether or not a string is lowercased
+    ✓ upper should detect whether or not a string is uppercased
+
+
+  339 passing (1s)
+  15 failing
+
+  1) compiler
+       should inherit template objects:
+     parentTemplate.rootRenderFunc is not a function
+  
+
+  2) jinja-compat
+       should support array slices with start and stop:
+     TypeError: nodes.Node.extend is not a function
+      at Object.installCompat (server/src/jinja-compat.js:6:50)
+      at jinjaEqual (server/tests/util.js:9:207)
+      at Context.<anonymous> (server/tests/jinja-compat.js:2:532)
+      at process.processImmediate (node:internal/timers:471:21)
+
+  3) jinja-compat
+       should support array slices using expressions:
+     TypeError: nodes.Node.extend is not a function
+      at Object.installCompat (server/src/jinja-compat.js:6:50)
+      at jinjaEqual (server/tests/util.js:9:207)
+      at Context.<anonymous> (server/tests/jinja-compat.js:2:754)
+      at process.processImmediate (node:internal/timers:471:21)
+
+  4) jinja-compat
+       should support array slices with start:
+     TypeError: nodes.Node.extend is not a function
+      at Object.installCompat (server/src/jinja-compat.js:6:50)
+      at jinjaEqual (server/tests/util.js:9:207)
+      at Context.<anonymous> (server/tests/jinja-compat.js:2:975)
+      at process.processImmediate (node:internal/timers:471:21)
+
+  5) jinja-compat
+       should support array slices with negative start:
+     TypeError: nodes.Node.extend is not a function
+      at Object.installCompat (server/src/jinja-compat.js:6:50)
+      at jinjaEqual (server/tests/util.js:9:207)
+      at Context.<anonymous> (server/tests/jinja-compat.js:2:1202)
+      at process.processImmediate (node:internal/timers:471:21)
+
+  6) jinja-compat
+       should support array slices with stop:
+     TypeError: nodes.Node.extend is not a function
+      at Object.installCompat (server/src/jinja-compat.js:6:50)
+      at jinjaEqual (server/tests/util.js:9:207)
+      at Context.<anonymous> (server/tests/jinja-compat.js:2:1418)
+      at process.processImmediate (node:internal/timers:471:21)
+
+  7) jinja-compat
+       should support array slices with negative stop:
+     TypeError: nodes.Node.extend is not a function
+      at Object.installCompat (server/src/jinja-compat.js:6:50)
+      at jinjaEqual (server/tests/util.js:9:207)
+      at Context.<anonymous> (server/tests/jinja-compat.js:2:1643)
+      at process.processImmediate (node:internal/timers:471:21)
+
+  8) jinja-compat
+       should support array slices with step:
+     TypeError: nodes.Node.extend is not a function
+      at Object.installCompat (server/src/jinja-compat.js:6:50)
+      at jinjaEqual (server/tests/util.js:9:207)
+      at Context.<anonymous> (server/tests/jinja-compat.js:2:1861)
+      at process.processImmediate (node:internal/timers:471:21)
+
+  9) jinja-compat
+       should support array slices with negative step:
+     TypeError: nodes.Node.extend is not a function
+      at Object.installCompat (server/src/jinja-compat.js:6:50)
+      at jinjaEqual (server/tests/util.js:9:207)
+      at Context.<anonymous> (server/tests/jinja-compat.js:2:2087)
+      at process.processImmediate (node:internal/timers:471:21)
+
+  10) jinja-compat
+       should support array slices with start and negative step:
+     TypeError: nodes.Node.extend is not a function
+      at Object.installCompat (server/src/jinja-compat.js:6:50)
+      at jinjaEqual (server/tests/util.js:9:207)
+      at Context.<anonymous> (server/tests/jinja-compat.js:2:2328)
+      at process.processImmediate (node:internal/timers:471:21)
+
+  11) jinja-compat
+       should support array slices with negative start and negative step:
+     TypeError: nodes.Node.extend is not a function
+      at Object.installCompat (server/src/jinja-compat.js:6:50)
+      at jinjaEqual (server/tests/util.js:9:207)
+      at Context.<anonymous> (server/tests/jinja-compat.js:2:2577)
+      at process.processImmediate (node:internal/timers:471:21)
+
+  12) jinja-compat
+       should support array slices with stop and negative step:
+     TypeError: nodes.Node.extend is not a function
+      at Object.installCompat (server/src/jinja-compat.js:6:50)
+      at jinjaEqual (server/tests/util.js:9:207)
+      at Context.<anonymous> (server/tests/jinja-compat.js:2:2816)
+      at process.processImmediate (node:internal/timers:471:21)
+
+  13) jinja-compat
+       should support array slices with start and step:
+     TypeError: nodes.Node.extend is not a function
+      at Object.installCompat (server/src/jinja-compat.js:6:50)
+      at jinjaEqual (server/tests/util.js:9:207)
+      at Context.<anonymous> (server/tests/jinja-compat.js:2:3046)
+      at process.processImmediate (node:internal/timers:471:21)
+
+  14) jinja-compat
+       should support array slices with start, stop, and step:
+     TypeError: nodes.Node.extend is not a function
+      at Object.installCompat (server/src/jinja-compat.js:6:50)
+      at jinjaEqual (server/tests/util.js:9:207)
+      at Context.<anonymous> (server/tests/jinja-compat.js:2:3282)
+      at process.processImmediate (node:internal/timers:471:21)
+
+  15) parser
+       should parse custom tags:
+     TypeError: Cannot read properties of undefined (reading '__name')
+      at new CallExtension (server/src/nodes.js:27:72)
+      at TestTagExtension.parse (server/tests/parser.js:21:455)
+      at Parser.parseStatement (server/src/Parser.js:27:2481)
+      at Parser.parseNodes (server/src/Parser.js:72:451)
+      at Parser.parseAsRoot (server/src/Parser.js:73:344)
+      at Object.parse (server/src/Parser.js:84:341)
+      at Context.<anonymous> (server/tests/parser.js:22:402)
+      at process.processImmediate (node:internal/timers:471:21)
+
+
+
+----------------------|---------|----------|---------|---------|------------------------------------
+File                  | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                  
+----------------------|---------|----------|---------|---------|------------------------------------
+All files             |   84.54 |    75.26 |   83.87 |    84.6 |                                    
+ Compiler.ts          |   96.82 |    83.08 |   96.77 |   96.98 | ...0,426,764,808,914,959,1010-1011 
+ Context.ts           |   93.54 |       75 |     100 |   93.54 | 60,72                              
+ Environment.ts       |   81.57 |    71.42 |   78.26 |   81.25 | ...186,203,206-207,211,218,253,262 
+ FileSystemLoader.ts  |   93.93 |       80 |     100 |   93.75 | 15,31                              
+ Filters.ts           |   95.94 |    91.54 |     100 |   95.78 | ...,88,101,229,244,383,407,511,540 
+ Frame.ts             |   90.69 |     91.3 |   46.15 |   88.88 | 55-59                              
+ Parser.ts            |   93.95 |    87.91 |     100 |   93.94 | ...8,1075,1113,1174,1187,1214,1330 
+ PrecompiledLoader.ts |   28.57 |        0 |       0 |   28.57 | 9-23                               
+ SafeString.ts        |      75 |    66.66 |   85.71 |      75 | 9,47-56                            
+ Template.ts          |   84.48 |       75 |     100 |   85.96 | 28-31,37,57,59,81,84               
+ TemplateError.ts     |      75 |       50 |      50 |   85.71 | 22                                 
+ WebLoader.ts         |   20.68 |    19.04 |   16.66 |   20.68 | 23-63                              
+ globals.ts           |     100 |      100 |     100 |     100 |                                    
+ index.ts             |   77.58 |       30 |      50 |   71.11 | 34-35,43-44,60-64,70,76-78         
+ jinja-compat.js      |   12.65 |     9.52 |    7.14 |   12.96 | 28-34,45-49,56,67-302              
+ lexer.js             |   93.65 |    91.13 |     100 |    93.6 | ...309,322,345-352,434,474-480,500 
+ lib.ts               |   70.24 |    60.78 |   76.92 |   71.68 | ...164-166,173,178-184,215,221-225 
+ loader.ts            |   85.71 |      100 |   66.66 |   85.71 | 15                                 
+ loaders.ts           |     100 |      100 |   33.33 |     100 |                                    
+ nodes.ts             |   72.02 |    42.85 |   83.67 |   70.58 | 6,52,104,133,181-232               
+ precompile-global.js |   91.66 |       50 |     100 |    90.9 | 16                                 
+ precompile.ts        |    53.7 |    47.36 |   42.85 |   55.76 | 10-12,23,56-66,76-94               
+ runtime.ts           |   95.23 |    85.41 |   95.23 |   94.66 | 88-96,131                          
+ tests.js             |   96.29 |    66.66 |     100 |   96.29 | 265,286                            
+ transformer.ts       |    92.2 |     93.1 |   94.44 |   91.66 | 50,57-59,88-90                     
+----------------------|---------|----------|---------|---------|------------------------------------

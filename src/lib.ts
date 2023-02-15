@@ -1,5 +1,4 @@
-
-var TemplateError = require('./TemplateError').default;
+import TemplateError from './TemplateError';
 
 var ArrayProto = Array.prototype;
 var ObjProto = Object.prototype;
