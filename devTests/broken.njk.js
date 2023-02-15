@@ -5,13 +5,26 @@ var colno = 0;
 var output = "";
 try {
 var parentTemplate = null;
-t_1 = await (await env.getTemplate("devTests/brokenImport1.njk", false, "devTests/brokenTop.njk", false)
-).getExported();context.setVariable("inc", t_1);
+const t_1 = await (await env.getTemplate("devTests/brokenImport1.njk", false, "devTests/brokenTop.njk", false)
+).getExported();
+context.setVariable("inc", t_1);
 output += "IN BROKEN TOP\n\n";
-var t_2 = await env.getTemplate("devTests/brokenInclude.njk", true, "devTests/brokenTop.njk", false)
-;output += await t_2.render(context.getVariables(),frame.push());
+
+var t_2 = await env.getTemplate("devTests/brokenInclude.njk", true, "devTests/brokenTop.njk", false);
+
+console.log('AAA t_1:', t_1);
+output += await t_2.render(context.getVariables(),frame.push());
+
+console.log('BBB t_1:', t_1);
 output += "\n";
-output += runtime.suppressValue((lineno = 7, colno = 19, await runtime.callWrap(await runtime.memberLookup((t_1),"brokenMacro1"), "inc[\"brokenMacro1\"]",context,[])), env.opts.autoescape);
+
+
+var qqq = await runtime.memberLookup((t_1),"brokenMacro1");
+
+output += runtime.suppressValue((lineno = 7, colno = 19, await runtime.callWrap(qqq, "inc[\"brokenMacro1\"]",context,[])), env.opts.autoescape);
+//output += runtime.suppressValue((lineno = 7, colno = 19, await runtime.callWrap(await runtime.memberLookup((t_1),"brokenMacro1"), "inc[\"brokenMacro1\"]",context,[])), env.opts.autoescape);
+
+
 output += "\n";
 if(parentTemplate)
 return await parentTemplate.rootRenderFunc(env, context, frame, runtime);
@@ -109,7 +122,7 @@ var colno = 0;
 var output = "";
 try {
 var parentTemplate = null;
-t_1 = await (await env.getTemplate("devTests/brokenImport2.njk", false, "devTests/brokenInclude.njk", false)
+const t_1 = await (await env.getTemplate("devTests/brokenImport2.njk", false, "devTests/brokenInclude.njk", false)
 ).getExported();context.setVariable("inc2", t_1);
 if(parentTemplate)
 return await parentTemplate.rootRenderFunc(env, context, frame, runtime);

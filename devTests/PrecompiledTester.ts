@@ -11,7 +11,7 @@ class TwoStageTester
 //		let env2: nunjucks.Environment;
 		let env2: Environment;
 
-		const precompiled = await readFile('./devTests/broken2.njk.js',{encoding:'UTF8' as BufferEncoding});
+		const precompiled = await readFile('./devTests/broken.njk.js',{encoding:'UTF8' as BufferEncoding});
 
 		global.window = <any>{};
 		const func = new Function(precompiled);

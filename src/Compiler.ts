@@ -795,7 +795,7 @@ export class Compiler
 		const target = node.target.value;
 		const id = this._tmpid();
 
-		this._emit(`${id} = await (`);
+		this._emit(`const ${id} = await (`);
 		this._compileGetTemplate(node, frame, false, false);
 		this._emit(`).getExported(` +
 //      		(node.withContext ? `context.getVariables(),frame,${id}` : '') +
@@ -813,7 +813,7 @@ export class Compiler
 	compileFromImport(node, frame) 
 	{
 		const importedId = this._tmpid();
-		this._emit(`${importedId} = await (`);
+		this._emit(`const ${importedId} = await (`);
 		this._compileGetTemplate(node, frame, false, false);
 		this._emit(`).getExported(`+
 //      		(node.withContext ? `context.getVariables(),frame,${importedId}` : '') +
@@ -903,7 +903,7 @@ export class Compiler
 	{
 		//XXX QQQ BB: why does this have a var and most of the others not?
 		const templateId = this._tmpid();
-		this._emit(`var ${templateId} = `);
+		this._emit(`const ${templateId} = `);
 		this._compileGetTemplate(node, frame, true, node.ignoreMissing);
 		this._emit(`;`);
 		this._emitLine(this.buffer+` += await ${templateId}.render(context.getVariables(),frame.push());`);
