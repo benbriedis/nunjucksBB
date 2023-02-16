@@ -1359,7 +1359,7 @@ export class Parser
 // var n = p.parseAsRoot();
 // nodes.printNodes(n);
 
-function parse(src, extensions, opts) {
+function parse(src, extensions=undefined, opts=undefined) {
 	var p = new Parser(lexer.lex(src, opts));
 	if (extensions !== undefined)
 		p.extensions = extensions;

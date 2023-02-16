@@ -153,7 +153,7 @@ export function repeat(char_, n)
 	return str;
 }
 
-export function each(obj, func, context) 
+export function each(obj, func, context=undefined) 
 {
 	if (obj == null) 
 		return;
