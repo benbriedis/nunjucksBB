@@ -42,7 +42,7 @@
 //    	"Build/*":			["vos/build/*"],
 	},
 
-	"outDir":"./server",
+	"outDir":"./dist",
 
 
     // "typeRoots": [],                                  /* Specify multiple folders that act like `./node_modules/@types`. */
@@ -130,8 +130,7 @@
 	/* "exclude" does not prevent files being imported.  Only excludes them from being entry points. */
 	"exclude": [
 		"./node_modules/**/*",
-		"./browser/**/*",
-		"./server/**/*",
+		"./dist/**/*",
 		"./docs/**/*",
 		"./bench/**/*",
 		"./samples/**/*",

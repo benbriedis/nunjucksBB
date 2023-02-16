@@ -15,13 +15,13 @@ module.exports = env => {
 //TODO use externals to trim out fs and commander?
 //TODO add main or module?
 
-//		main: 'browser/nunjucks.js',
+//		main: 'dist/nunjucks.js',
 
         output: {
 			filename: '[name].js',
 //			filename: 'nunjucks.js',
 //            path: path.resolve(__dirname, env.BUILDDIR),
-            path: path.resolve(__dirname, 'browser'),
+            path: path.resolve(__dirname, 'dist'),
             publicPath: '/',
 			globalObject: 'this',
 			library: {

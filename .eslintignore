@@ -1,9 +1,0 @@
-node_modules
-spm_modules
-coverage
-dist
-browser
-docs
-tests/browser
-bench
-src/loaders.js

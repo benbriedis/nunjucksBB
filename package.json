@@ -7,7 +7,6 @@
     "commander": "^5.1.0",
     "fs": "^0.0.1-security"
   },
-  "browser": "./browser/nunjucks.js",
   "devDependencies": {
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.18",
@@ -49,17 +48,19 @@
     "build:server": "tsc",
     "build": "npm run build:browser && npm run build:server",
     "prepare": "npm run build",
-    "test": "tsc ; nyc mocha -R spec server/tests"
+    "test": "tsc ; nyc mocha -R spec dist/tests"
   },
   "bin": {
     "nunjucks-precompile": "./bin/precompile"
   },
-  "main": "server/src/index.js",
-  "types": "server/src/index.d.ts",
+  "main": "dist/nunjucks.js",
+  "browser": "dist/nunjucks.js",
+  "types": "dist/src/index.d.ts",
   "files": [
     "bin/**",
-    "browser/**",
-    "server/**"
+    "dist/*",
+    "dist/src/*.d.ts",
+    "dist/src/*.d.ts.map"
   ],
   "repository": {
     "type": "git",
