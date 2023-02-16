@@ -166,7 +166,7 @@ export class Compiler
 	assertType(node, ...types) 
 	{
 		if (!types.some(t => node instanceof t)) 
-			this.fail(`assertType: invalid type: ${node.typename}`,node.lineno,node.colno);
+			this.fail(`assertType: invalid type: ${node.typename()}`,node.lineno,node.colno);
 	}
 
 	compileCallExtension(node,frame) 
@@ -426,7 +426,7 @@ export class Compiler
 		return '--expression--';
 
 /*
-		switch (node.typename) {
+		switch (node.typename()) {
 			case 'Symbol':
 				return node.value;
 			case 'FunCall':
@@ -1019,12 +1019,12 @@ export class Compiler
 
 	compile(node,frame=undefined) 
 	{
-		var _compile = this['compile' + node.typename];
+		var _compile = this['compile' + node.typename()];
 		if (_compile) 
 			_compile.call(this, node, frame);
 		else {
 			console.log('ERROR compiler.js compile()  node:', node);
-			this.fail(`compile: Cannot compile node: ${node.typename}`,node.lineno, node.colno);
+			this.fail(`compile: Cannot compile node: ${node.typename()}`,node.lineno, node.colno);
 		}
 	}
 

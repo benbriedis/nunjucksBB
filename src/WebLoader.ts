@@ -1,4 +1,4 @@
-import Loader, {LoaderSource} from './loader';
+import Loader, {LoaderSource} from './Loader';
 
 export default class WebLoader extends Loader 
 {

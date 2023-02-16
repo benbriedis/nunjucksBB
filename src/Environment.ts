@@ -1,5 +1,5 @@
 import * as lib from './lib';
-import type Loader from './loader';
+import type Loader from './Loader';
 import * as Loaders from './loaders';
 import tests from './tests';
 import Globals from './globals';

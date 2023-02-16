@@ -1,4 +1,3 @@
-import path from 'path';
 import EventEmitter from 'events';
 
 export interface LoaderSource {
@@ -16,7 +15,7 @@ export abstract class Loader extends EventEmitter
 
 	createPath(from:string,to:string):string
 	{
-		return path.resolve(path.dirname(from), to);
+		throw new Error('relative templates not supported by this loader');
 	}
 
 	isRelative(filename:string):boolean

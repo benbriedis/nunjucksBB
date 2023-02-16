@@ -7,7 +7,7 @@ import Environment from './Environment';
 
 export {default as Environment} from './Environment';
 export {default as Template} from './Template';
-export {default as Loader,LoaderSource} from './loader';
+export {default as Loader,LoaderSource} from './Loader';
 export {default as compiler} from './Compiler';
 export {default as parser} from './Parser';
 export {default as lexer} from './lexer';

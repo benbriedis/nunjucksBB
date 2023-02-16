@@ -1,6 +1,6 @@
 import fs,{access} from 'fs/promises';
 import path from 'path';
-import Loader, {LoaderSource} from './loader';
+import Loader, {LoaderSource} from './Loader';
 
 export default class FileSystemLoader extends Loader 
 {
@@ -29,6 +29,11 @@ export default class FileSystemLoader extends Loader
 			this.searchPaths = searchPaths.map(path.normalize);
 		} else 
 			this.searchPaths = ['.'];
+	}
+
+	createPath(from:string,to:string):string
+	{
+		return path.resolve(path.dirname(from), to);
 	}
 
 	async getSource(name):Promise<LoaderSource>
