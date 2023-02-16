@@ -1,4 +1,4 @@
-import lexer from './lexer';
+import * as lexer from './lexer';
 import nodes from './nodes';
 import * as lib from './lib';
 import TemplateError from './TemplateError';

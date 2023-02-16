@@ -10,7 +10,7 @@ export {default as Template} from './Template';
 export {default as Loader,LoaderSource} from './Loader';
 export {default as compiler} from './Compiler';
 export {default as parser} from './Parser';
-export {default as lexer} from './lexer';
+export * as lexer from './lexer';
 export {default as nodes} from './nodes';
 export {precompile,precompileString} from './precompile';
 export {default as installJinjaCompat} from './jinja-compat';
