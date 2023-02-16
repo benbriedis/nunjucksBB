@@ -53,6 +53,7 @@
   "bin": {
     "nunjucks-precompile": "./bin/precompile"
   },
+  "main": "dist/nunjucks.js",
   "module": "dist/nunjucks.js",
   "browser": "dist/nunjucks.js",
   "types": "dist/src/index.d.ts",
