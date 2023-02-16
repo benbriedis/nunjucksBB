@@ -811,7 +811,7 @@ export class Compiler
 		const target = node.target.value;
 		const id = this._tmpid();
 
-		this._emit(`${id} = await (`);
+		this._emit(`const ${id} = await (`);
 		this._compileGetTemplate(node, frame, false, false);
 		this._emit(`).getExported(` +
 //      		(node.withContext ? `context.getVariables(),frame,${id}` : '') +
@@ -829,7 +829,7 @@ export class Compiler
 	compileFromImport(node, frame) 
 	{
 		const importedId = this._tmpid();
-		this._emit(`${importedId} = await (`);
+		this._emit(`const ${importedId} = await (`);
 		this._compileGetTemplate(node, frame, false, false);
 		this._emit(`).getExported(`+
 //      		(node.withContext ? `context.getVariables(),frame,${importedId}` : '') +
