@@ -1,7 +1,7 @@
 import * as lib from './lib';
 import type Loader from './Loader';
 import * as Loaders from './loaders';
-import tests from './tests';
+import * as tests from './tests';
 import Globals from './globals';
 import Filters from './Filters';
 import Template from './Template';
