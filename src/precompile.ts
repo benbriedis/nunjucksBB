@@ -3,7 +3,7 @@ import path from 'path';
 import { _prettifyError } from './lib';
 import compiler from './Compiler';
 import Environment from './Environment';
-import precompileGlobal from './precompile-global';
+import {precompileGlobal} from './precompile-global';
 
 function match(filename,patterns) 
 {
