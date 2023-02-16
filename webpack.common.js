@@ -8,6 +8,7 @@ module.exports = env => {
             browserTester: {
 				dependOn: 'nunjucks',
 				import: './devTests/BrowserTester.ts',
+				filename: './dist/devTests/BrowserTester.js'
 			}
         },
 

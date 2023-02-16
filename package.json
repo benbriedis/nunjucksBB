@@ -58,7 +58,8 @@
   "types": "dist/src/index.d.ts",
   "files": [
     "bin/**",
-    "dist/*",
+    "dist/*.js",
+    "dist/*.js.map",
     "dist/src/*.d.ts",
     "dist/src/*.d.ts.map"
   ],
