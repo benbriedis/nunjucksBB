@@ -166,7 +166,7 @@ export class Compiler
 	assertType(node, ...types) 
 	{
 		if (!types.some(t => node instanceof t)) 
-			this.fail(`assertType: invalid type: ${node.typename()}`,node.lineno,node.colno);
+			this.fail(`assertType: invalid type: ${node.typename}`,node.lineno,node.colno);
 	}
 
 	compileCallExtension(node,frame) 
@@ -424,6 +424,22 @@ export class Compiler
 			return (<any>node).value.toString();
 
 		return '--expression--';
+
+/*
+		switch (node.typename) {
+			case 'Symbol':
+				return node.value;
+			case 'FunCall':
+				return 'the return value of (' + this._getNodeName(node.name) + ')';
+			case 'LookupVal':
+				return this._getNodeName(node.target) + '["' +
+					this._getNodeName(node.val) + '"]';
+			case 'Literal':
+				return node.value.toString();
+			default:
+				return '--expression--';
+		}
+*/		
 	}
 
 	compileFunCall(node, frame) 
@@ -795,7 +811,7 @@ export class Compiler
 		const target = node.target.value;
 		const id = this._tmpid();
 
-		this._emit(`const ${id} = await (`);
+		this._emit(`${id} = await (`);
 		this._compileGetTemplate(node, frame, false, false);
 		this._emit(`).getExported(` +
 //      		(node.withContext ? `context.getVariables(),frame,${id}` : '') +
@@ -813,7 +829,7 @@ export class Compiler
 	compileFromImport(node, frame) 
 	{
 		const importedId = this._tmpid();
-		this._emit(`const ${importedId} = await (`);
+		this._emit(`${importedId} = await (`);
 		this._compileGetTemplate(node, frame, false, false);
 		this._emit(`).getExported(`+
 //      		(node.withContext ? `context.getVariables(),frame,${importedId}` : '') +
@@ -903,7 +919,7 @@ export class Compiler
 	{
 		//XXX QQQ BB: why does this have a var and most of the others not?
 		const templateId = this._tmpid();
-		this._emit(`const ${templateId} = `);
+		this._emit(`var ${templateId} = `);
 		this._compileGetTemplate(node, frame, true, node.ignoreMissing);
 		this._emit(`;`);
 		this._emitLine(this.buffer+` += await ${templateId}.render(context.getVariables(),frame.push());`);
@@ -1003,12 +1019,12 @@ export class Compiler
 
 	compile(node,frame=undefined) 
 	{
-		var _compile = this['compile' + node.typename()];
+		var _compile = this['compile' + node.typename];
 		if (_compile) 
 			_compile.call(this, node, frame);
 		else {
 			console.log('ERROR compiler.js compile()  node:', node);
-			this.fail(`compile: Cannot compile node: ${node.typename()}`,node.lineno, node.colno);
+			this.fail(`compile: Cannot compile node: ${node.typename}`,node.lineno, node.colno);
 		}
 	}
 

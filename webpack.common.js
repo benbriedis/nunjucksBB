@@ -10,12 +10,24 @@ module.exports = env => {
 				import: './devTests/BrowserTester.ts',
 			}
         },
+
+//TODO split into 'render' and 'compile + render' (ie slim and full)
+//TODO use externals to trim out fs and commander?
+//TODO add main or module?
+
+//		main: 'browser/nunjucks.js',
+
         output: {
 			filename: '[name].js',
 //			filename: 'nunjucks.js',
 //            path: path.resolve(__dirname, env.BUILDDIR),
             path: path.resolve(__dirname, 'browser'),
             publicPath: '/',
+			globalObject: 'this',
+			library: {
+				name: 'nunjucksBB',
+				type: 'umd'
+			}
         },
 		devtool: 'source-map',
 /*		
@@ -47,7 +59,6 @@ module.exports = env => {
 //XXX would be nice to separate out the server-specific code
 				'fs':false,
 				'path':false,
-				'chokidar':false,
 				'stream':false,
 				'os':false,
 				'fsevents':false

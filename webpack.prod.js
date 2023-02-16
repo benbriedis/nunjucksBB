@@ -8,7 +8,7 @@ module.exports = env => merge(common(env), {
     mode: 'production',
 
 	plugins: [
-        new BundleAnalyzerPlugin({analyzerMode:'static'}),
+        new BundleAnalyzerPlugin({analyzerMode:'static',openAnalyzer:'false'}),
 	],
 /*
     optimization: {
