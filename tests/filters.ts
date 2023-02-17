@@ -1,9 +1,9 @@
 import expect from 'expect.js';
-import { render, equal } from './util';
-import * as lib from '../src/lib';
-import * as r from '../src/runtime';
 import assert from 'assert';
-import TemplateError from '../src/TemplateError';
+import { render, equal } from './util';
+import * as lib from '../src/runtime/lib';
+import * as r from '../src/runtime/runtime';
+import TemplateError from '../src/runtime/TemplateError';
 
 
 describe('filter', function() {

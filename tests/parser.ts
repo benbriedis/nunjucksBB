@@ -1,7 +1,7 @@
 import expect from 'expect.js';
-import * as lib from '../src/lib';
-import nodes from '../src/nodes';
-import parser from '../src/Parser';
+import * as lib from '../src/runtime/lib';
+import nodes from '../src/parser/nodes';
+import parser from '../src/parser/Parser';
 
 
 function _isAST(node1, node2) {

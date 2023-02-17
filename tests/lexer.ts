@@ -1,6 +1,6 @@
 import expect from 'expect.js';
-import * as lib from '../src/lib';
-import * as lexer from '../src/lexer';
+import * as lib from '../src/runtime/lib';
+import * as lexer from '../src/parser/lexer';
 
 
 function _hasTokens(ws, tokens, types) {

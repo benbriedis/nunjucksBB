@@ -1,4 +1,4 @@
-import * as nunjucks from '../src/index.js';
+import * as nunjucks from '../src/all.js';
 import {open} from 'fs/promises';
 //import nunjucks from 'nunjucks';
 //import NunjucksExtensions from 'Browser/NunjucksEnv';

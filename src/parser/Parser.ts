@@ -1,7 +1,7 @@
 import * as lexer from './lexer';
 import nodes from './nodes';
-import * as lib from './lib';
-import TemplateError from './TemplateError';
+import * as lib from '../runtime/lib';
+import TemplateError from '../runtime/TemplateError';
 
 export class Parser
 {

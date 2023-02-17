@@ -1,4 +1,4 @@
-import nodes from './nodes';
+import nodes from '../parser/nodes';
 
 var sym = 0;
 

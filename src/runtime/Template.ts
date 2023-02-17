@@ -1,9 +1,12 @@
 import * as lib from './lib';
-import compiler from './Compiler';
-import Frame from './Frame';
 import * as globalRuntime from './runtime';
 import Environment from './Environment';
+import Frame from './Frame';
 import Context from './Context';
+
+//XXX QQQ are these required for 'slim'?
+import compiler from '../compiler/Compiler';
+
 
 export default class Template
 {

@@ -4,7 +4,7 @@ const webpack = require('webpack');
 module.exports = env => {
     return {
         entry: {
-            nunjucks: './src/index.ts',
+            nunjucks: './src/all.ts',
             browserTester: {
 				dependOn: 'nunjucks',
 				import: './devTests/BrowserTester.ts',

@@ -1,4 +1,4 @@
-import * as nunjucks from '../src/index';
+import * as nunjucks from '../src/all';
 import fs from 'fs-extra';
 import path from 'path';
 import os from 'os';
@@ -25,44 +25,32 @@ describe('nunjucks.configure', function() {
 	});
 
 	after(function() {
-		nunjucks.reset();
-		if (typeof tempdir !== 'undefined') {
+		if (typeof tempdir !== 'undefined') 
 			rmdir(tempdir);
-		}
 	});
 
 	it('should cache templates by default', async function() {
-		if (typeof fs === 'undefined') {
-			this.skip();
-			return;
-		}
-		nunjucks.configure(tempdir);
+		const env = new nunjucks.Environment(new nunjucks.FileSystemLoader([tempdir],{}),{});
 
 		fs.writeFileSync(tempdir + '/test.html', '{{ name }}', 'utf-8');
 
-		const result = await nunjucks.render('test.html',{name:'foo'});
+		const result = await env.render('test.html',{name:'foo'});
 		assert.equal(result,'foo');
 
 		fs.writeFileSync(tempdir + '/test.html', '{{ name }}-changed', 'utf-8');
-		const result2 = await nunjucks.render('test.html',{name:'foo'});
+		const result2 = await env.render('test.html',{name:'foo'});
 		assert.equal(result,'foo');
 	});
 
 	it('should not cache templates with {noCache: true}', async function() {
-		if (typeof fs === 'undefined') {
-			this.skip();
-			return;
-		}
-		nunjucks.configure(tempdir, {
-			noCache: true
-		});
+		const env = new nunjucks.Environment(new nunjucks.FileSystemLoader([tempdir],{noCache:true}),{noCache:true});
 
 		fs.writeFileSync(tempdir + '/test.html', '{{ name }}', 'utf-8');
-		const result = await nunjucks.render('test.html', {name: 'foo'});
+		const result = await env.render('test.html', {name: 'foo'});
 		assert.equal(result,'foo');
 
 		fs.writeFileSync(tempdir + '/test.html', '{{ name }}-changed', 'utf-8');
-		const result2 = await nunjucks.render('test.html',{name:'foo'});
+		const result2 = await env.render('test.html',{name:'foo'});
 		assert.equal(result2,'foo-changed');
 	});
 });

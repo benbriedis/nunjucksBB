@@ -2,6 +2,10 @@ import * as lib from './lib';
 import Environment from './Environment';
 import Frame from './Frame';
 
+/*
+	Context is used by the compiled code - e.g. calls are make to
+	setVariable(), getVariables(), addExport(), getBlock(), getSuper()
+ */
 export default class Context
 {
 	env:Environment;

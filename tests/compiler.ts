@@ -1,10 +1,10 @@
 import 'mocha';
 import assert from 'assert';
 import expect from 'expect.js';
-import TemplateError from '../src/TemplateError';
-import Template from '../src/Template';
-import Environment from '../src/Environment';
-import Loader from '../src/FileSystemLoader';
+import TemplateError from '../src/runtime/TemplateError';
+import Template from '../src/runtime/Template';
+import Environment from '../src/runtime/Environment';
+import Loader from '../src/loaders/FileSystemLoader';
 import {render,equal} from './util';
 import {runLoopTests} from './compileLoops';
 import {testCompileMacros} from './compileMacros';

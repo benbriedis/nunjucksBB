@@ -1,10 +1,17 @@
-import * as lib from './lib';
-import type Loader from './Loader';
-import * as Loaders from './loaders';
-import * as tests from './tests';
 import Globals from './globals';
 import Filters from './Filters';
+import * as tests from './tests';
+import type Loader from '../loaders/Loader';
+import * as lib from './lib';
 import Template from './Template';
+import FileSystemLoader from '../loaders/FileSystemLoader';
+import PrecompiledLoader from '../loaders/PrecompiledLoader';
+import WebLoader from '../loaders/WebLoader';
+
+export {default as FileSystemLoader} from '../loaders/FileSystemLoader';
+export {default as PrecompiledLoader} from '../loaders/PrecompiledLoader';
+export {default as WebLoader} from '../loaders/WebLoader';
+
 import EventEmitter from 'events';
 
 /* A no-op template, for use with {% include ignore missing %} */
@@ -60,10 +67,10 @@ export default class Environment extends EventEmitter
 
 		if (!loaders) {
 			// The filesystem loader is only available server-side
-			if (Loaders.FileSystemLoader) 
-				this.loaders = [new Loaders.FileSystemLoader('views')];
-			else if (Loaders.WebLoader) 
-				this.loaders = [new Loaders.WebLoader('/views')];
+			if (FileSystemLoader) 
+				this.loaders = [new FileSystemLoader('views')];
+			else if (WebLoader) 
+				this.loaders = [new WebLoader('/views')];
 		} 
 		else 
 			this.loaders = lib.isArray(loaders) ? loaders : [loaders];
@@ -72,7 +79,7 @@ export default class Environment extends EventEmitter
 		// before you configure nunjucks and this will automatically
 		// pick it up and use it
 		if (typeof window !== 'undefined' && window.nunjucksPrecompiled) 
-			this.loaders.unshift(new Loaders.PrecompiledLoader(window.nunjucksPrecompiled));
+			this.loaders.unshift(new PrecompiledLoader(window.nunjucksPrecompiled));
 
 		this._initLoaders();
 

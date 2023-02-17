@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import { _prettifyError } from './lib';
+import { _prettifyError } from '../runtime/lib';
 import compiler from './Compiler';
-import Environment from './Environment';
+import Environment from '../runtime/Environment';
 import {precompileGlobal} from './precompile-global';
 
 function match(filename,patterns) 

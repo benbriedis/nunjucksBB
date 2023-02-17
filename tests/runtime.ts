@@ -1,6 +1,6 @@
 import {render} from './util';
 import assert from 'assert';
-import TemplateError from '../src/TemplateError';
+import TemplateError from '../src/runtime/TemplateError';
 
 /*
 		process.on('uncaughtException', err => {

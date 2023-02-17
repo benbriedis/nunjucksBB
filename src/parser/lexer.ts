@@ -1,4 +1,4 @@
-import * as lib from './lib';
+import * as lib from '../runtime/lib';
 
 const whitespaceChars = ' \n\t\r\u00A0';
 const delimChars = '()[]{}%*-+~/#,:|.<>=!';

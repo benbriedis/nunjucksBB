@@ -1,5 +1,5 @@
-import * as nunjucks from '../src/index';
-import {Environment} from '../src/index';
+import * as nunjucks from '../src/all';
+import {Environment} from '../src/all';
 import {readFile} from 'fs/promises';
 
 /* This script can run on the server */

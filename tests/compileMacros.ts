@@ -1,9 +1,9 @@
 import 'mocha';
 import assert from 'assert';
 import {equal,render} from './util';
-import Template from '../src/Template';
-import Environment from '../src/Environment';
-import Loader from '../src/FileSystemLoader';
+import Template from '../src/runtime/Template';
+import Environment from '../src/runtime/Environment';
+import Loader from '../src/loaders/FileSystemLoader';
 
 export function testCompileMacros()
 {

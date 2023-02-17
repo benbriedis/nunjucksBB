@@ -1,8 +1,8 @@
-import parser from './Parser';
+import parser from '../parser/Parser';
+import nodes from '../parser/nodes';
 import { transform } from './transformer';
-import nodes from './nodes';
-import TemplateError from './TemplateError';
-import Frame from './Frame';
+import TemplateError from '../runtime/TemplateError';
+import Frame from '../runtime/Frame';
 
 // These are all the same for now, but shouldn't be passed straight
 // through

@@ -1,8 +1,8 @@
 import expect from 'expect.js';
-import {equal,render} from './util';
-import Environment from '../src/Environment';
 import assert from 'assert';
-import TemplateError from '../src/TemplateError';
+import {equal,render} from './util';
+import Environment from '../src/runtime/Environment';
+import TemplateError from '../src/runtime/TemplateError';
 
 
 describe('global', function() {

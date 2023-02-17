@@ -1,10 +1,11 @@
 export {SafeString,markSafe,suppressValue} from './SafeString';
 export {isArray,inOperator,keys} from './lib';
 
-
-// Frames keep track of scoping both at compile-time and run-time so
-// we know how to access variables. Block tags can introduce special
-// variables, for example.
+/*
+	Frames keep track of scoping both at compile-time and run-time so
+	we know how to access variables. Block tags can introduce special
+	variables, for example.
+*/
 export default class Frame 
 {
 	variables;

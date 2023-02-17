@@ -1,5 +1,5 @@
 import expect from 'expect.js';
-import {precompile,precompileString} from '../src/precompile';
+import {precompile,precompileString} from '../src/compiler/precompile';
 
 describe('precompile', function() {
 	it('should return a string', function() {

@@ -8,7 +8,7 @@
 		 https://www.pluralsight.com/guides/install-npm-packages-from-gitgithub
 */
 
-import * as nunjucks from '../src/index.js';
+import * as nunjucks from '../src/all.js';
 
 class Render
 {
@@ -22,12 +22,14 @@ class Render
 			b:2
 		};
 
-	//const myNunjucksEnv = new nunjucks.Environment(loader,{trimBlocks:true,lstripBlocks:true});
-	//NunjucksExtensions.extend(this.myNunjucksEnv);
-
 
 //global.go = true;
-		const result = await nunjucks.render(templateName,data);
+
+		const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(['.'],{}),
+			{trimBlocks:true,lstripBlocks:true});
+		//NunjucksExtensions.extend(this.myNunjucksEnv);
+
+		const result = await env.render(templateName,data);
 
 		console.log('result:',result);	
 	}

@@ -1,7 +1,7 @@
 import expect from 'expect.js';
 import * as util from './util';
-import Environment from '../src/Environment';
-import Loader from '../src/FileSystemLoader';
+import Environment from '../src/runtime/Environment';
+import Loader from '../src/loaders/FileSystemLoader';
 import path from 'path';
 
 const templatesPath = 'tests/templates';
