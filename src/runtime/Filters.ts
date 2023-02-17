@@ -3,7 +3,6 @@ import * as runtime from './runtime';
 import TemplateError from './TemplateError';
 import SafeString,{copySafeness,markSafe} from './SafeString';
 import type Context from './Context';
-import Environment from './Environment';
 
 
 // For the jinja regexp, see
@@ -581,7 +580,7 @@ export default class Filters
 }
 
 
-function env(thisObj:Filters):Environment
+function env(thisObj:Filters)//:Environment
 {
 	return (<Context><unknown>thisObj).env;
 }

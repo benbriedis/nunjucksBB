@@ -1,0 +1,71 @@
+{
+//XXX maybe extend...
+//	"extends": "./tsconfig",
+
+	"compilerOptions": {
+    	"module": "commonjs",  //XXX apparently for tree-shaking we need something else
+
+
+//		"target": "es2020" // <-- Latest version for which linking is working
+		"target": "es2021",
+//		"target": "es2015"
+
+//    	"rootDirs": ["/home/ben/programming/nunjucksBB"],
+    	"baseUrl": ".",
+		"outDir":"./dist",
+//		"outFile":"./dist/slimXXX.js",
+
+		"allowJs": false,
+		"allowUmdGlobalAccess": true,
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": false,
+		"noImplicitAny": false,
+		"strictNullChecks": false,
+		"skipLibCheck": true,
+	},
+
+//	"files": ["./slim.ts"]
+/*
+	"files": [
+//		"./src/slim.ts",
+//		"./src/runtime/Context.ts",
+//		"./src/runtime/Filters.ts",
+//		"./src/runtime/Frame.ts",
+//		"./src/runtime/globals.ts",
+		"./src/runtime/lib.ts",
+//		"./src/runtime/runtime.ts",
+//		"./src/runtime/SafeString.ts",
+//		"./src/runtime/SlimEnvironment.ts",
+//		"./src/runtime/SlimTemplate.ts",
+//		"./src/runtime/TemplateError.ts",
+//		"./src/runtime/tests.ts",
+//		"./src/runtime/tsGlobals.ts",
+		"./src/loaders/Loader.ts",
+		"./src/loaders/PrecompiledLoader.ts"
+	],
+*/	
+
+	"include": [
+		"./slim.ts"
+	],
+
+	// "exclude" does not prevent files being imported.  Only excludes them from being entry points. 
+//	"exclude": [
+//		"./src/all.*",
+//		"./src/parser/**/*",
+//		"./src/compiler/**/*",
+//		"./src/loaders/**/*",
+//		"./node_modules/**/*",
+//		"./dist/**/*",
+//		"./docs/**/*",
+//		"./bench/**/*",
+//		"./samples/**/*",
+//		"./webpack*",
+//		"./**/*.js"
+//	]
+}
+

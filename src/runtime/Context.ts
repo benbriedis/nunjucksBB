@@ -1,5 +1,5 @@
 import * as lib from './lib';
-import Environment from './Environment';
+import SlimEnvironment from './SlimEnvironment';
 import Frame from './Frame';
 
 /*
@@ -8,12 +8,12 @@ import Frame from './Frame';
  */
 export default class Context
 {
-	env:Environment;
+	env:SlimEnvironment;
 	ctx:Context;
 	blocks;     //XXX currently these are async functions
 	exported;
 
-	constructor(ctx:Context, blocks, env:Environment) 
+	constructor(ctx:Context,blocks,env:SlimEnvironment) 
 	{
 //		super();
 
@@ -66,7 +66,7 @@ export default class Context
 		return this.blocks[name][0];
 	}
 
-	async getSuper(env:Environment,name:string,block,frame:Frame,runtime) 
+	async getSuper(env:SlimEnvironment,name:string,block,frame:Frame,runtime) 
 	{
 		var idx = lib.indexOf(this.blocks[name] || [], block);
 		var blk = this.blocks[name][idx + 1];

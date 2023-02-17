@@ -25,6 +25,7 @@
     "serve-static": "^1.13.1",
     "supertest": "*",
     "ts-loader": "^9.4.2",
+    "tsconfig-paths-webpack-plugin": "^4.0.0",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1",
     "webpack-merge": "^5.8.0"
@@ -45,8 +46,9 @@
   },
   "scripts": {
     "build:browser": "npx webpack build --config ./webpack.dev.js",
+    "build:slim": "/bin/sh slim/buildSlim.sh",
     "build:server": "tsc",
-    "build": "npm run build:browser && npm run build:server",
+    "build": "npm run build:browser && npm run build:slim && npm run build:server",
     "prepare": "npm run build",
     "test": "tsc ; nyc mocha -R spec dist/tests"
   },
