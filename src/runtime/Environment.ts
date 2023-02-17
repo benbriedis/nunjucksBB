@@ -4,9 +4,6 @@ import * as tests from './tests';
 import type Loader from '../loaders/Loader';
 import * as lib from './lib';
 import Template from './Template';
-import FileSystemLoader from '../loaders/FileSystemLoader';
-import PrecompiledLoader from '../loaders/PrecompiledLoader';
-import WebLoader from '../loaders/WebLoader';
 
 export {default as FileSystemLoader} from '../loaders/FileSystemLoader';
 export {default as PrecompiledLoader} from '../loaders/PrecompiledLoader';
@@ -31,20 +28,20 @@ export default class Environment
 	extensions = {};
 	extensionsList = [];
 	opts;
-//FIXME only working with 'declare' present. No idea why	
-	public loaders;  //XXX public for testing only
-//	public loaders: Loader[];  //XXX public for testing only
+	loader;  
 
 
-	constructor(loaders?:Loader|Loader[], opts?:any) 
+	constructor(loader:Loader, opts:any={}) 
 	{
+		this.loader = loader;
+		this.opts = opts;
+
 		// The dev flag determines the trace that'll be shown on errors.
 		// If set to true, returns the full trace from the error point,
 		// otherwise will return trace starting from Template.render
 		// (the full trace from within nunjucks may confuse developers using
 		//  the library)
 		// defaults to false
-		opts = this.opts = opts || {};
 		this.opts.dev = !!opts.dev;
 
 		// The autoescape flag sets global autoescaping. If true,
@@ -58,26 +55,6 @@ export default class Environment
 		this.opts.throwOnUndefined = !!opts.throwOnUndefined;
 		this.opts.trimBlocks = !!opts.trimBlocks;
 		this.opts.lstripBlocks = !!opts.lstripBlocks;
-
-		this.loaders = [];
-
-		if (!loaders) {
-			// The filesystem loader is only available server-side
-			if (FileSystemLoader) 
-				this.loaders = [new FileSystemLoader('views')];
-			else if (WebLoader) 
-				this.loaders = [new WebLoader('/views')];
-		} 
-		else 
-			this.loaders = lib.isArray(loaders) ? loaders : [loaders];
-
-		// It's easy to use precompiled templates: just include them
-		// before you configure nunjucks and this will automatically
-		// pick it up and use it
-		if (typeof window !== 'undefined' && window.nunjucksPrecompiled) 
-			this.loaders.unshift(new PrecompiledLoader(window.nunjucksPrecompiled));
-
-		this._initLoaders();
 
 //TODO use new on all of these
 		this.globals = new Globals();
@@ -93,34 +70,6 @@ export default class Environment
 		/* Shallow copy filters and tests into a new objects */
 		lib._entries(tests).forEach(([name, test]) => this.addTest(name, test));
   	}
-
-	_initLoaders() 
-	{
-		const me = this;
-
-		this.loaders.forEach(loader => {
-			// Caching and cache busting
-			loader.cache = {};
-			if (typeof loader.on === 'function') {
-				loader.on('update', function(name, fullname) {
-					loader.cache[name] = null;
-//FIXME use a mixin to support emit?
-//					me.emit('update', name, fullname, loader);
-				});
-//XXX BB possibly just used for Chokidar
-				loader.on('load', function(name, source) {
-//					me.emit('load', name, source, loader);
-				});
-			}
-		});
-	}
-
-	invalidateCache() 
-	{
-		this.loaders.forEach((loader) => {
-			loader.cache = {};
-		});
-	}
 
 	addExtension(name, extension) 
 	{
@@ -198,8 +147,6 @@ export default class Environment
 
 	async getTemplate(name, eagerCompile=undefined, parentName=undefined, ignoreMissing=undefined)
 	{
-		var tmpl = null;
-
 		// this fixes autoescape for templates referenced in symbols
 //XXX should be done in caller
 		if (name && name.raw) 
@@ -213,32 +160,25 @@ export default class Environment
 		if (lib.isFunction(eagerCompile)) 
 			eagerCompile = false;
 
-//XXX YUCK: names are not templates
+//XXX YUCK: names are not templates. May relate to the broken unit test...
 		if (name instanceof Template)  
 			return name;
 
 		if (typeof name !== 'string') 
 			throw new Error('template names must be a string: ' + name);
 
-//XXX can we do with a single loader? (nb could be a ChainLoader if necessary)
+		const resolvedName = this.resolveTemplate(this.loader, parentName, name);
 
-		for (let i = 0; i < this.loaders.length; i++) {
-			const loader = this.loaders[i];
-			const resolvedName = this.resolveTemplate(loader, parentName, name);
+		const tmpl = this.loader.cache[resolvedName];
+		if (tmpl!=null) return tmpl;
 
-			tmpl = loader.cache[resolvedName];
-			if (tmpl!=null) 
-				return tmpl;
-
-			const info = await loader.getSource(resolvedName);
-
-			if (info != null) {
-				const template = new Template(info.src, this, info.path);
-				await template.init(eagerCompile);
-				if (!info.noCache) 
-					loader.cache[resolvedName] = template;
-				return template;
-			}
+		const info = await this.loader.getSource(resolvedName);
+		if (info != null) {
+			const template = new Template(info.src, this, info.path);
+			await template.init(eagerCompile);
+			if (!info.noCache) 
+				this.loader.cache[resolvedName] = template;
+			return template;
 		}
 
 		if (ignoreMissing) {

@@ -9,6 +9,7 @@ import {render,equal} from './util';
 import {runLoopTests} from './compileLoops';
 import {testCompileMacros} from './compileMacros';
 import {testFilterTag} from './compileFilterTag';
+import PrecompiledLoader from '../src/loaders/PrecompiledLoader';
 
 describe('compiler',function() {
 	mainCompilerTests1();
@@ -304,7 +305,7 @@ function mainCompilerTests1()
 	});
 
 	it('should throw exceptions when missing import', async () => {
-		var tmpl = new Template('{% from "doesnotexist" import foo %}',new Environment(),null);
+		var tmpl = new Template('{% from "doesnotexist" import foo %}',new Environment(new PrecompiledLoader({})),null);
 		const promise = tmpl.render({});
 
 /*
@@ -323,7 +324,7 @@ promise.catch(err => {
 			`{% set items = ["a", "b",, "c"] %}
 			 {{ items | join(",") }}`;
 
-		const env = new Environment(new Loader('tests/templates'));
+		const env = new Environment(new Loader(['tests/templates']));
 		const tmpl = new Template(tmplStr,env,'parse-error.njk');
 
 		const promise = tmpl.render({});
@@ -1172,7 +1173,7 @@ function mainCompilerTests2()
 
 	it('should import template objects', async () => {
 		var tmpl = new Template('{% macro foo() %}Inside a macro{% endmacro %}{% set bar = "BAZ" %}',
-			new Environment(),null);
+			new Environment(new PrecompiledLoader({})),null);
 
 		await equal(
 			'{% import tmpl as imp %}' +
@@ -1191,7 +1192,7 @@ function mainCompilerTests2()
 
 	it('should inherit template objects', async () => {
 		var tmpl = new Template('Foo{% block block1 %}Bar{% endblock %}{% block block2 %}Baz{% endblock %}Whizzle',
-			new Environment(),null);
+			new Environment(new PrecompiledLoader({})),null);
 
 		await equal('hola {% extends tmpl %} fizzle mumble', {
 				tmpl: tmpl
@@ -1208,7 +1209,7 @@ function mainCompilerTests2()
 	});
 
 	it('should include template objects', async () => {
-		var tmpl = new Template('FooInclude {{ name }}',new Environment(),null);
+		var tmpl = new Template('FooInclude {{ name }}',new Environment(new PrecompiledLoader({})),null);
 
 		await equal('hello world {% include tmpl %}', {
 				name: 'thedude',

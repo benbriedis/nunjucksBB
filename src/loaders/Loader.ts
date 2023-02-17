@@ -9,6 +9,8 @@ export type Callback<E, T> = (err: E | null, res: T | null) => void;
 
 export abstract class Loader
 {
+	cache:object = {};
+
     async getSource(name:string) : Promise<LoaderSource> { return <any>null; }
 
 	createPath(from:string,to:string):string

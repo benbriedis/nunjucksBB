@@ -1,5 +1,6 @@
 import expect from 'expect.js';
 import Environment from '../src/runtime/Environment';
+import Loader from '../src/loaders/Loader';
 import WebLoader from '../src/loaders/WebLoader';
 import FileSystemLoader from '../src/loaders/FileSystemLoader';
 
@@ -12,16 +13,15 @@ describe('loader', function() {
 		// We should be able to create a loader that only exposes getSource
 		var env, parent;
 
-		function MyLoader() {
-			// configuration
+		class MyLoader extends Loader {
+			async getSource(name:string) {
+				return {
+					src: 'Hello World',
+					path: '/tmp/somewhere',
+					noCache: true
+				}
+			}
 		}
-
-		MyLoader.prototype.getSource = function() {
-			return {
-				src: 'Hello World',
-				path: '/tmp/somewhere'
-			};
-		};
 
 		env = new Environment(new MyLoader());
 		parent = await env.getTemplate('fake.njk');

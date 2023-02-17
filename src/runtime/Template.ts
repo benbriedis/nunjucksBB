@@ -3,6 +3,7 @@ import * as globalRuntime from './runtime';
 import Environment from './Environment';
 import Frame from './Frame';
 import Context from './Context';
+import PrecompiledLoader from '../loaders/PrecompiledLoader';
 
 //XXX QQQ are these required for 'slim'?
 import compiler from '../compiler/Compiler';
@@ -20,7 +21,7 @@ export default class Template
 
 	constructor(src,env:Environment,path) 
 	{
-		this.env = env || new Environment();
+		this.env = env || new Environment(new PrecompiledLoader({}),{});
 
 		if (lib.isObject(src)) {
 			switch (src.type) {
@@ -118,7 +119,7 @@ export default class Template
 				this.path,
 				this.env.opts);
 
-if (global.go) console.log('_compile() source:',source);	
+//if (global.go) console.log('_compile() source:',source);	
 
 			const func = new Function(source); // eslint-disable-line no-new-func
 			props = await func();

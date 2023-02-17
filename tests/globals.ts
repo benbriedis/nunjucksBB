@@ -3,6 +3,7 @@ import assert from 'assert';
 import {equal,render} from './util';
 import Environment from '../src/runtime/Environment';
 import TemplateError from '../src/runtime/TemplateError';
+import PrecompiledLoader from '../src/loaders/PrecompiledLoader';
 
 
 describe('global', function() {
@@ -55,7 +56,7 @@ describe('global', function() {
 	});
 
 	it('should allow addition of globals', async () => {
-		var env = new Environment();
+		var env = new Environment(new PrecompiledLoader({}));
 
 		env.addGlobal('hello', function(arg1) {
 			return 'Hello ' + arg1;
@@ -65,7 +66,7 @@ describe('global', function() {
 	});
 
 	it('should allow chaining of globals', async () => {
-		var env = new Environment();
+		var env = new Environment(new PrecompiledLoader({}));
 
 		env.addGlobal('hello', function(arg1) {
 			return 'Hello ' + arg1;
@@ -78,7 +79,7 @@ describe('global', function() {
 	});
 
 	it('should allow getting of globals', async () => {
-		var env = new Environment();
+		var env = new Environment(new PrecompiledLoader({}));
 		var hello = function(arg1) {
 			return 'Hello ' + arg1;
 		};
@@ -89,7 +90,7 @@ describe('global', function() {
 	});
 
 	it('should allow getting boolean globals', async () => {
-		var env = new Environment();
+		var env = new Environment(new PrecompiledLoader({}));
 		var hello = false;
 
 		env.addGlobal('hello', hello);
@@ -98,7 +99,7 @@ describe('global', function() {
 	});
 
 	it('should fail on getting non-existent global', async () => {
-		var env = new Environment();
+		var env = new Environment(new PrecompiledLoader({}));
 
 		// Using this format instead of .withArgs since env.getGlobal uses 'this'
 		expect(function() {
@@ -107,7 +108,7 @@ describe('global', function() {
 	});
 
 	it('should pass context as this to global functions', async () => {
-		var env = new Environment();
+		var env = new Environment(new PrecompiledLoader({}));
 
 		env.addGlobal('hello', function() {
 			return 'Hello ' + this.lookup('user');
@@ -119,11 +120,11 @@ describe('global', function() {
 	});
 
 	it('should be exclusive to each environment', async () => {
-		var env = new Environment();
+		var env = new Environment(new PrecompiledLoader({}));
 		var env2;
 
 		env.addGlobal('hello', 'konichiwa');
-		env2 = new Environment();
+		env2 = new Environment(new PrecompiledLoader({}));
 
 		// Using this format instead of .withArgs since env2.getGlobal uses 'this'
 		expect(function() {
@@ -132,7 +133,7 @@ describe('global', function() {
 	});
 
 	it('should return errors from globals', async () => {
-		var env = new Environment();
+		var env = new Environment(new PrecompiledLoader({}));
 
 		env.addGlobal('err', function() {
 			throw new Error('Global error');

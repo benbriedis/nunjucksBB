@@ -69,7 +69,7 @@ export async function render(str:string,ctx={},opts=undefined,env=undefined):Pro
 	opts = opts || {};
 	opts.dev = true;
 
-	const loader = new nunjucks.FileSystemLoader('tests/templates');
+	const loader = new nunjucks.FileSystemLoader(['tests/templates'],{});
 	var e = env || new Environment(loader, opts);
 
 	var name;

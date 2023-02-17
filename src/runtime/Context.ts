@@ -18,7 +18,7 @@ export default class Context
 //		super();
 
 		// Has to be tied to an environment so we can tap into its globals.
-		this.env = env || new Environment();
+		this.env = env;
 
 		// Make a duplicate of ctx
 		this.ctx = Object.assign({},ctx);
@@ -70,7 +70,6 @@ export default class Context
 	{
 		var idx = lib.indexOf(this.blocks[name] || [], block);
 		var blk = this.blocks[name][idx + 1];
-		var context = this;
 
 		if (idx === -1 || !blk) 
 			throw new Error('no super block available for "' + name + '"');

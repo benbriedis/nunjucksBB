@@ -4,19 +4,20 @@ import { _prettifyError } from '../runtime/lib';
 import compiler from './Compiler';
 import Environment from '../runtime/Environment';
 import {precompileGlobal} from './precompile-global';
+import PrecompiledLoader from '../loaders/PrecompiledLoader';
 
 function match(filename,patterns) 
 {
 	if (!Array.isArray(patterns)) 
 		return false;
-	return patterns.some((pattern) => filename.match(pattern));
+	return patterns.some(pattern => filename.match(pattern));
 }
 
 export function precompileString(str,opts) 
 {
 	opts = opts || {};
 	opts.isString = true;
-	const env = opts.env || new Environment([]);
+	const env = opts.env || new Environment(new PrecompiledLoader({}),[]);
 	const wrapper = opts.wrapper || precompileGlobal;
 
 	if (!opts.name) 
@@ -42,7 +43,7 @@ export function precompile(input, opts)
 	//       A custom loader will be necessary to load your custom wrapper.
 
 	opts = opts || {};
-	const env = opts.env || new Environment([]);
+	const env = opts.env || new Environment(new PrecompiledLoader({}),[]);
 	const wrapper = opts.wrapper || precompileGlobal;
 
 	if (opts.isString) 
@@ -101,7 +102,7 @@ export function precompile(input, opts)
 
 function _precompile(str, name, env) 
 {
-	env = env || new Environment([]);
+	env = env || new Environment(new PrecompiledLoader({}),[]);
 
 	const extensions = env.extensionsList;
 	let template;

@@ -4,6 +4,7 @@ import {equal,render} from './util';
 import Template from '../src/runtime/Template';
 import Environment from '../src/runtime/Environment';
 import Loader from '../src/loaders/FileSystemLoader';
+import PrecompiledLoader from '../src/loaders/PrecompiledLoader';
 
 export function testCompileMacros()
 {
@@ -23,7 +24,8 @@ export function testCompileMacros()
 	});
 
 	it('should compile macros with args that can be passed to filters', async () => {
-		const tmpl = new Template(`{% macro foo(x) %}{{ x|title }}{% endmacro %}{{ foo("foo") }}`, new Environment(),null);
+		const tmpl = new Template(`{% macro foo(x) %}{{ x|title }}{% endmacro %}{{ foo("foo") }}`, 
+			new Environment(new PrecompiledLoader({})),null);
 		const result = await tmpl.render({});
 		assert(result == 'Foo');
 	});
