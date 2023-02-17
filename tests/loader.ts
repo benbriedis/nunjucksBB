@@ -58,19 +58,6 @@ describe('loader', function() {
 			expect(webLoader).to.be.a(WebLoader);
 			expect(webLoader.useCache).to.be(false);
 		});
-
-		it('should emit a "load" event', async () => {
-			var loader = new WebLoader(templatesPath);
-
-			if (typeof window === 'undefined') 
-				return;
-
-			loader.on('load', function(name, source) {
-				expect(name).to.equal('simple-base.njk');
-			});
-
-			loader.getSource('simple-base.njk');
-		});
 	});
 
 	if (typeof FileSystemLoader !== 'undefined') {
@@ -79,15 +66,6 @@ describe('loader', function() {
 				var loader = new FileSystemLoader(templatesPath);
 				expect(loader).to.be.a(FileSystemLoader);
 				expect(loader.noCache).to.be(false);
-			});
-
-			it('should emit a "load" event', async () => {
-				var loader = new FileSystemLoader(templatesPath);
-				loader.on('load', function(name, source) {
-					expect(name).to.equal('simple-base.njk');
-				});
-
-				loader.getSource('simple-base.njk');
 			});
 		});
 	}

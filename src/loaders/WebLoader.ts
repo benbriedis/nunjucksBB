@@ -30,7 +30,6 @@ export default class WebLoader extends Loader
 			return null;
 
 		const result = { src: src, path: name, noCache: !this.useCache };
-		this.emit('load', name, result);
 		return result;
 	}
 

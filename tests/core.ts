@@ -43,7 +43,7 @@ describe('nunjucks.configure', function() {
 	});
 
 	it('should not cache templates with {noCache: true}', async function() {
-		const env = new nunjucks.Environment(new nunjucks.FileSystemLoader([tempdir],{noCache:true}),{noCache:true});
+		const env = new nunjucks.Environment(new nunjucks.FileSystemLoader([tempdir],{noCache:true}),{});
 
 		fs.writeFileSync(tempdir + '/test.html', '{{ name }}', 'utf-8');
 		const result = await env.render('test.html', {name: 'foo'});

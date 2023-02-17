@@ -26,6 +26,9 @@ WORK DONE
   NodeResolveLoader could be a plugin and its probably cleaner to put file watch into a separate loader.
 > Removed the Nunjucks singletons.
   WHY? Because they are singletons.
+> Removed EventEmitter.
+  WHY? Might be useful adding something back in once it has stabilised. Better not to be Node-specific.
+       If the code is to become more generator-based, might be better to sort this stuff out first.
 
 
 DESIRED FUNCTIONALITY

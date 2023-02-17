@@ -12,8 +12,6 @@ export {default as FileSystemLoader} from '../loaders/FileSystemLoader';
 export {default as PrecompiledLoader} from '../loaders/PrecompiledLoader';
 export {default as WebLoader} from '../loaders/WebLoader';
 
-import EventEmitter from 'events';
-
 /* A no-op template, for use with {% include ignore missing %} */
 const noopTmplSrc = {
 	type: 'code',
@@ -24,7 +22,7 @@ const noopTmplSrc = {
 
 
 //XXX use an emit mixin
-export default class Environment extends EventEmitter
+export default class Environment 
 {
 	globals;
 //	filters: AsyncFunc[] = <any>null;
@@ -40,8 +38,6 @@ export default class Environment extends EventEmitter
 
 	constructor(loaders?:Loader|Loader[], opts?:any) 
 	{
-		super();
-
 		// The dev flag determines the trace that'll be shown on errors.
 		// If set to true, returns the full trace from the error point,
 		// otherwise will return trace starting from Template.render

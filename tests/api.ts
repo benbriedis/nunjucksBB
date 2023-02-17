@@ -36,12 +36,4 @@ describe('api', () => {
 			path: path.resolve(templatesPath, 'string.njk')
 		})).to.be('FooTest3BazFizzle\n');
 	});
-
-	it('should emit "load" event on Environment instance', async () => {
-		var env = new Environment(new Loader(templatesPath));
-		env.on('load', function(name, source) {
-			expect(name).to.equal('item.njk');
-		});
-		await env.render('item.njk', {});
-	});
 });

@@ -58,6 +58,7 @@ export default class FileSystemLoader extends Loader
 
 		this.pathsToNames[fullpath] = name;
 
+//XXX BB: dont know that we need to specify the caching option on a file-by-file basis... cf doing it on a Loader-level
 		const source = {
 			src: await fs.readFile(fullpath, 'utf-8'),
 			path: fullpath,
@@ -65,8 +66,6 @@ export default class FileSystemLoader extends Loader
 		};
 
 //XXX consider trimming any final \n here, or having a loader option to do so. Linux almost always adds a \n at the end.
-
-		this.emit('load', name, source);
 
 		return source;
 	}
