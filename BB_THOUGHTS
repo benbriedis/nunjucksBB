@@ -70,11 +70,11 @@ CODING
 
 TODO 
 > CLI might be broken.
-> Implement a 'slim' version, together with type bindings.
 > update doco with work done
 > Just specify a single loader, and make it compulsary. Don't have a default loader. 
   I think this would be clearer that the current setup. 
 > Have a separate FileWatchLoader.
   Rename WebLoader to eg WebWatchLoader
 > Copy over my JS dump with folding
+> The slim build + some of the package.json script lines depend on Bash. 
 

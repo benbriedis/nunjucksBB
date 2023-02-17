@@ -1,9 +1,6 @@
 node_modules
 coverage
-/slim/dist
-/slim/runtime
-/slim/loaders
-/slim/slim.ts
+/slimBuild
 /dist
 .#*
 docs/_site

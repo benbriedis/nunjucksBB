@@ -49,6 +49,7 @@
     "build:slim": "/bin/sh slim/buildSlim.sh",
     "build:server": "tsc",
     "build": "npm run build:browser && npm run build:slim && npm run build:server",
+	"clean": "rm -rf dist slimBuild",
     "prepare": "npm run build",
     "test": "tsc ; nyc mocha -R spec dist/tests"
   },

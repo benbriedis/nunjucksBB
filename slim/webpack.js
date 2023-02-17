@@ -10,7 +10,7 @@ module.exports = env => {
     	mode: 'production',
         output: {
 			filename: 'nunjucks-slim.js',
-            path: path.resolve(__dirname, 'dist'),
+            path: path.resolve(__dirname, '../dist/slim'),
             publicPath: '/',
 			globalObject: 'this',
 			library: {
@@ -44,7 +44,7 @@ module.exports = env => {
 						//  between server and client. Includes and excudes come from tsconfig.json.
 						//  Having troble excluding vos/node_modules
 	 					//onlyCompileBundledFiles: true,
-						configFile: 'slim/tsconfig.json'
+						configFile: 'slimBuild/tsconfig.json'
 					}
 				}
 			}]

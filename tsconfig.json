@@ -131,6 +131,7 @@
 	"exclude": [
 		"./node_modules/**/*",
 		"./dist/**/*",
+		"./slim/**/*",
 		"./docs/**/*",
 		"./bench/**/*",
 		"./samples/**/*",
