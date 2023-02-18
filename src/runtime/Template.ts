@@ -3,12 +3,12 @@ import compiler from '../compiler/Compiler';
 
 export default class Template extends SlimTemplate
 {
+	private compiled:boolean = false;
+
 	public async init(eagerCompile:boolean)
 	{
 		if (eagerCompile) 
 			await this._compile();
-		else 
-			this.compiled = false;
 	}
 
 	async compile() 

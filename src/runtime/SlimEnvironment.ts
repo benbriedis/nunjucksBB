@@ -193,12 +193,13 @@ export default class SlimEnvironment
 		return new SlimTemplate(src,this,path);
 	}
 
-	async render(name, ctx):Promise<string> 
+	async render(name,ctx):Promise<string> 
 	{
-		if (lib.isFunction(ctx)) 
+		if (lib.isFunction(ctx))  //XXX huh?
 			ctx = null;
 
 		const tmpl = await this.getTemplate(name);
+console.log('SlimEnv.render()  tmpl:',tmpl);		
 		return await tmpl.render(ctx);
 	}
 

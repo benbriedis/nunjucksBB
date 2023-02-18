@@ -7,7 +7,7 @@ export default class PrecompiledLoader extends Loader
 	constructor(compiledTemplates) 
 	{
 		super();
-		this.precompiled = compiledTemplates || {};
+		this.precompiled = compiledTemplates;
 	}
 
 	async getSource(name:string):Promise<any|null>

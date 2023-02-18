@@ -10,7 +10,6 @@ export default class SlimTemplate
 	path;
 	tmplProps;
 	tmplStr;
-	compiled;
     blocks: (...args:any[])=>Promise<any>;   //XXX may be possible to use stronger type
     rootRenderFunc;
 
@@ -22,6 +21,7 @@ export default class SlimTemplate
 			switch (src.type) {
 				case 'code':
 					this.tmplProps = src.obj;
+					this.rootRenderFunc = this.tmplProps.root;
 					break;
 				case 'string':
 					this.tmplStr = src.obj;
@@ -36,9 +36,6 @@ export default class SlimTemplate
 			throw new Error('src must be a string or an object describing the source');
 
 		this.path = path;
-
-
-//this.rootRenderFunc = props.root;
 	}
 
 //XXX may be abe to remove
