@@ -1,9 +1,11 @@
 import expect from 'expect.js';
-import {precompile,precompileString} from '../src/compiler/precompile';
+import Environment from '../src/runtime/Environment';
+import NullLoader from '../src/loaders/NullLoader';
 
 describe('precompile', function() {
 	it('should return a string', function() {
-		expect(precompileString('{{ test }}', {
+		const env = new Environment(new NullLoader(),{});
+		expect(env.precompileString('{{ test }}', {
 			name: 'test.njk'
 		})).to.be.an('string');
 	});
@@ -12,7 +14,8 @@ describe('precompile', function() {
 		it('should return *NIX path seperators', function() {
 			var fileName;
 
-			precompile('./tests/templates/item.njk', {
+			const env = new Environment(new NullLoader(),{});
+			env.precompile('./tests/templates/item.njk', {
 				wrapper: function(templates) {
 					fileName = templates[0].name;
 				}
@@ -24,7 +27,8 @@ describe('precompile', function() {
 		it('should return *NIX path seperators, when name is passed as option', function() {
 			var fileName;
 
-			precompile('<span>test</span>', {
+			const env = new Environment(new NullLoader(),{});
+			env.precompile('<span>test</span>', {
 				name: 'path\\to\\file.j2',
 				isString: true,
 				wrapper: function(templates) {

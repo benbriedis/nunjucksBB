@@ -3,7 +3,6 @@ import * as globalRuntime from './runtime';
 import SlimEnvironment from './SlimEnvironment';
 import Frame from './Frame';
 import Context from './Context';
-import PrecompiledLoader from '../loaders/PrecompiledLoader';
 
 export default class SlimTemplate
 {
@@ -17,7 +16,7 @@ export default class SlimTemplate
 
 	constructor(src,env:SlimEnvironment,path) 
 	{
-		this.env = env || new SlimEnvironment(new PrecompiledLoader({}),{});
+		this.env = env;
 
 		if (lib.isObject(src)) {
 			switch (src.type) {
@@ -58,8 +57,6 @@ export default class SlimTemplate
 		const context = new Context(ctx || {}, this.blocks, this.env);
 		const frame = parentFrame ? parentFrame.push(true) : new Frame();
 		frame.topLevel = true;
-
-console.log('SlimTemplate.render()  this.rootRenderFunc:',this.rootRenderFunc);
 
 		return await this.rootRenderFunc(this.env,context,frame,globalRuntime);
 	}

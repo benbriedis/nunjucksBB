@@ -5,8 +5,10 @@ export default class Precompile
 {
 	static async run():Promise<void>
 	{
+//TODO shoud probably be able to use FileSystemLoader here and do away with readFile() below	
 		const env = new nunjucks.Environment(
-			new nunjucks.FileSystemLoader(['.'],{}),
+			new nunjucks.NullLoader(),
+//			new nunjucks.FileSystemLoader(['.'],{}),
 			{
 				trimBlocks:true,
 				lstripBlocks:true
@@ -24,7 +26,7 @@ export default class Precompile
 		const handle = await open(templateName,'r');
 		const contents = await handle.readFile({encoding:'UTF-8' as BufferEncoding});
 //XXX does 'precompile()' not work?
-		const compiled = nunjucks.precompileString(contents,{name:templateName,env:env});
+		const compiled = env.precompileString(contents,{name:templateName,env:env});
 		console.log(compiled);
 
 		await handle.close();

@@ -9,6 +9,7 @@ import {render,equal} from './util';
 import {runLoopTests} from './compileLoops';
 import {testCompileMacros} from './compileMacros';
 import {testFilterTag} from './compileFilterTag';
+import NullLoader from '../src/loaders/NullLoader';
 import PrecompiledLoader from '../src/loaders/PrecompiledLoader';
 
 describe('compiler',function() {
@@ -305,7 +306,7 @@ function mainCompilerTests1()
 	});
 
 	it('should throw exceptions when missing import', async () => {
-		var tmpl = new Template('{% from "doesnotexist" import foo %}',new Environment(new PrecompiledLoader({})),null);
+		var tmpl = new Template('{% from "doesnotexist" import foo %}',new Environment(new PrecompiledLoader(['.'])),null);
 		const promise = tmpl.render({});
 
 /*
@@ -1173,7 +1174,7 @@ function mainCompilerTests2()
 
 	it('should import template objects', async () => {
 		var tmpl = new Template('{% macro foo() %}Inside a macro{% endmacro %}{% set bar = "BAZ" %}',
-			new Environment(new PrecompiledLoader({})),null);
+			new Environment(new NullLoader()),null);
 
 		await equal(
 			'{% import tmpl as imp %}' +
@@ -1192,7 +1193,7 @@ function mainCompilerTests2()
 
 	it('should inherit template objects', async () => {
 		var tmpl = new Template('Foo{% block block1 %}Bar{% endblock %}{% block block2 %}Baz{% endblock %}Whizzle',
-			new Environment(new PrecompiledLoader({})),null);
+			new Environment(new NullLoader()),null);
 
 		await equal('hola {% extends tmpl %} fizzle mumble', {
 				tmpl: tmpl
@@ -1209,7 +1210,7 @@ function mainCompilerTests2()
 	});
 
 	it('should include template objects', async () => {
-		var tmpl = new Template('FooInclude {{ name }}',new Environment(new PrecompiledLoader({})),null);
+		var tmpl = new Template('FooInclude {{ name }}',new Environment(new NullLoader()),null);
 
 		await equal('hello world {% include tmpl %}', {
 				name: 'thedude',

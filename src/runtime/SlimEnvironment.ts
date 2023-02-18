@@ -6,6 +6,7 @@ import SlimTemplate from './SlimTemplate';
 
 import type Loader from '../loaders/Loader';
 export {default as PrecompiledLoader} from '../loaders/PrecompiledLoader';
+export {default as NullLoader} from '../loaders/NullLoader';
 
 /* A no-op template, for use with {% include ignore missing %} */
 const noopTmplSrc = {
@@ -171,7 +172,7 @@ export default class SlimEnvironment
 
 		const info = await this.loader.getSource(resolvedName);
 		if (info != null) {
-			const template = this.createTemplate(info.src,this,info.path);
+			const template = this.createTemplate(info.src,info.path);
 			await template.init(eagerCompile);
 			if (!info.noCache) 
 				this.loader.cache[resolvedName] = template;
@@ -179,7 +180,7 @@ export default class SlimEnvironment
 		}
 
 		if (ignoreMissing) {
-			const template = this.createTemplate(noopTmplSrc,this,'');
+			const template = this.createTemplate(noopTmplSrc,'');
 			await template.init(eagerCompile);
 			return template;
 		}
@@ -187,9 +188,9 @@ export default class SlimEnvironment
 		throw new Error('template not found: ' + name);
 	}
 
-	protected createTemplate(src,env:SlimEnvironment,path:string)
+	protected createTemplate(src,path:string)
 	{
-		return new SlimTemplate(src,env,path);
+		return new SlimTemplate(src,this,path);
 	}
 
 	async render(name, ctx):Promise<string> 

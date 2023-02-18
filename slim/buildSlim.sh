@@ -21,7 +21,7 @@ cp slim.ts "${SLIMBUILD}/"
 
 cd "${SRCDIR}/loaders"
 mkdir -p "${SLIMBUILD}/loaders"
-cp Loader.ts PrecompiledLoader.ts ${SLIMBUILD}/loaders/
+cp Loader.ts PrecompiledLoader.ts NullLoader.ts ${SLIMBUILD}/loaders/
 
 cd "${SRCDIR}/runtime"
 mkdir -p "${SLIMBUILD}/runtime"
