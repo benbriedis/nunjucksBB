@@ -1,4 +1,4 @@
-import * as nunjucks from '../src/all';
+import Nunjucks,{PrecompiledLoader} from '../src/all';
 import {Environment} from '../src/all';
 import {readFile} from 'fs/promises';
 
@@ -23,7 +23,7 @@ class TwoStageTester
 
 		console.log('XXXX',(<any>window).nunjucksPrecompiled);
 
-		const env = new nunjucks.Environment(new nunjucks.PrecompiledLoader(window.nunjucksPrecompiled),{
+		const env = new Nunjucks(new PrecompiledLoader(window.nunjucksPrecompiled),{
 			trimBlocks:true,
 			lstripBlocks:true
 			//throwOnUndefined:true

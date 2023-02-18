@@ -1,4 +1,4 @@
-import * as nunjucks from '../src/all.js';
+import Nunjucks,{NullLoader} from '../src/all.js';
 import {open} from 'fs/promises';
 
 export default class Precompile
@@ -6,9 +6,8 @@ export default class Precompile
 	static async run():Promise<void>
 	{
 //TODO shoud probably be able to use FileSystemLoader here and do away with readFile() below	
-		const env = new nunjucks.Environment(
-			new nunjucks.NullLoader(),
-//			new nunjucks.FileSystemLoader(['.'],{}),
+		const env = new Nunjucks(new NullLoader(),
+//			new FileSystemLoader(['.'],{}),
 			{
 				trimBlocks:true,
 				lstripBlocks:true

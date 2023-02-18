@@ -1,12 +1,8 @@
 import expect from 'expect.js';
 
-import * as nunjucks from '../src/all.js';
+import Nunjucks,{FileSystemLoader,installJinjaCompat} from '../src/all.js';
 import Environment from '../src/runtime/Environment.js';
 import Template from '../src/runtime/Template.js';
-
-//TODO remove nunjucksFull?
-const nunjucksFull = nunjucks;
-
 
 export async function equal(str,ctx=undefined,opts=undefined,str2=undefined,env=undefined) 
 {
@@ -34,9 +30,7 @@ export async function equal(str,ctx=undefined,opts=undefined,str2=undefined,env=
 
 export async function jinjaEqual(str,ctx,str2,env=undefined) 
 {
-	var jinjaUninstalls = [nunjucks.installJinjaCompat()];
-	if (nunjucksFull !== nunjucks) 
-		jinjaUninstalls.push(nunjucksFull.installJinjaCompat());
+	var jinjaUninstalls = [installJinjaCompat()];
 	try {
 		return await equal(str,ctx,{},str2,env);
 	} 
@@ -69,7 +63,7 @@ export async function render(str:string,ctx={},opts=undefined,env=undefined):Pro
 	opts = opts || {};
 	opts.dev = true;
 
-	const loader = new nunjucks.FileSystemLoader(['tests/templates'],{});
+	const loader = new FileSystemLoader(['tests/templates'],{});
 	var e = env || new Environment(loader, opts);
 
 	var name;

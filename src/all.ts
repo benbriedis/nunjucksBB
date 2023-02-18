@@ -1,5 +1,6 @@
-//XXX Probably shouldn't be exporting all of these
+import Environment from './runtime/Environment';
 
+//XXX Probably shouldn't be exporting all of these
 export {default as compiler} from './compiler/Compiler';
 export {default as parser} from './parser/Parser';
 export * as lexer from './parser/lexer';
@@ -15,4 +16,5 @@ export {default as Template} from './runtime/Template';
 export {default as Environment} from './runtime/Environment';
 
 export {default as Loader,LoaderSource} from './loaders/Loader';
-
+ 
+export default Environment;

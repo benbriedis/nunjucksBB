@@ -1,10 +1,4 @@
-import * as nunjucks from '../src/all';
-//import nunjucks from 'nunjucks';
-//import NunjucksExtensions from 'Browser/NunjucksEnv';
-
-//export default class RunPrecompiled    XXX would be useful if I had a 2nd one I could run on the server
-//export default class BrowserTester
-
+import Nunjucks,{WebLoader} from '../src/all';
 
 class BrowserTester
 {
@@ -27,7 +21,7 @@ console.log('In BrowserTester.run() - 2');
 //XXX is using something window.nunjucksPrecompiled to access
 
 console.log('In BrowserTester.run() - 3');
-		const env = new nunjucks.Environment(new nunjucks.WebLoader('/home/ben/programming/nunjucksBB/devTests'),{
+		const env = new Nunjucks(new WebLoader('/home/ben/programming/nunjucksBB/devTests'),{
 			trimBlocks:true,
 			lstripBlocks:true
 			//throwOnUndefined:true

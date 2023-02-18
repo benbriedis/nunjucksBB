@@ -1,4 +1,4 @@
-import * as nunjucks from '../src/all';
+import Nunjucks,{NullLoader,PrecompiledLoader} from '../src/all';
 
 /* This script can run on the server */
 
@@ -8,7 +8,7 @@ class TwoStageTester
 	{
 		const contents = 'HERE {{ middle }} THERE';
 
-		const env1 = new nunjucks.Environment(new nunjucks.NullLoader());
+		const env1 = new Nunjucks(new NullLoader());
 		const precompiled = env1.precompileString(contents,{name:'top.njk'});
 
 		global.window = <any>{};
@@ -21,7 +21,7 @@ class TwoStageTester
 
 		console.log('XXXX',(<any>window).nunjucksPrecompiled);
 
-		const env2 = new nunjucks.Environment(new nunjucks.PrecompiledLoader(window.nunjucksPrecompiled),{
+		const env2 = new Nunjucks(new PrecompiledLoader(window.nunjucksPrecompiled),{
 			trimBlocks:true,
 			lstripBlocks:true
 			//throwOnUndefined:true
