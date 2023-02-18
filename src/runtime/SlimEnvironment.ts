@@ -180,7 +180,7 @@ export default class SlimEnvironment
 		}
 
 		if (ignoreMissing) {
-			const template = this.createTemplate(noopTmplSrc,'');
+			const template = this.createTemplate(<any>noopTmplSrc,'');  //FIXME hacky cast
 			await template.init(eagerCompile);
 			return template;
 		}
@@ -199,7 +199,6 @@ export default class SlimEnvironment
 			ctx = null;
 
 		const tmpl = await this.getTemplate(name);
-console.log('SlimEnv.render()  tmpl:',tmpl);		
 		return await tmpl.render(ctx);
 	}
 
@@ -210,8 +209,6 @@ console.log('SlimEnv.render()  tmpl:',tmpl);
 		opts = opts || {};
 
 		const tmpl = new SlimTemplate(src, this, opts.path);
-
-console.log('SlimEnvironment renderString() tmpl:',tmpl);
 		return await tmpl.render(ctx);
 	}
 }

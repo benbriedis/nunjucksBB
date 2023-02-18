@@ -2,17 +2,20 @@ import * as lib from './lib';
 import * as globalRuntime from './runtime';
 import SlimEnvironment from './SlimEnvironment';
 import Frame from './Frame';
-import Context from './Context';
+import Context,{Block} from './Context';
 import type {LoaderSourceSrc} from '../loaders/Loader';
 import Assert from '../Assert';
+
+export type Blocks = {[name:string]:Block};
+
 
 export default class SlimTemplate
 {
 	env:SlimEnvironment;
 	path;
-	tmplProps;
+	tmplProps:Blocks;
 	tmplStr;
-    blocks: (...args:any[])=>Promise<any>;   //XXX may be possible to use stronger type
+    blocks: Blocks;
     rootRenderFunc;
 
 	constructor(src:LoaderSourceSrc,env:SlimEnvironment,path) 
@@ -26,6 +29,7 @@ export default class SlimTemplate
 			switch (src.type) {
 				case 'code':
 					this.tmplProps = src.obj;
+					this.blocks = this.getBlocks(this.tmplProps);
 					this.rootRenderFunc = this.tmplProps.root;
 					break;
 				case 'string':
@@ -63,7 +67,7 @@ export default class SlimTemplate
 		return await this.rootRenderFunc(this.env,context,frame,globalRuntime);
 	}
 
-	async getExported(ctx, parentFrame) // eslint-disable-line consistent-return
+	async getExported(ctx, parentFrame):Promise<Blocks>
 	{ 
 		if (typeof ctx === 'function') 
 			ctx = {};
@@ -84,7 +88,7 @@ export default class SlimTemplate
 		return context.getExported();
 	}
 
-	_getBlocks(props)
+	protected getBlocks(props:Blocks):Blocks
 	{
 		var blocks:any = {};
 

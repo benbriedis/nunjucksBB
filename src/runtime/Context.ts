@@ -1,6 +1,10 @@
 import * as lib from './lib';
 import SlimEnvironment from './SlimEnvironment';
+import {Blocks} from './SlimTemplate';
 import Frame from './Frame';
+
+export type Block = (env:SlimEnvironment,context:Context,frame:Frame,runtime)=>Promise<any>; 
+export type BlockLists = {[name:string]:Block[]};
 
 /*
 	Context is used by the compiled code - e.g. calls are make to
@@ -10,25 +14,19 @@ export default class Context
 {
 	env:SlimEnvironment;
 	ctx:Context;
-	blocks;     //XXX currently these are async functions
-	exported;
+	blocks:BlockLists = {}; 
+	exported: string[] = [];
 
-	constructor(ctx:Context,blocks,env:SlimEnvironment) 
+	constructor(ctx:Context,blocks:Blocks,env:SlimEnvironment) 
 	{
-//		super();
-
 		// Has to be tied to an environment so we can tap into its globals.
 		this.env = env;
 
 		// Make a duplicate of ctx
 		this.ctx = Object.assign({},ctx);
 
-		this.blocks = {};
-		this.exported = [];
-
-		lib.keys(blocks).forEach(name => {
-			this.addBlock(name, blocks[name]);
-		});
+		for (const [name,block] of Object.entries(blocks))
+			this.addBlock(name,block);
 	}
 
 	lookup(name:string) 
@@ -41,24 +39,25 @@ export default class Context
 			return this.ctx[name];
 	}
 
-	setVariable(name:string, val) 
+	setVariable(name:string, val):void
 	{
 		this.ctx[name] = val;
 	}
 
-	getVariables() 
+	getVariables():Context 
 	{
 		return this.ctx;
 	}
 
-	addBlock(name:string, block) 
+	//XXX note this is mutable. Can we remove the chaining?
+	addBlock(name:string, block:Block):Context 
 	{
 		this.blocks[name] = this.blocks[name] || [];
 		this.blocks[name].push(block);
 		return this;
 	}
 
-	getBlock(name:string) 
+	getBlock(name:string):Block
 	{
 		if (!this.blocks[name]) 
 			throw new Error('unknown block "' + name + '"');
@@ -66,7 +65,7 @@ export default class Context
 		return this.blocks[name][0];
 	}
 
-	async getSuper(env:SlimEnvironment,name:string,block,frame:Frame,runtime) 
+	async getSuper(env:SlimEnvironment,name:string,block:Block,frame:Frame,runtime):Promise<Block>
 	{
 		var idx = lib.indexOf(this.blocks[name] || [], block);
 		var blk = this.blocks[name][idx + 1];
@@ -77,17 +76,16 @@ export default class Context
 		return await blk(env,this,frame,runtime);
 	}
 
-	addExport(name:string) 
+	addExport(name:string):void 
 	{
 		this.exported.push(name);
 	}
 
-	getExported() 
+	getExported():Blocks 
 	{
-		var exported = {};
-		this.exported.forEach(name => {
+		var exported:Blocks = {};
+		for (const name of this.exported)
 			exported[name] = this.ctx[name];
-		});
 		return exported;
 	}
 }

@@ -1,4 +1,4 @@
-import SlimTemplate from './SlimTemplate';
+import SlimTemplate,{Blocks} from './SlimTemplate';
 import compiler from '../compiler/Compiler';
 
 export default class Template extends SlimTemplate
@@ -19,7 +19,7 @@ export default class Template extends SlimTemplate
 
 	private async _compile() 
 	{
-		var props;
+		var props:Blocks;
 
 		if (this.tmplProps) 
 			props = this.tmplProps;
@@ -36,7 +36,7 @@ export default class Template extends SlimTemplate
 			props = await func();
 		}
 
-		this.blocks = this._getBlocks(props);
+		this.blocks = this.getBlocks(props);
 		this.rootRenderFunc = props.root;
 		this.compiled = true;
 	}

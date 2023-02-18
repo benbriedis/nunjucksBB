@@ -1,12 +1,11 @@
+import {Blocks} from '../runtime/SlimTemplate';
 
 
 //TODO fix up these confusing names and types
 export type LoaderSourceSrc = string | {
 //	type:'code'|'string';
 	type:string;
-	obj: {
-		root: (env,context,frame,runtime) => string;
-	}
+	obj: Blocks
 };
 
 export interface LoaderSource {
