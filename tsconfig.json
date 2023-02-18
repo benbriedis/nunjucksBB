@@ -132,6 +132,7 @@
 		"./node_modules/**/*",
 		"./dist/**/*",
 		"./slim/**/*",
+		"./slimBuild/**/*",
 		"./docs/**/*",
 		"./bench/**/*",
 		"./samples/**/*",

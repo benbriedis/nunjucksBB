@@ -4,7 +4,7 @@ import * as tests from './tests';
 import * as lib from './lib';
 import SlimTemplate from './SlimTemplate';
 
-import type Loader from '../loaders/Loader';
+import Loader,{LoaderSourceSrc} from '../loaders/Loader';
 export {default as PrecompiledLoader} from '../loaders/PrecompiledLoader';
 export {default as NullLoader} from '../loaders/NullLoader';
 
@@ -188,7 +188,7 @@ export default class SlimEnvironment
 		throw new Error('template not found: ' + name);
 	}
 
-	protected createTemplate(src,path:string)
+	protected createTemplate(src:LoaderSourceSrc,path:string)
 	{
 		return new SlimTemplate(src,this,path);
 	}
@@ -203,7 +203,7 @@ console.log('SlimEnv.render()  tmpl:',tmpl);
 		return await tmpl.render(ctx);
 	}
 
-	async renderString(src, ctx, opts):Promise<string>
+	async renderString(src:string, ctx, opts):Promise<string>
 	{
 		if (lib.isFunction(opts)) 
 			opts = {};

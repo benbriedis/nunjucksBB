@@ -17,7 +17,7 @@ cp -r "${SLIMDIR}" "${SLIMBUILD}"
 
 # Copy over the source files required for the slim build:
 cd "${SRCDIR}"
-cp slim.ts "${SLIMBUILD}/"
+cp slim.ts Assert.ts "${SLIMBUILD}/"
 
 cd "${SRCDIR}/loaders"
 mkdir -p "${SLIMBUILD}/loaders"

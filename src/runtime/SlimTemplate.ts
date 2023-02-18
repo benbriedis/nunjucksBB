@@ -3,6 +3,8 @@ import * as globalRuntime from './runtime';
 import SlimEnvironment from './SlimEnvironment';
 import Frame from './Frame';
 import Context from './Context';
+import type {LoaderSourceSrc} from '../loaders/Loader';
+import Assert from '../Assert';
 
 export default class SlimTemplate
 {
@@ -13,11 +15,14 @@ export default class SlimTemplate
     blocks: (...args:any[])=>Promise<any>;   //XXX may be possible to use stronger type
     rootRenderFunc;
 
-	constructor(src,env:SlimEnvironment,path) 
+	constructor(src:LoaderSourceSrc,env:SlimEnvironment,path) 
 	{
 		this.env = env;
 
-		if (lib.isObject(src)) {
+//TODO clean up this LoaderSource stuff
+
+		if (typeof src == 'object') { 
+			Assert.check('type' in src);
 			switch (src.type) {
 				case 'code':
 					this.tmplProps = src.obj;
@@ -30,7 +35,7 @@ export default class SlimTemplate
 					throw new Error(
 						`Unexpected template object type ${src.type}; expected 'code', or 'string'`);
 			}
-		} else if (lib.isString(src)) 
+		} else if (typeof src == 'string')
 			this.tmplStr = src;
 		else 
 			throw new Error('src must be a string or an object describing the source');

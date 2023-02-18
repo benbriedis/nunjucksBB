@@ -1,8 +1,20 @@
+
+
+//TODO fix up these confusing names and types
+export type LoaderSourceSrc = string | {
+//	type:'code'|'string';
+	type:string;
+	obj: {
+		root: (env,context,frame,runtime) => string;
+	}
+};
+
 export interface LoaderSource {
-    src: string;
+    src: LoaderSourceSrc;
     path: string;
-    noCache: boolean;
+    noCache?: boolean;
 }
+
 
 //export type TemplateCallback<T> = (err: lib.TemplateError | null, res: T | null) => void;
 export type Callback<E, T> = (err: E | null, res: T | null) => void;

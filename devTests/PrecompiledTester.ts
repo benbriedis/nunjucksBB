@@ -3,8 +3,8 @@
 
 
 //import Nunjucks,{PrecompiledLoader} from '../src/slim';
-import {PrecompiledLoader,SlimEnvironment as Nunjucks} from '../src/slim';
-import {Environment} from '../src/all';
+//import {PrecompiledLoader,SlimEnvironment as Nunjucks} from '../src/slim';
+import SlimNunjucks,{PrecompiledLoader} from '../src/slim';
 import {readFile} from 'fs/promises';
 
 /* This script can run on the server */
@@ -17,22 +17,22 @@ class PrecompiledTester
 
 		global.window = <any>{};
 		const func = new Function(precompiled);
-		func();
+		await func();
 
 //		console.log('window:',window);
 //		console.log('precompiled:',precompiled);
 //		console.log('XXXX',(<any>window).nunjucksPrecompiled);
 
-		const env = new Nunjucks(new PrecompiledLoader(window.nunjucksPrecompiled),{
+		const env = new SlimNunjucks(new PrecompiledLoader(window.nunjucksPrecompiled),{
 			trimBlocks:true,
 			lstripBlocks:true
 			//throwOnUndefined:true
 		});
 
-//		const result = await env.render('devTests/brokenTop.njk',{blah:1}); 
-		const template = await env.getTemplate('devTests/brokenTop.njk'); 
-console.log('template:',template);
-		const result = await template.render({blah:1});
+		const result = await env.render('devTests/brokenTop.njk',{blah:1}); 
+//		const template = await env.getTemplate('devTests/brokenTop.njk'); 
+//console.log('template:',template);
+//		const result = await template.render({blah:1});
 		console.log('result:',result);
 	}
 }

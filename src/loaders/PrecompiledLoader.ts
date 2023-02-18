@@ -1,4 +1,4 @@
-import Loader from './Loader';
+import Loader,{LoaderSource} from './Loader';
 
 export default class PrecompiledLoader extends Loader 
 {
@@ -10,7 +10,7 @@ export default class PrecompiledLoader extends Loader
 		this.precompiled = compiledTemplates;
 	}
 
-	async getSource(name:string):Promise<any|null>
+	async getSource(name:string):Promise<LoaderSource|null>
 	{
 		if (this.precompiled[name]) 
 			return {
