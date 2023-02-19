@@ -5,5 +5,6 @@ export * as runtime from './runtime/runtime';
 export {default as SlimEnvironment} from './runtime/SlimEnvironment';
 export {default as PrecompiledLoader} from './loaders/PrecompiledLoader';
 export {default as NullLoader} from './loaders/NullLoader';
+export {default as TemplateError} from './runtime/TemplateError';
 
 export default SlimEnvironment;

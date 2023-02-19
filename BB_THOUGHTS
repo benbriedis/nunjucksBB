@@ -75,6 +75,6 @@ TODO
   I think this would be clearer that the current setup. 
 > Have a separate FileWatchLoader.
   Rename WebLoader to eg WebWatchLoader
-> Copy over my JS dump with folding
+> Copy over my jsdump() with folding
 > The slim build + some of the package.json script lines depend on Bash. 
 

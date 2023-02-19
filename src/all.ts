@@ -14,6 +14,7 @@ export {default as WebLoader} from './loaders/WebLoader';
 export {default as NullLoader} from './loaders/NullLoader';
 export {default as Template} from './runtime/Template';
 export {default as Environment} from './runtime/Environment';
+export {default as TemplateError} from './runtime/TemplateError';
 
 export {default as Loader,LoaderSource} from './loaders/Loader';
  
