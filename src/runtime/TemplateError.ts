@@ -1,12 +1,12 @@
 
 export default class TemplateError
 {
-	message;
-	template;
-	line;
-	column;
+	message:string;
+	template:string;
+	line:number;
+	column:number;
 
-	constructor(message:string,template,line,column) 
+	constructor(message:string,template:string,line:number,column:number) 
 	{
 		this.message = message;
 		this.template = template;
