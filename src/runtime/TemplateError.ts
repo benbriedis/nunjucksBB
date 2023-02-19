@@ -1,10 +1,10 @@
 
 export default class TemplateError
 {
-	message:string;
-	template:string;
-	line:number;
-	column:number;
+	readonly message:string;
+	readonly template:string;
+	readonly line:number;
+	readonly column:number;
 
 	constructor(message:string,template:string,line:number,column:number) 
 	{
@@ -16,7 +16,7 @@ export default class TemplateError
 if (global.go) (<any>this).stack = (new Error()).stack;
 	}
 
-	static fromError(err:Error,template,line,column)
+	static fromError(err:Error,template:string,line:number,column:number)
 	{
 //TODO copy stack trace over?	
 		return new TemplateError(err.toString(),template,line,column);
