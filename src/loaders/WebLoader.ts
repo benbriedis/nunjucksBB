@@ -23,7 +23,7 @@ export default class WebLoader extends Loader
 		throw new Error('relative templates not support in the browser yet');
 	}
 
-	async getSource(name): Promise<LoaderSource> 
+	async getSource(name): Promise<LoaderSource|null> 
 	{
 		const src = await this.fetch(this.baseURL + '/' + name);
 		if (src==null)

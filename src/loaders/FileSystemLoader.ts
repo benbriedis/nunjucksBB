@@ -36,7 +36,7 @@ export default class FileSystemLoader extends Loader
 		return path.resolve(path.dirname(from), to);
 	}
 
-	async getSource(name):Promise<LoaderSource>
+	async getSource(name):Promise<LoaderSource|null>
 	{
 		var fullpath = null;
 		var paths = this.searchPaths;
