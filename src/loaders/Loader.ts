@@ -23,7 +23,7 @@ export abstract class Loader
 	cache:object = {};
 
 	/* Return null if not found */
-    async getSource(name:string) : Promise<LoaderSource> { return <any>null; }
+    async getSource(name:string) : Promise<LoaderSource|null> { return <any>null; }
 
 	createPath(from:string,to:string):string
 	{
