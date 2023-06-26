@@ -1,0 +1,26 @@
+{
+	"compilerOptions": {
+    	"module": "commonjs", 
+
+		"target": "es2021",
+
+    	"baseUrl": ".",
+		"outDir":"../dist/devTests",
+
+		"allowJs": false,
+		"allowUmdGlobalAccess": true,
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": false,
+		"noImplicitAny": false,
+		"strictNullChecks": false,
+		"skipLibCheck": true,
+	},
+	"include": [
+		"./Precompile.ts"
+	]
+}
+

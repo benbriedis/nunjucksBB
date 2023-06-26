@@ -3,26 +3,19 @@ const webpack = require('webpack');
 
 module.exports = env => {
     return {
+		mode: 'development',
         entry: {
             browserPrecompiledTest: {
 				import: './devTests/BrowserPrecompiledTest.ts',
-				filename: './dist/devTests/BrowserPrecompiledTest.js',
+				filename: '../dist/devTests/BrowserPrecompiledTest.js',
 			},
-/*			
-			output: {
-				filename: 'BrowserPrecompiledTest.js',
-				path: 'dist',
-				publicPath: '/',
-			},
-*/			
         },
 		resolve: {
-			alias: {
-				nunjucksBB: path.resolve(__dirname,'node_modules/nunjucksBB/dist/nunjucks-slim.js')
-			},
-			extensions: ['.ts','.js']
+			extensions: ['.ts','.js'],
+			fallback: {
+				nunjucksBB:false
+    		}
 		},
-//		main: 'dist/nunjucks.js',
 		module: {
 			rules: [{
 //XXX does this need to be restricted?			
@@ -31,7 +24,7 @@ module.exports = env => {
 				use: {
 					loader: 'ts-loader',
 					options: {
-						configFile: 'devTests/tsconfig.devTests.json'
+						configFile: 'devTests/tsconfig.browser.json'
 					}
 				},
 			}]

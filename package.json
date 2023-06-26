@@ -51,8 +51,8 @@
     "build": "npm run build:browser && npm run build:slim && npm run build:server",
 	"clean": "rm -rf dist slimBuild",
     "prepare": "npm run build",
-    "test": "tsc ; nyc mocha -R spec dist/tests"
-    "build:devTests": "npx webpack build --config ./webpack.devTests.js && node dist/devTests/Precompile.js > dist/devTests/compiledTop.njk.js",
+    "test": "tsc ; nyc mocha -R spec dist/tests",
+    "build:devTests": "tsc -p devTests/tsconfig.server.json && npx webpack build --config ./devTests/webpack.devTests.js && node dist/devTests/devTests/Precompile.js > dist/devTests/compiledTop.njk.js"
   },
   "bin": {
     "nunjucks-precompile": "./bin/precompile"

@@ -4,9 +4,6 @@ class BrowserTester
 {
 	static async run():Promise<void>
 	{
-
-console.log('In BrowserTester.run() - 2');
-
 		const compiledName = 'compiledTop.njk.js';
 
 //FIXME WebLoader refuses to run on the server 
@@ -20,7 +17,6 @@ console.log('In BrowserTester.run() - 2');
 //XXX Can I pass in a 'null' loader instead? I suspect that a cache is used in this case...
 //XXX is using something window.nunjucksPrecompiled to access
 
-console.log('In BrowserTester.run() - 3');
 		const env = new Nunjucks(new WebLoader('http://localhost:8080'),{
 			trimBlocks:true,
 			lstripBlocks:true
@@ -34,11 +30,8 @@ console.log('In BrowserTester.run() - 3');
 			b:2
 		};
 
-console.log('In BrowserTester.run() - 3A');
 //XXX can/should I combine these two?
 		const template = await env.getTemplate(templateName,true);   //XXX true?
-
-console.log('In BrowserTester.run() - 4  template:',template);
 
 try {
 		const content = await template.render(data);
@@ -51,8 +44,6 @@ console.log('GOT ERROR:',err);
 		console.log('DONE');
 	}
 }
-
-console.log('In BrowserTester - 1');
 
 BrowserTester.run().catch(err => console.log(err));
 

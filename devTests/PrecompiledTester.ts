@@ -1,9 +1,3 @@
-//import Nunjucks,{PrecompiledLoader} from '../src/all';
-//import Nunjucks,{PrecompiledLoader} from '../../dists/nunjucks-slim.js';
-
-
-//import Nunjucks,{PrecompiledLoader} from '../src/slim';
-//import {PrecompiledLoader,SlimEnvironment as Nunjucks} from '../src/slim';
 import SlimNunjucks,{PrecompiledLoader} from '../src/slim';
 import {readFile} from 'fs/promises';
 
@@ -18,10 +12,6 @@ class PrecompiledTester
 		global.window = <any>{};
 		const func = new Function(precompiled);
 		await func();
-
-//		console.log('window:',window);
-//		console.log('precompiled:',precompiled);
-//		console.log('XXXX',(<any>window).nunjucksPrecompiled);
 
 		const env = new SlimNunjucks(new PrecompiledLoader(window.nunjucksPrecompiled),{
 			trimBlocks:true,

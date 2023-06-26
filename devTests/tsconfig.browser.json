@@ -20,7 +20,8 @@
 		"skipLibCheck": true,
 	},
 	"include": [
-		"./BrowserPrecompiledTest.ts"
+		"./BrowserPrecompiledTest.ts",
+		"./globals.ts"
 	]
 }
 

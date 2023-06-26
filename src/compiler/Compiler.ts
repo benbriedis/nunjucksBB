@@ -1002,7 +1002,8 @@ export class Compiler
 			this._emitFuncBegin(block, `b_${name}`);
 
 			const tmpFrame = new Frame();
-			this._emitLine('var frame = frame.push(true);');
+//			this._emitLine('var frame = frame.push(true);');
+			this._emitLine('frame = frame.push(true);');
 			this.compile(block.body, tmpFrame);
 			this._emitFuncEnd();
 		});

@@ -7,17 +7,20 @@ export default class Precompile
 	{
 //TODO shoud probably be able to use FileSystemLoader here and do away with readFile() below	
 		const env = new Nunjucks(new NullLoader(),
-//			new FileSystemLoader(['.'],{}),
 			{
 				trimBlocks:true,
 				lstripBlocks:true
 				//throwOnUndefined:true
 			});
 
+		await this.compileOne('devTests/top.njk',env);
+		await this.compileOne('devTests/middle.njk',env);
+/*		
 		await this.compileOne('devTests/brokenTop.njk',env);
 		await this.compileOne('devTests/brokenImport1.njk',env);
 		await this.compileOne('devTests/brokenImport2.njk',env);
 		await this.compileOne('devTests/brokenInclude.njk',env);
+*/		
 	}
 
 	static async compileOne(templateName:string,env)

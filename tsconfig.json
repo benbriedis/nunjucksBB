@@ -133,6 +133,7 @@
 		"./dist/**/*",
 		"./slim/**/*",
 		"./slimBuild/**/*",
+		"./devTests/**/*",
 		"./docs/**/*",
 		"./bench/**/*",
 		"./samples/**/*",
