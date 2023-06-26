@@ -23,6 +23,6 @@ module.exports = env => merge(common(env), {
 	/* 
  		See this for potential speedups to incremental builds. Currently not a problem.
 			https://webpack.js.org/guides/build-performance/#incremental-builds
-		Also, there is Snowpack, but a fair bit of work to transfer to it I think.
+		Thre are faster options than Webpack these days too
 	*/
 });

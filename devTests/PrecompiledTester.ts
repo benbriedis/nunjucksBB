@@ -13,7 +13,7 @@ class PrecompiledTester
 {
 	static async run():Promise<void>
 	{
-		const precompiled = await readFile('./devTests/broken.njk.js',{encoding:'UTF8' as BufferEncoding});
+		const precompiled = await readFile('/devTests/compiledTop.njk.js',{encoding:'UTF8' as BufferEncoding});
 
 		global.window = <any>{};
 		const func = new Function(precompiled);
@@ -29,10 +29,7 @@ class PrecompiledTester
 			//throwOnUndefined:true
 		});
 
-		const result = await env.render('devTests/brokenTop.njk',{blah:1}); 
-//		const template = await env.getTemplate('devTests/brokenTop.njk'); 
-//console.log('template:',template);
-//		const result = await template.render({blah:1});
+		const result = await env.render('devTests/top.njk',{a:1,b:2}); 
 		console.log('result:',result);
 	}
 }

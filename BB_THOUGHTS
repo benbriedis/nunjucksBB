@@ -44,7 +44,16 @@ DESIRED FUNCTIONALITY
   This would remove an advantage that Vue etc has over Nunjucks.
   Could be applied to XML etc too if used with Nunjucks.
   Could be done with a call to a plugin and the plugin calls an external language parser.
-
+> Combine null and undefined
+> Combine == & ===
+> Maybe "{% if musicEmbedExists %}" to mean "true or not null"?  ie in boolean contexts null==>false, all else ==>true   
+  Still want to be able to test these things individual somehow. Think about. cf an 'exists' or 'defined' keyword, function, or symbol.
+> Copy other string ops over from String, Number, etc. Reference against Twig and Jinja.
+> Dont allow macros to be imported in parents
+> Better error handling - including line numbers - including macros as much as practical
+> Dont like the 'call' feature. Adds an extra hidden parameter to the macro and then requires special syntax in the definition.
+> Might be better off with no include and no extends and just use macros. 
+  
 
 DOCUMENTATION IDEAS
 > Documentation should mention the possibility of using MorphDOM etc to provide for reactive programming.
@@ -66,7 +75,8 @@ CODING
 
 > Maybe I do need to remove the final trailing \n from template files. Basically impossible to remove otherwise. But where?
     Probably FileSystemLoader makes most sense... 
-
+> Use of generators would be nice. 
+  - Useful if the parser would be installed separately for syntax checking, IDE integration, etc
 
 TODO 
 > CLI might be broken.

@@ -21,14 +21,14 @@ console.log('In BrowserTester.run() - 2');
 //XXX is using something window.nunjucksPrecompiled to access
 
 console.log('In BrowserTester.run() - 3');
-		const env = new Nunjucks(new WebLoader('/home/ben/programming/nunjucksBB/devTests'),{
+		const env = new Nunjucks(new WebLoader('http://localhost:8080'),{
 			trimBlocks:true,
 			lstripBlocks:true
 			//throwOnUndefined:true
 		});
 //		NunjucksExtensions.extend(this.env);
 
-		const templateName = 'devTests/top.njk';
+		const templateName = '/devTests/top.njk';
 		const data = {
 			a:1,
 			b:2

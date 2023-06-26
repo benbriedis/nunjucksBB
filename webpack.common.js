@@ -4,12 +4,7 @@ const webpack = require('webpack');
 module.exports = env => {
     return {
         entry: {
-            nunjucks: './src/all.ts',
-            browserTester: {
-				dependOn: 'nunjucks',
-				import: './devTests/BrowserTester.ts',
-				filename: './dist/devTests/BrowserTester.js'
-			}
+            nunjucks: './src/all.ts'
         },
 
 //TODO split into 'render' and 'compile + render' (ie slim and full)

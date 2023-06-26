@@ -1,8 +1,22 @@
 <!DOCTYPE html>
 <html>
 <body>
-	<script type="text/javascript"  src="compiledTop.njk.js"></script>
-	<script type="text/javascript"  src="../browser/nunjucks.js"></script>
-	<script type="text/javascript"  src="../browser/browserTester.js"></script>
+	<!-- 
+		To test we need a local http server...
+
+		1. npm install -g http-server
+		2. cd <nunjucksBB top>
+		3. http-server -c-1
+		4. On the browser go to: http://localhost:8080/devTests/testCompiled.html
+	-->
+
+<!--XXX seems to be bundled into BrowserPrecompiledTest.js
+	<script type="text/javascript"  src="/dist/nunjucks-slim.js"></script>
+-->	
+	<script type="text/javascript"  src="/dist/devTests/compiledTop.njk.js"></script>
+<!--	
+	<script type="text/javascript"  src="/dist/dist/devTests/BrowserTester.js"></script>
+-->	
+	<script type="text/javascript"  src="/dist/dist/devTests/BrowserPrecompiledTest.js"></script>
 </body>
 </html>
