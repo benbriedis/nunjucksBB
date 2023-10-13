@@ -53,6 +53,25 @@ DESIRED FUNCTIONALITY
 > Better error handling - including line numbers - including macros as much as practical
 > Dont like the 'call' feature. Adds an extra hidden parameter to the macro and then requires special syntax in the definition.
 > Might be better off with no include and no extends and just use macros. 
+> Could really to with a way of returning a data structure from a macro or something like a macro - eg:
+		{%- macro hoursTypes(types) -%}
+			{{ types|setAttribute('value',{
+				'mon':		'Monday',
+				'tue':		'Tuesday',
+				'wed':		'Wednesday',
+				'thu':		'Thursday',
+				'fri':		'Friday',
+				'sat':		'Saturday',
+				'sun':		'Sunday',
+				'holidays':	'Public Holidays',
+				'other':	'Other'
+			}) }}
+		{%- endmacro -%}
+  can be used to pass values to selects as well as for looking up individual values for display.
+  They are display things and should be included in NJK. Including everything in the top script is
+  pretty bad. I suppose could get away with 2 macros: one a lookup and one that creates a select... but
+  this is probably overly restrictive on the select.
+  	cf "datamacro/macrodata" or something
   
 
 DOCUMENTATION IDEAS
@@ -77,6 +96,8 @@ CODING
     Probably FileSystemLoader makes most sense... 
 > Use of generators would be nice. 
   - Useful if the parser would be installed separately for syntax checking, IDE integration, etc
+  - One thing I noticed... should make error reporting much easier as you dont need to store all the context information with
+    the errors... instead you can generate the errors more on the fly
 
 TODO 
 > CLI might be broken.

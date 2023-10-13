@@ -1,8 +1,8 @@
 {
-  "name": "nunjucksBB",
-  "description": "A powerful templating engine with inheritance, asynchronous control, and more (jinja2 inspired)",
-  "version": "3.2.3",
-  "author": "James Long <longster@gmail.com>",
+  "name": "nunjucksbb",
+  "description": "A fork of Nunjucks that supports await",
+  "version": "1.0.0",
+  "author": "Ben Briedis",
   "dependencies": {
     "commander": "^5.1.0",
     "fs": "^0.0.1-security"
